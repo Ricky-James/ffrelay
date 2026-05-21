@@ -1,0 +1,34 @@
+{
+  "sections": [
+    {
+      "label": "Home",
+      "shortLabel": "Home",
+      "href": "/",
+      "desc": "What is the FF Relay?"
+    },
+    {
+      "label": "Schedule",
+      "shortLabel": "Schedule",
+      "href": "/schedule",
+      "desc": "Predicted run schedule in your local timezone"
+    },
+    {
+      "label": "Splits",
+      "shortLabel": "Detailed\nSplits",
+      "href": "/splits",
+      "desc": "Per-game split times for the current run"
+    },
+    {
+      "label": "Past Results",
+      "shortLabel": "Past\nResults",
+      "href": "/past-results",
+      "desc": "Previous winners and full per-relay breakdowns"
+    },
+    {
+      "label": "History",
+      "shortLabel": "History",
+      "href": "/history",
+      "desc": "Every Final Fantasy game and runner who has taken part"
+    }
+  ]
+}

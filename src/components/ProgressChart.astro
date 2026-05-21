@@ -1,0 +1,746 @@
+---
+import eventData from '../data/event.json';
+import { csvExportUrl } from '../lib/sheetUrl';
+
+const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.splits);
+---
+
+<div class="progress-chart" id="progress-chart" data-csv-url={CSV_URL}>
+  <div class="chart-controls">
+    <label class="zoom-label">
+      <span class="zoom-text">Zoom</span>
+      <input
+        type="range"
+        id="chart-zoom"
+        min="0"
+        max="1"
+        step="any"
+        value="0.7"
+        aria-label="Chart zoom level"
+      />
+    </label>
+    <button type="button" id="chart-refresh" class="chart-btn">Refresh</button>
+    <p class="chart-hint">Scroll, drag, or pinch / <kbd>Ctrl</kbd>+wheel to zoom</p>
+  </div>
+
+  <div class="chart-frame">
+    <!-- Separate SVG so labels stay pinned while the plot area scrolls horizontally. -->
+    <svg id="chart-yaxis" class="chart-yaxis" aria-hidden="true"></svg>
+
+    <div class="chart-scroll" id="chart-scroll">
+      <svg
+        id="chart-svg"
+        class="chart-svg"
+        role="img"
+        aria-label="Cumulative split delta per team, in minutes from the three-team average"
+      >
+        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="empty-text">
+          Loading splits…
+        </text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="chart-footer">
+    <div class="chart-legend" aria-label="Team colour key">
+      <span class="legend-item legend-mog"><span class="legend-swatch"></span>Mog</span>
+      <span class="legend-item legend-choco"><span class="legend-swatch"></span>Choco</span>
+      <span class="legend-item legend-tonberry"><span class="legend-swatch"></span>Tonberry</span>
+    </div>
+    <p class="chart-status" id="chart-status" aria-live="polite">Loading…</p>
+  </div>
+</div>
+
+<style>
+  .progress-chart {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  [data-theme='light'] .progress-chart {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .chart-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .zoom-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .zoom-text {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  #chart-zoom {
+    width: 180px;
+    accent-color: #fbbf24;
+  }
+  .chart-btn {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .chart-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+  }
+  .chart-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .chart-btn:disabled {
+    opacity: 0.55;
+    cursor: progress;
+  }
+  [data-theme='light'] .chart-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+  [data-theme='light'] .chart-btn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.08);
+  }
+  .chart-hint {
+    font-size: 0.78rem;
+    color: var(--text-dimmer);
+    margin: 0;
+  }
+  .chart-hint kbd {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+    padding: 0 0.3rem;
+    font-size: 0.72rem;
+  }
+  [data-theme='light'] .chart-hint kbd {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+
+  /* Absolute layering keeps the y-axis gutter shorter than the plot, freeing the
+     lower-left corner for rotated x-axis labels to extend into. */
+  .chart-frame {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.5rem;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  [data-theme='light'] .chart-frame {
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+  .chart-yaxis {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 56px;
+    /* Leaves the bottom strip empty for long game-name labels to extend leftward. */
+    height: 240px;
+    color: var(--text-muted);
+    background: var(--bg);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 2;
+    pointer-events: none;
+  }
+  [data-theme='light'] .chart-yaxis {
+    border-right-color: rgba(0, 0, 0, 0.08);
+  }
+  .chart-scroll {
+    width: 100%;
+    height: 380px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* pan-x lets one-finger drag scroll horizontally; pinch falls through to our handler. */
+    touch-action: pan-x;
+    cursor: grab;
+  }
+  .chart-scroll.is-dragging {
+    cursor: grabbing;
+    user-select: none;
+  }
+  .chart-svg {
+    display: block;
+    height: 380px;
+    color: var(--text-muted);
+  }
+  .chart-svg .empty-text {
+    fill: var(--text-dim);
+    font-size: 14px;
+  }
+
+  :global(.chart-svg .grid),
+  :global(.chart-yaxis .grid) {
+    stroke: rgba(255, 255, 255, 0.05);
+    stroke-width: 1;
+  }
+  :global(.chart-svg .zero),
+  :global(.chart-yaxis .zero) {
+    stroke: rgba(255, 255, 255, 0.25);
+    stroke-width: 1.25;
+    stroke-dasharray: 4 3;
+  }
+  :global(.chart-svg .tick) {
+    stroke: rgba(255, 255, 255, 0.15);
+    stroke-width: 1;
+  }
+  :global(.chart-svg .axis-label),
+  :global(.chart-yaxis .axis-label) {
+    font-size: 11px;
+    fill: var(--text-dim);
+  }
+  :global(.chart-svg .x-label) {
+    fill: var(--text-muted);
+  }
+  :global(.chart-svg .x-label-game) {
+    fill: var(--text);
+    font-weight: 700;
+  }
+  :global(.chart-svg .line) {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  :global(.chart-svg .line-mog),
+  :global(.chart-svg .dot-mog) {
+    stroke: #38bdf8;
+    fill: #38bdf8;
+  }
+  :global(.chart-svg .line-mog) { fill: none; }
+  :global(.chart-svg .line-choco),
+  :global(.chart-svg .dot-choco) {
+    stroke: #fde047;
+    fill: #fde047;
+  }
+  :global(.chart-svg .line-choco) { fill: none; }
+  :global(.chart-svg .line-tonberry),
+  :global(.chart-svg .dot-tonberry) {
+    stroke: #4ade80;
+    fill: #4ade80;
+  }
+  :global(.chart-svg .line-tonberry) { fill: none; }
+
+  :global(.chart-svg .dot-game) {
+    stroke: rgba(255, 255, 255, 0.85);
+    stroke-width: 1.5;
+  }
+  [data-theme='light'] :global(.chart-svg .dot-game) {
+    stroke: rgba(15, 23, 42, 0.7);
+  }
+
+  [data-theme='light'] :global(.chart-svg .grid),
+  [data-theme='light'] :global(.chart-yaxis .grid) {
+    stroke: rgba(0, 0, 0, 0.07);
+  }
+  [data-theme='light'] :global(.chart-svg .zero),
+  [data-theme='light'] :global(.chart-yaxis .zero) {
+    stroke: rgba(0, 0, 0, 0.3);
+  }
+  [data-theme='light'] :global(.chart-svg .tick) {
+    stroke: rgba(0, 0, 0, 0.18);
+  }
+  [data-theme='light'] :global(.chart-svg .line-choco),
+  [data-theme='light'] :global(.chart-svg .dot-choco) {
+    stroke: #a16207;
+    fill: #a16207;
+  }
+  [data-theme='light'] :global(.chart-svg .line-choco) { fill: none; }
+
+  .chart-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-top: 0.85rem;
+  }
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+  }
+  .legend-swatch {
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    margin-right: 0.45rem;
+  }
+  .legend-mog .legend-swatch { background: #38bdf8; }
+  .legend-choco .legend-swatch { background: #fde047; }
+  .legend-tonberry .legend-swatch { background: #4ade80; }
+  [data-theme='light'] .legend-choco .legend-swatch { background: #a16207; }
+
+  .chart-status {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+  .chart-status.is-stale { color: #fbbf24; }
+  [data-theme='light'] .chart-status.is-stale { color: #b45309; }
+</style>
+
+<script>
+  // @ts-nocheck
+  import { parseCsv, timeToSeconds, teamSlug, escapeHtml } from '../lib/sheetParse';
+
+  const CSV_URL = document.getElementById('progress-chart').dataset.csvUrl;
+  const KNOWN_TEAMS = ['mog', 'choco', 'tonberry'];
+
+  // Shorter x-axis labels for verbose game names. Tooltips still show the full sheet name.
+  const LABEL_OVERRIDES = [
+    { match: /lightning returns/i, label: 'Lightning Returns' },
+    { match: /reunion/i, label: 'Crisis Core Reunion' },
+    { match: /dirge of cerberus/i, label: 'Dirge of Cerberus' },
+    { match: /tactics\s*(?:a2|advance\s*2)/i, label: 'Final Fantasy Tactics A2' },
+    { match: /stranger of paradise/i, label: 'Stranger of Paradise' },
+  ];
+  function shortLabel(name) {
+    for (const { match, label } of LABEL_OVERRIDES) {
+      if (match.test(name)) return label;
+    }
+    return name;
+  }
+
+  const svgEl = document.getElementById('chart-svg');
+  const yAxisEl = document.getElementById('chart-yaxis');
+  const scrollEl = document.getElementById('chart-scroll');
+  const zoomEl = document.getElementById('chart-zoom');
+  const refreshBtn = document.getElementById('chart-refresh');
+  const statusEl = document.getElementById('chart-status');
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const CHART_H = 380;
+  const PAD_TOP = 18;
+  const PAD_BOTTOM = 140; // room for 45°-rotated long game-name labels
+  const YAXIS_W = 56;
+  const PAD_LEFT = YAXIS_W;
+  const PAD_RIGHT = 16;
+  const YAXIS_H = PAD_TOP + (CHART_H - PAD_TOP - PAD_BOTTOM);
+
+  // Zoom uses a logarithmic mapping between slider position (0..1) and pxPerSplit, so
+  // equal slider distance corresponds to equal multiplicative zoom — a linear scale
+  // felt warped because each px increment near minPx doubled the visible width.
+  const MAX_PX = 110;
+  const POLL_MS = 30_000;
+  let pollHandle = null;
+  let pxPerSplit = 75;
+  let minPx = 1;
+  let lastParsed = null;
+
+  function pxFromSliderT(t) {
+    if (MAX_PX <= minPx) return minPx;
+    return minPx * Math.pow(MAX_PX / minPx, t);
+  }
+  function sliderTFromPx(px) {
+    if (MAX_PX <= minPx) return 0;
+    return Math.log(px / minPx) / Math.log(MAX_PX / minPx);
+  }
+  function syncSlider() {
+    zoomEl.value = String(Math.max(0, Math.min(1, sliderTFromPx(pxPerSplit))));
+  }
+
+  // Pull only the FIRST team-column group (cumulative-across-relay). Partial rows are dropped.
+  function parseCumulativeForChart(text) {
+    const rows = parseCsv(text);
+    const headerIdx = rows.findIndex((r) => /^split name/i.test((r[0] ?? '').trim()));
+    if (headerIdx === -1) return null;
+    const labelRow = rows[headerIdx];
+
+    const cols = [];
+    for (let i = 1; i < labelRow.length; i++) {
+      const v = (labelRow[i] ?? '').trim();
+      const m = v.match(/^team\s+(.+)$/i);
+      if (m) {
+        cols.push({ col: i, team: teamSlug(m[1]) });
+      } else if (cols.length > 0) {
+        break;
+      }
+    }
+    if (cols.length === 0) return null;
+    const teamsInOrder = cols.map((c) => c.team).filter((t) => KNOWN_TEAMS.includes(t));
+
+    const splits = [];
+    // Drives whether the parent <section> is shown — same hide-when-empty rule as LiveStatus.
+    let anyData = false;
+    for (let r = headerIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      const name = (row[0] ?? '').trim();
+      if (!name) continue;
+      const times = {};
+      let allFilled = true;
+      for (const c of cols) {
+        if (!KNOWN_TEAMS.includes(c.team)) continue;
+        const secs = timeToSeconds((row[c.col] ?? '').trim());
+        if (secs == null) { allFilled = false; continue; }
+        anyData = true;
+        times[c.team] = secs;
+      }
+      // Advance the chart only when every team has finished this split.
+      if (!allFilled) continue;
+      // "Final Fantasy <something>" rows are per-game totals — render as game boundaries.
+      const isGameEnd = /\bfinal fantasy\b/i.test(name);
+      splits.push({ name, times, isGameEnd });
+    }
+    return { teams: teamsInOrder, splits, anyData };
+  }
+
+  function computeDeltas(parsed) {
+    const teams = parsed.teams;
+    return parsed.splits.map((s) => {
+      const sum = teams.reduce((a, t) => a + s.times[t], 0);
+      const avg = sum / teams.length;
+      const deltas = {};
+      // Positive = behind average (slower = higher time → team − avg > 0). Faster teams plot lower.
+      for (const t of teams) deltas[t] = (s.times[t] - avg) / 60;
+      return { name: s.name, deltas, isGameEnd: s.isGameEnd };
+    });
+  }
+
+  function niceYTicks(absMax, target = 6) {
+    const safeMax = Math.max(0.5, absMax);
+    const rough = (2 * safeMax) / target;
+    const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+    const norm = rough / mag;
+    let step;
+    if (norm < 1.5) step = mag;
+    else if (norm < 3) step = 2 * mag;
+    else if (norm < 7) step = 5 * mag;
+    else step = 10 * mag;
+    const top = Math.ceil(safeMax / step) * step;
+    const ticks = [];
+    for (let v = -top; v <= top + 1e-9; v += step) {
+      ticks.push(Math.round(v * 1000) / 1000);
+    }
+    return { ticks, top };
+  }
+
+  function formatDelta(min) {
+    if (Math.abs(min) < 1e-9) return '0:00';
+    const sign = min > 0 ? '+' : '−';
+    const totalSec = Math.round(Math.abs(min) * 60);
+    const m = Math.floor(totalSec / 60);
+    const s = String(totalSec % 60).padStart(2, '0');
+    return `${sign}${m}:${s}`;
+  }
+
+  function renderEmpty(message) {
+    yAxisEl.setAttribute('viewBox', `0 0 ${YAXIS_W} ${YAXIS_H}`);
+    yAxisEl.innerHTML = '';
+    svgEl.setAttribute('viewBox', `0 0 600 ${CHART_H}`);
+    svgEl.setAttribute('width', '600');
+    svgEl.setAttribute('height', String(CHART_H));
+    svgEl.innerHTML =
+      `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="empty-text">${escapeHtml(message)}</text>`;
+  }
+
+  function render(parsed) {
+    const n = parsed.splits.length;
+    if (n === 0) {
+      renderEmpty('No fully-completed splits yet.');
+      return;
+    }
+    const deltas = computeDeltas(parsed);
+    const teams = parsed.teams;
+    const plotH = CHART_H - PAD_TOP - PAD_BOTTOM;
+
+    let absMax = 0;
+    for (const d of deltas) {
+      for (const t of teams) absMax = Math.max(absMax, Math.abs(d.deltas[t]));
+    }
+    const { ticks, top: yTop } = niceYTicks(absMax, 6);
+    const yMin = -yTop;
+    const yMax = yTop;
+
+    function xOf(i) { return PAD_LEFT + (i + 0.5) * pxPerSplit; }
+    function yOf(v) { return PAD_TOP + ((yMax - v) / (yMax - yMin)) * plotH; }
+
+    const plotW = pxPerSplit * n;
+    const totalW = PAD_LEFT + plotW + PAD_RIGHT;
+
+    const yParts = [];
+    for (const v of ticks) {
+      const y = PAD_TOP + ((yMax - v) / (yMax - yMin)) * plotH;
+      const cls = v === 0 ? 'zero' : 'grid';
+      yParts.push(`<line class="${cls}" x1="${YAXIS_W - 6}" y1="${y}" x2="${YAXIS_W}" y2="${y}" />`);
+      yParts.push(
+        `<text class="axis-label" x="${YAXIS_W - 10}" y="${y}" text-anchor="end" dominant-baseline="middle">${escapeHtml(formatDelta(v))}</text>`,
+      );
+    }
+    yAxisEl.setAttribute('viewBox', `0 0 ${YAXIS_W} ${YAXIS_H}`);
+    yAxisEl.innerHTML = yParts.join('');
+
+    const parts = [];
+
+    for (const v of ticks) {
+      const y = yOf(v);
+      const cls = v === 0 ? 'zero' : 'grid';
+      parts.push(`<line class="${cls}" x1="${PAD_LEFT}" y1="${y}" x2="${totalW - PAD_RIGHT}" y2="${y}" />`);
+    }
+
+    // Zoomed out we drop segment labels and keep only per-game totals as anchors.
+    const showAllLabels = pxPerSplit >= 28;
+    // Game-end dots always render; segment dots fade out as the chart densifies.
+    const showSegmentDots = pxPerSplit >= 20;
+
+    const labelY = CHART_H - PAD_BOTTOM + 14;
+    for (let i = 0; i < n; i++) {
+      const x = xOf(i);
+      parts.push(`<line class="tick" x1="${x}" y1="${CHART_H - PAD_BOTTOM}" x2="${x}" y2="${CHART_H - PAD_BOTTOM + 4}" />`);
+      const isEnd = deltas[i].isGameEnd;
+      if (!showAllLabels && !isEnd) continue;
+      const name = shortLabel(deltas[i].name);
+      const cls = isEnd ? 'axis-label x-label x-label-game' : 'axis-label x-label';
+      parts.push(
+        `<text class="${cls}" x="${x}" y="${labelY}" text-anchor="end" transform="rotate(-45 ${x} ${labelY})">${escapeHtml(name)}</text>`,
+      );
+    }
+
+    for (const team of teams) {
+      const points = deltas.map((d, i) => `${xOf(i)},${yOf(d.deltas[team])}`).join(' ');
+      parts.push(`<polyline class="line line-${team}" points="${points}" />`);
+      for (let i = 0; i < n; i++) {
+        const isEnd = deltas[i].isGameEnd;
+        if (!isEnd && !showSegmentDots) continue;
+        const cx = xOf(i);
+        const cy = yOf(deltas[i].deltas[team]);
+        const label = `${team[0].toUpperCase()}${team.slice(1)} · ${deltas[i].name}: ${formatDelta(deltas[i].deltas[team])} from avg`;
+        const cls = isEnd ? `dot dot-${team} dot-game` : `dot dot-${team}`;
+        const r = isEnd ? 5 : 3.5;
+        parts.push(
+          `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}"><title>${escapeHtml(label)}</title></circle>`,
+        );
+      }
+    }
+
+    svgEl.setAttribute('viewBox', `0 0 ${totalW} ${CHART_H}`);
+    svgEl.setAttribute('width', String(totalW));
+    svgEl.setAttribute('height', String(CHART_H));
+    svgEl.innerHTML = parts.join('');
+  }
+
+  function setStatus(text, stale) {
+    statusEl.textContent = text;
+    statusEl.classList.toggle('is-stale', !!stale);
+  }
+
+  async function refresh() {
+    try {
+      const url = `${CSV_URL}&_=${Date.now()}&r=${Math.random().toString(36).slice(2)}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const parsed = parseCumulativeForChart(text);
+      if (!parsed) {
+        setStatus('Sheet format unexpected — could not find team columns.', true);
+        return;
+      }
+      lastParsed = parsed;
+      // Stick to the right edge across data updates so the latest splits stay in view.
+      // If the user has scrolled away from the end, leave their position alone.
+      const wasAtEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
+      // updateZoomMin may render via setZoom — only render here if it didn't, to avoid a double draw.
+      if (!updateZoomMin()) render(parsed);
+      if (wasAtEnd) scrollEl.scrollLeft = scrollEl.scrollWidth;
+      const ts = new Date().toLocaleTimeString(undefined, {
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+      });
+      setStatus(
+        parsed.splits.length === 0
+          ? `Updated ${ts} · waiting for the first split to be completed by all teams`
+          : `Updated ${ts} · ${parsed.splits.length} completed split${parsed.splits.length === 1 ? '' : 's'}`,
+        false,
+      );
+    } catch (err) {
+      const ts = new Date().toLocaleTimeString();
+      if (lastParsed) setStatus(`Last update failed at ${ts}. Showing previous data.`, true);
+      else setStatus(`Unable to load data (${err.message}). Retrying…`, true);
+    }
+  }
+
+  refreshBtn.addEventListener('click', async () => {
+    refreshBtn.disabled = true;
+    const prevText = refreshBtn.textContent;
+    refreshBtn.textContent = 'Refreshing…';
+    try {
+      await refresh();
+    } finally {
+      refreshBtn.disabled = false;
+      refreshBtn.textContent = prevText;
+    }
+  });
+
+  function startPolling() {
+    if (pollHandle != null) return;
+    refresh();
+    pollHandle = setInterval(refresh, POLL_MS);
+  }
+  function stopPolling() {
+    if (pollHandle != null) {
+      clearInterval(pollHandle);
+      pollHandle = null;
+    }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopPolling();
+    else startPolling();
+  });
+
+  // If focalClientX is given, keep the split under that point anchored as we rescale.
+  function setZoom(next, focalClientX = null) {
+    next = Math.max(minPx, Math.min(MAX_PX, next));
+    if (Math.abs(next - pxPerSplit) < 0.001) return;
+
+    let anchorRatio = null;
+    if (focalClientX != null) {
+      const rect = scrollEl.getBoundingClientRect();
+      const beforeScroll = scrollEl.scrollLeft;
+      const xInPlot = (focalClientX - rect.left) + beforeScroll - PAD_LEFT;
+      anchorRatio = xInPlot / pxPerSplit;
+    }
+
+    pxPerSplit = next;
+    syncSlider();
+    if (lastParsed) render(lastParsed);
+
+    if (anchorRatio != null) {
+      const newPlotX = anchorRatio * pxPerSplit + PAD_LEFT;
+      const rect = scrollEl.getBoundingClientRect();
+      scrollEl.scrollLeft = newPlotX - (focalClientX - rect.left);
+    }
+  }
+
+  zoomEl.addEventListener('input', () => {
+    setZoom(pxFromSliderT(parseFloat(zoomEl.value)));
+  });
+
+  // minPx = "every split fits in view". Recomputed as data and viewport grow.
+  // Returns true when it already triggered a render via setZoom.
+  function updateZoomMin() {
+    if (!lastParsed || lastParsed.splits.length === 0) return false;
+    const avail = scrollEl.clientWidth - PAD_LEFT - PAD_RIGHT;
+    if (avail <= 0) return false;
+    minPx = Math.max(0.1, avail / lastParsed.splits.length);
+    if (pxPerSplit < minPx - 0.001) {
+      setZoom(minPx);
+      return true;
+    }
+    syncSlider();
+    return false;
+  }
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      const wasAtEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
+      if (!updateZoomMin() && lastParsed) render(lastParsed);
+      if (wasAtEnd) scrollEl.scrollLeft = scrollEl.scrollWidth;
+    }, 150);
+  });
+
+  // Ctrl+wheel = zoom; plain vertical wheel = horizontal scroll (chart is intrinsically wide).
+  scrollEl.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const factor = e.deltaY > 0 ? 1 / 1.1 : 1.1;
+      setZoom(pxPerSplit * factor, e.clientX);
+    } else if (e.deltaY !== 0 && e.deltaX === 0) {
+      scrollEl.scrollLeft += e.deltaY;
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  const activePointers = new Map();
+  let pinchStartDist = 0;
+  let pinchStartPx = pxPerSplit;
+  let pinchCenter = 0;
+
+  // Mouse click-drag to scroll horizontally. Capture only after the cursor moves
+  // past a small threshold so single clicks (which surface dot tooltips) still work.
+  const DRAG_THRESHOLD = 4;
+  let drag = null;
+
+  scrollEl.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button === 0) {
+      drag = { id: e.pointerId, startX: e.clientX, startScroll: scrollEl.scrollLeft, moved: false };
+      return;
+    }
+    if (e.pointerType !== 'touch') return;
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (activePointers.size === 2) {
+      const [a, b] = [...activePointers.values()];
+      pinchStartDist = Math.hypot(a.x - b.x, a.y - b.y);
+      pinchStartPx = pxPerSplit;
+      pinchCenter = (a.x + b.x) / 2;
+    }
+  });
+  scrollEl.addEventListener('pointermove', (e) => {
+    if (drag && e.pointerId === drag.id) {
+      const dx = e.clientX - drag.startX;
+      if (!drag.moved && Math.abs(dx) > DRAG_THRESHOLD) {
+        drag.moved = true;
+        scrollEl.setPointerCapture(e.pointerId);
+        scrollEl.classList.add('is-dragging');
+      }
+      if (drag.moved) {
+        scrollEl.scrollLeft = drag.startScroll - dx;
+        e.preventDefault();
+      }
+      return;
+    }
+    if (!activePointers.has(e.pointerId)) return;
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (activePointers.size === 2 && pinchStartDist > 0) {
+      const [a, b] = [...activePointers.values()];
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (dist > 0) {
+        const ratio = dist / pinchStartDist;
+        setZoom(Math.round(pinchStartPx * ratio), pinchCenter);
+        e.preventDefault();
+      }
+    }
+  });
+  function endPointer(e) {
+    if (drag && e.pointerId === drag.id) {
+      if (drag.moved && scrollEl.hasPointerCapture(e.pointerId)) {
+        scrollEl.releasePointerCapture(e.pointerId);
+      }
+      scrollEl.classList.remove('is-dragging');
+      drag = null;
+    }
+    activePointers.delete(e.pointerId);
+    if (activePointers.size < 2) pinchStartDist = 0;
+  }
+  scrollEl.addEventListener('pointerup', endPointer);
+  scrollEl.addEventListener('pointercancel', endPointer);
+  scrollEl.addEventListener('pointerleave', endPointer);
+
+  startPolling();
+</script>

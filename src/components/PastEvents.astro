@@ -1,0 +1,75 @@
+---
+import Table, { type Column, type Cell, type CellTone } from './Table.astro';
+import RelayDetails from './RelayDetails.astro';
+import data from '../data/past-events.json';
+
+const columns: Column[] = [
+  { key: 'event', label: 'Event' },
+  { key: 'date', label: 'Date', align: 'center', width: '8rem' },
+  { key: 'teams', label: 'Teams', align: 'center', width: '5rem' },
+  { key: 'winner', label: 'Winner', align: 'center', width: '8rem' },
+  { key: 'vod', label: 'VoD', align: 'center', width: '5rem' },
+];
+
+const dateFmt = new Intl.DateTimeFormat('en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+});
+
+const TEAM_TONES: Record<string, CellTone> = {
+  Mog: 'blue',
+  Choco: 'yellow',
+  Tonberry: 'green',
+};
+
+function winnerCell(name: string): Cell {
+  if (!name) return '';
+  const tone = TEAM_TONES[name];
+  return tone ? { tag: name, tone } : name;
+}
+
+const rows = data.events.map((e) => {
+  const row: Record<string, Cell> = {
+    event: e.event,
+    date: e.date ? dateFmt.format(new Date(e.date)) : '',
+    teams: e.teams,
+    winner: winnerCell(e.winner),
+    vod: e.vod ? { href: e.vod, text: 'Link' } : '',
+  };
+  return row;
+});
+
+const rowTones = data.events.map((e) => TEAM_TONES[e.winner]);
+---
+
+<section id="previous-winners" class="section-pad">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+    <h2 class="section-heading">Previous Winners</h2>
+    <p class="section-lead">
+      Every Final Fantasy Relay Race held to date, with team count, winner, and links to the VoDs.
+    </p>
+    <Table columns={columns} rows={rows} rowTones={rowTones} />
+  </div>
+  <RelayDetails />
+</section>
+
+<style>
+  .section-pad {
+    padding: 6rem 0;
+  }
+  .section-heading {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .section-lead {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 50rem;
+  }
+</style>

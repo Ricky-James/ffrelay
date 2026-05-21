@@ -1,0 +1,417 @@
+---
+export type CellTone = 'blue' | 'yellow' | 'green';
+
+export type LinkCell = { href: string; text: string; external?: boolean };
+export type TagCell = { tag: string; tone: CellTone };
+export type Cell = string | number | null | undefined | LinkCell | TagCell;
+
+export interface Column {
+  key: string;
+  label: string;
+  align?: 'left' | 'center' | 'right';
+  width?: string;
+  /** Consecutive columns sharing a group get a colspan'd header above them. */
+  group?: string;
+  /** Subtle background tint applied to this column's header + body cells. */
+  tone?: CellTone;
+}
+
+export interface Props {
+  columns: Column[];
+  rows: Array<Record<string, Cell>>;
+  /** Per-row background tint (one entry per row, undefined for no tint). */
+  rowTones?: Array<CellTone | undefined>;
+  caption?: string;
+  emptyMessage?: string;
+  /** Shrinks the table to content width, centers it, and applies dense typography. */
+  compact?: boolean;
+}
+
+const {
+  columns,
+  rows,
+  rowTones,
+  caption,
+  emptyMessage = 'No entries yet.',
+  compact = false,
+} = Astro.props;
+
+function isLink(v: Cell): v is { href: string; text: string; external?: boolean } {
+  return typeof v === 'object' && v !== null && 'href' in v;
+}
+
+function isTag(v: Cell): v is { tag: string; tone: CellTone } {
+  return typeof v === 'object' && v !== null && 'tag' in v;
+}
+
+type HeaderCell =
+  | { type: 'col'; col: Column }
+  | { type: 'group'; label: string; span: number; tone?: CellTone };
+
+const hasGroups = columns.some((c) => c.group);
+const groupRow: HeaderCell[] = [];
+const labelRow: Column[] = [];
+
+if (hasGroups) {
+  let i = 0;
+  while (i < columns.length) {
+    const col = columns[i];
+    if (!col.group) {
+      groupRow.push({ type: 'col', col });
+      i++;
+    } else {
+      let j = i;
+      while (j < columns.length && columns[j].group === col.group) {
+        labelRow.push(columns[j]);
+        j++;
+      }
+      groupRow.push({ type: 'group', label: col.group, span: j - i, tone: col.tone });
+      i = j;
+    }
+  }
+}
+---
+
+<div class="table-wrap">
+  {caption && <p class="table-caption">{caption}</p>}
+  {
+    rows.length === 0 ? (
+      <p class="table-empty">{emptyMessage}</p>
+    ) : (
+      <div class:list={['table-scroll', compact && 'table-scroll-compact']}>
+        <table
+          class:list={[
+            'data-table',
+            compact && 'data-table-dense',
+            compact && 'data-table-compact',
+          ]}
+        >
+          <thead>
+            {hasGroups ? (
+              <>
+                <tr>
+                  {groupRow.map((cell) =>
+                    cell.type === 'col' ? (
+                      <th
+                        scope="col"
+                        rowspan="2"
+                        class:list={[cell.col.tone && `col-tone-${cell.col.tone}`]}
+                        style={`text-align:${cell.col.align ?? 'left'};${cell.col.width ? `width:${cell.col.width};` : ''}`}
+                      >
+                        {cell.col.label.split('\n').map((line, i) => (
+                          <>
+                            {i > 0 && <br />}
+                            {line}
+                          </>
+                        ))}
+                      </th>
+                    ) : (
+                      <th
+                        scope="colgroup"
+                        colspan={cell.span}
+                        class:list={['group-header', cell.tone && `col-tone-${cell.tone}`]}
+                      >
+                        {cell.label}
+                      </th>
+                    )
+                  )}
+                </tr>
+                <tr>
+                  {labelRow.map((col) => (
+                    <th
+                      scope="col"
+                      class:list={['sub-header', col.tone && `col-tone-${col.tone}`]}
+                      style={`text-align:${col.align ?? 'left'};${col.width ? `width:${col.width};` : ''}`}
+                    >
+                      {col.label.split('\n').map((line, i) => (
+                          <>
+                            {i > 0 && <br />}
+                            {line}
+                          </>
+                        ))}
+                    </th>
+                  ))}
+                </tr>
+              </>
+            ) : (
+              <tr>
+                {columns.map((col) => (
+                  <th
+                    scope="col"
+                    class:list={[col.tone && `col-tone-${col.tone}`]}
+                    style={`text-align:${col.align ?? 'left'};${col.width ? `width:${col.width};` : ''}`}
+                  >
+                    {col.label.split('\n').map((line, i) => (
+                          <>
+                            {i > 0 && <br />}
+                            {line}
+                          </>
+                        ))}
+                  </th>
+                ))}
+              </tr>
+            )}
+          </thead>
+          <tbody>
+            {rows.map((row, rowIdx) => (
+              <tr class:list={[rowTones?.[rowIdx] && `row-tone-${rowTones[rowIdx]}`]}>
+                {columns.map((col) => {
+                  const v = row[col.key];
+                  const align = col.align ?? 'left';
+                  const toneClass = col.tone ? `col-tone-${col.tone}` : null;
+                  if (isLink(v)) {
+                    return (
+                      <td class:list={[toneClass]} style={`text-align:${align};`}>
+                        <a
+                          href={v.href}
+                          class="cell-link"
+                          {...(v.external !== false
+                            ? { target: '_blank', rel: 'noopener noreferrer' }
+                            : {})}
+                        >
+                          {v.text}
+                        </a>
+                      </td>
+                    );
+                  }
+                  if (isTag(v)) {
+                    return (
+                      <td class:list={[toneClass]} style={`text-align:${align};`}>
+                        <span class:list={['cell-tag', `cell-tag-${v.tone}`]}>{v.tag}</span>
+                      </td>
+                    );
+                  }
+                  const isDnf = typeof v === 'string' && v.trim().toUpperCase() === 'DNF';
+                  return (
+                    <td class:list={[toneClass]} style={`text-align:${align};`}>
+                      {v == null || v === '' ? (
+                        <span class="cell-empty">—</span>
+                      ) : isDnf ? (
+                        <span class="cell-dnf">DNF</span>
+                      ) : (
+                        v
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .table-wrap {
+    width: 100%;
+  }
+
+  .table-caption {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 0 0 0.75rem;
+  }
+
+  .table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.015);
+  }
+
+  .table-scroll-compact {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+
+  .data-table thead {
+    background: rgba(251, 191, 36, 0.04);
+  }
+
+  .data-table th {
+    padding: 0.85rem 1rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .data-table th:has(br) {
+    /* Soft line breaks in column labels (via \n) need normal whitespace to render. */
+    white-space: normal;
+  }
+
+  .data-table th.group-header {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: rgba(251, 191, 36, 0.65);
+    padding-bottom: 0.4rem;
+    border-bottom: 1px dashed rgba(251, 191, 36, 0.18);
+  }
+  .data-table th.sub-header {
+    padding-top: 0.5rem;
+  }
+  .data-table-dense th.group-header {
+    font-size: 0.55rem;
+    padding: 0.4rem 0.55rem 0.3rem;
+  }
+  .data-table-dense th.sub-header {
+    padding-top: 0.4rem;
+  }
+
+  .data-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s ease;
+  }
+  .data-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .data-table tbody tr:hover {
+    background: rgba(251, 191, 36, 0.03);
+  }
+
+  .data-table td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .data-table-dense {
+    font-size: 0.78rem;
+  }
+  .data-table-dense th {
+    padding: 0.55rem 0.55rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+  .data-table-dense td {
+    padding: 0.45rem 0.55rem;
+  }
+
+  .data-table-compact {
+    width: auto;
+  }
+
+  .cell-link {
+    color: #fbbf24;
+    font-weight: 500;
+    border-bottom: 1px dashed rgba(251, 191, 36, 0.35);
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .cell-link:hover {
+    color: #fde047;
+    border-bottom-color: #fde047;
+  }
+  .cell-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .cell-empty {
+    color: var(--text-dimmer);
+  }
+
+  .cell-dnf {
+    display: inline-block;
+    color: var(--text-dimmer);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+
+  .cell-tag {
+    display: inline-block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: currentColor;
+    text-shadow: 0 0 10px color-mix(in srgb, currentColor 55%, transparent);
+  }
+
+  .cell-tag-blue { color: #38bdf8; }
+  .cell-tag-yellow { color: #fde047; }
+  .cell-tag-green { color: #4ade80; }
+
+  .data-table td.col-tone-blue    { background: rgba(56, 189, 248, 0.045); }
+  .data-table td.col-tone-yellow  { background: rgba(253, 224, 71, 0.05); }
+  .data-table td.col-tone-green   { background: rgba(74, 222, 128, 0.045); }
+
+  .data-table th.col-tone-blue    { background: rgba(56, 189, 248, 0.09); color: #38bdf8; }
+  .data-table th.col-tone-yellow  { background: rgba(253, 224, 71, 0.09); color: #fde047; }
+  .data-table th.col-tone-green   { background: rgba(74, 222, 128, 0.09); color: #4ade80; }
+
+  [data-theme='light'] .data-table td.col-tone-blue    { background: rgba(12, 74, 110, 0.06); }
+  [data-theme='light'] .data-table td.col-tone-yellow  { background: rgba(113, 63, 18, 0.08); }
+  [data-theme='light'] .data-table td.col-tone-green   { background: rgba(20, 83, 45, 0.06); }
+
+  [data-theme='light'] .data-table th.col-tone-blue    { background: rgba(12, 74, 110, 0.12); color: #0c4a6e; }
+  [data-theme='light'] .data-table th.col-tone-yellow  { background: rgba(113, 63, 18, 0.14); color: #713f12; }
+  [data-theme='light'] .data-table th.col-tone-green   { background: rgba(20, 83, 45, 0.12); color: #14532d; }
+
+  .data-table th.group-header[class*='col-tone-'] {
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .data-table tbody tr.row-tone-blue    { background: rgba(56, 189, 248, 0.06); }
+  .data-table tbody tr.row-tone-yellow  { background: rgba(253, 224, 71, 0.07); }
+  .data-table tbody tr.row-tone-green   { background: rgba(74, 222, 128, 0.06); }
+  .data-table tbody tr.row-tone-blue:hover    { background: rgba(56, 189, 248, 0.1); }
+  .data-table tbody tr.row-tone-yellow:hover  { background: rgba(253, 224, 71, 0.12); }
+  .data-table tbody tr.row-tone-green:hover   { background: rgba(74, 222, 128, 0.1); }
+
+  [data-theme='light'] .data-table tbody tr.row-tone-blue    { background: rgba(12, 74, 110, 0.07); }
+  [data-theme='light'] .data-table tbody tr.row-tone-yellow  { background: rgba(113, 63, 18, 0.1); }
+  [data-theme='light'] .data-table tbody tr.row-tone-green   { background: rgba(20, 83, 45, 0.08); }
+
+  [data-theme='light'] .cell-tag-blue { color: #0c4a6e; }
+  [data-theme='light'] .cell-tag-yellow { color: #713f12; }
+  [data-theme='light'] .cell-tag-green { color: #14532d; }
+
+  .table-empty {
+    padding: 1.5rem 1rem;
+    text-align: center;
+    color: var(--text-dim);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
+  }
+
+  [data-theme='light'] .data-table thead {
+    background: rgba(202, 138, 4, 0.05);
+  }
+  [data-theme='light'] .data-table th {
+    color: #713f12;
+    border-bottom-color: rgba(202, 138, 4, 0.25);
+  }
+  [data-theme='light'] .cell-link {
+    color: #713f12;
+    border-bottom-color: rgba(113, 63, 18, 0.4);
+  }
+  [data-theme='light'] .cell-link:hover {
+    color: #713f12;
+    border-bottom-color: #713f12;
+  }
+</style>

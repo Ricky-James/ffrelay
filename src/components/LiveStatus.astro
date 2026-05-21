@@ -1,0 +1,652 @@
+---
+import eventData from '../data/event.json';
+import { csvExportUrl } from '../lib/sheetUrl';
+import ProgressChart from './ProgressChart.astro';
+
+const SPLITS_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.splits);
+const INFO_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.info);
+const POLL_MS = 30_000;
+const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<section
+  id="live-status"
+  class="live-status"
+  hidden
+  aria-label="Current relay status"
+  data-splits-url={SPLITS_URL}
+  data-info-url={INFO_URL}
+  data-poll-ms={POLL_MS}
+  data-base={BASE}
+>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ls-grid">
+      <div class="ls-card">
+        <div class="ls-standings">
+          <p class="ls-label">Standings</p>
+          <ol id="ls-standings-list" class="ls-list"></ol>
+        </div>
+
+        <div id="ls-commentary-block" class="ls-commentary" hidden>
+          <p class="ls-label">On commentary</p>
+          <ul id="ls-commentary-list" class="ls-comm-list"></ul>
+        </div>
+
+        <div id="ls-next-block" class="ls-upnext" hidden>
+          <span class="ls-upnext-label">Up next</span>
+          <span class="ls-upnext-arrow" aria-hidden="true">→</span>
+          <span id="ls-next" class="ls-upnext-game">—</span>
+        </div>
+      </div>
+
+      <div class="ls-chart-col">
+        <p class="ls-chart-caption">
+          Each line is a team's cumulative split delta vs the 3-team average — lower is faster.
+        </p>
+        <ProgressChart />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* Global because the standings <li>s are inserted via innerHTML from the script
+     below and would lose Astro's scoping attribute. All selectors are .ls-* prefixed
+     to avoid leaking into the rest of the page. */
+  .live-status {
+    padding: 0 0 2rem;
+  }
+  .ls-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (max-width: 1023px) {
+    .ls-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .ls-chart-col {
+    min-width: 0;
+  }
+  .ls-chart-caption {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin: 0 0 0.6rem;
+    line-height: 1.4;
+  }
+  .ls-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.025);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    padding: 1.5rem 1.75rem;
+  }
+  .ls-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.45), transparent);
+  }
+  [data-theme='light'] .ls-card {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  }
+  [data-theme='light'] .ls-card::before {
+    background: linear-gradient(90deg, transparent, rgba(202, 138, 4, 0.45), transparent);
+  }
+
+  .ls-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-dimmer);
+    margin: 0 0 0.7rem;
+  }
+
+  .ls-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .ls-row {
+    display: grid;
+    grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.95rem;
+    padding: 0.65rem 0.95rem;
+    border-radius: 0.65rem;
+    background: rgba(255, 255, 255, 0.018);
+    border: 1px solid var(--border);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* Icon is a CSS mask so we can recolour without baking colours into the SVG files. */
+  .ls-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .ls-icon::after {
+    content: '';
+    display: block;
+    width: 1.35rem;
+    height: 1.35rem;
+    background-color: var(--text-muted);
+    -webkit-mask: var(--ls-icon-url) center / contain no-repeat;
+            mask: var(--ls-icon-url) center / contain no-repeat;
+  }
+  [data-theme='light'] .ls-icon {
+    background: rgba(0, 0, 0, 0.025);
+  }
+  .ls-row.tone-blue .ls-icon::after   { background-color: #38bdf8; }
+  .ls-row.tone-yellow .ls-icon::after { background-color: #fde047; }
+  .ls-row.tone-green .ls-icon::after  { background-color: #4ade80; }
+  [data-theme='light'] .ls-row.tone-blue .ls-icon::after   { background-color: #0c4a6e; }
+  [data-theme='light'] .ls-row.tone-yellow .ls-icon::after { background-color: #713f12; }
+  [data-theme='light'] .ls-row.tone-green .ls-icon::after  { background-color: #14532d; }
+  .ls-team-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 0.1rem;
+  }
+  .ls-team {
+    font-size: 1.05rem;
+    font-weight: 600;
+    /* Inherit team colour from the row's tone class; leader rule adds weight + glow. */
+    color: inherit;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ls-meta {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ls-meta-label {
+    color: var(--text-dimmer);
+    margin-right: 0.3rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .ls-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: text-decoration-color 0.15s ease;
+  }
+  .ls-link:hover {
+    text-decoration-color: currentColor;
+  }
+  .ls-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .ls-meta-done {
+    font-weight: 700;
+    white-space: normal;
+    color: var(--text);
+  }
+  /* Medal palette (gold/silver/bronze) — kept distinct from team tones. */
+  .ls-rank {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.05rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .ls-rank-num {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+  .ls-rank-ord {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .ls-rank-1 {
+    color: #fde047;
+    text-shadow: 0 0 18px rgba(253, 224, 71, 0.45);
+  }
+  .ls-rank-2 {
+    color: #cbd5e1;
+    text-shadow: 0 0 14px rgba(203, 213, 225, 0.3);
+  }
+  .ls-rank-3 {
+    color: #d4946e;
+    text-shadow: 0 0 14px rgba(212, 148, 110, 0.3);
+  }
+  [data-theme='light'] .ls-rank-1 {
+    color: #a16207;
+    text-shadow: none;
+  }
+  [data-theme='light'] .ls-rank-2 {
+    color: #475569;
+    text-shadow: none;
+  }
+  [data-theme='light'] .ls-rank-3 {
+    color: #9a3412;
+    text-shadow: none;
+  }
+
+  .ls-row.is-leader {
+    background: color-mix(in srgb, currentColor 9%, transparent);
+    border-color: color-mix(in srgb, currentColor 38%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, currentColor 18%, transparent) inset,
+                0 8px 24px color-mix(in srgb, currentColor 14%, transparent);
+  }
+  .ls-row.is-leader .ls-icon {
+    background: currentColor;
+    border-color: transparent;
+    box-shadow: 0 0 14px color-mix(in srgb, currentColor 55%, transparent);
+  }
+  .ls-row.is-leader .ls-icon::after {
+    background-color: var(--bg);
+  }
+  .ls-row.is-leader .ls-team {
+    font-weight: 700;
+    text-shadow: 0 0 14px color-mix(in srgb, currentColor 45%, transparent);
+  }
+  .ls-row.is-leader .ls-meta {
+    color: color-mix(in srgb, currentColor 75%, var(--text));
+  }
+  .ls-row.is-leader .ls-meta-label {
+    color: color-mix(in srgb, currentColor 55%, transparent);
+  }
+
+  .ls-row.tone-blue       { color: #38bdf8; }
+  .ls-row.tone-yellow     { color: #fde047; }
+  .ls-row.tone-green      { color: #4ade80; }
+  [data-theme='light'] .ls-row.tone-blue   { color: #0c4a6e; }
+  [data-theme='light'] .ls-row.tone-yellow { color: #713f12; }
+  [data-theme='light'] .ls-row.tone-green  { color: #14532d; }
+
+  /* Outrank the leader rule above so a finished leader's subtitle stays neutral. */
+  .ls-row .ls-meta-done { color: var(--text); }
+
+  .ls-commentary {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  .ls-comm-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .ls-comm-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+  }
+  .ls-comm-game {
+    color: var(--text);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+  }
+  .ls-comm-people {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .ls-upnext {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .ls-upnext-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dimmer);
+  }
+  .ls-upnext-arrow {
+    color: var(--text-dimmer);
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+  .ls-upnext-game {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: -0.005em;
+  }
+</style>
+
+<script>
+  // @ts-nocheck
+  import {
+    parseCsv,
+    timeToSeconds,
+    teamSlug,
+    escapeHtml,
+    gameKey,
+    parseInfo,
+    linkName as linkNameLib,
+  } from '../lib/sheetParse';
+
+  const TEAM_TONE = { mog: 'blue', choco: 'yellow', tonberry: 'green' };
+  const ICON_TEAMS = new Set(['mog', 'choco', 'tonberry']);
+  const sectionEl = document.getElementById('live-status');
+  const standingsEl = document.getElementById('ls-standings-list');
+  const nextEl = document.getElementById('ls-next');
+  const nextBlockEl = document.getElementById('ls-next-block');
+  const commBlockEl = document.getElementById('ls-commentary-block');
+  const commListEl = document.getElementById('ls-commentary-list');
+
+  const SPLITS_URL = sectionEl.dataset.splitsUrl;
+  const INFO_URL = sectionEl.dataset.infoUrl;
+  const POLL_MS = Number(sectionEl.dataset.pollMs) || 30_000;
+  const BASE = sectionEl.dataset.base;
+
+  let pollHandle = null;
+
+  const linkName = (p) => linkNameLib(p, 'ls-link');
+
+  function ordinalSuffix(n) {
+    const v = n % 100;
+    if (v >= 11 && v <= 13) return 'th';
+    return ['th', 'st', 'nd', 'rd'][n % 10] || 'th';
+  }
+
+  function formatHMS(secs) {
+    const total = Math.max(0, Math.round(secs));
+    const h = Math.floor(total / 3600);
+    const m = String(Math.floor((total % 3600) / 60)).padStart(2, '0');
+    const s = String(total % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  }
+
+  function formatGap(secs) {
+    const total = Math.max(0, Math.round(secs));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = String(total % 60).padStart(2, '0');
+    if (h > 0) return `+${h}:${String(m).padStart(2, '0')}:${s}`;
+    return `+${m}:${s}`;
+  }
+
+  function parseSplits(text) {
+    const rows = parseCsv(text);
+    const headerIdx = rows.findIndex((r) => /^split name/i.test((r[0] ?? '').trim()));
+    if (headerIdx === -1) return null;
+    const labelRow = rows[headerIdx];
+
+    const cols = [];
+    for (let i = 1; i < labelRow.length; i++) {
+      const v = (labelRow[i] ?? '').trim();
+      const m = v.match(/^team\s+(.+)$/i);
+      if (m) cols.push({ col: i, team: teamSlug(m[1]), display: m[1].trim() });
+      else if (cols.length > 0) break;
+    }
+    if (cols.length === 0) return null;
+
+    const splits = [];
+    for (let r = headerIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      const name = (row[0] ?? '').trim();
+      if (!name) continue;
+      const times = {};
+      for (const c of cols) {
+        times[c.team] = timeToSeconds((row[c.col] ?? '').trim());
+      }
+      splits.push({ name, times, isGameEnd: /\bfinal fantasy\b/i.test(name) });
+    }
+
+    return { teams: cols, splits };
+  }
+
+  function computeStatus(parsed, info) {
+    const { teams, splits } = parsed;
+    const games = splits.filter((s) => s.isGameEnd);
+    if (games.length === 0) return null;
+
+    // Split-level progress drives ranking (a team a single split ahead ranks above one that isn't).
+    const lastDoneSplitIdx = {};
+    for (const t of teams) {
+      let idx = -1;
+      for (let i = 0; i < splits.length; i++) {
+        if (splits[i].times[t.team] != null) idx = i;
+      }
+      lastDoneSplitIdx[t.team] = idx;
+    }
+    if (Object.values(lastDoneSplitIdx).every((i) => i < 0)) return null;
+
+    const lastDoneGameIdx = {};
+    for (const t of teams) {
+      let idx = -1;
+      for (let i = 0; i < games.length; i++) {
+        if (games[i].times[t.team] != null) idx = i;
+      }
+      lastDoneGameIdx[t.team] = idx;
+    }
+
+    const standings = teams.map((t) => {
+      const splitProgress = lastDoneSplitIdx[t.team];
+      return {
+        team: t.team,
+        display: t.display,
+        splitProgress,
+        gameProgress: lastDoneGameIdx[t.team],
+        ownSecs: splitProgress >= 0 ? splits[splitProgress].times[t.team] : null,
+      };
+    }).sort((a, b) => {
+      if (b.splitProgress !== a.splitProgress) return b.splitProgress - a.splitProgress;
+      if (a.ownSecs == null) return 1;
+      if (b.ownSecs == null) return -1;
+      return a.ownSecs - b.ownSecs;
+    });
+
+    const leader = standings[0];
+
+    const currentGameByTeam = {};
+    for (const t of teams) {
+      const idx = lastDoneGameIdx[t.team] + 1;
+      currentGameByTeam[t.team] = idx < games.length ? games[idx] : null;
+    }
+
+    const finalIdx = games.length - 1;
+    for (const s of standings) {
+      const current = currentGameByTeam[s.team];
+      s.game = current?.name ?? null;
+      const entry = info && current ? info.get(gameKey(current.name)) : null;
+      s.runner = entry?.runners.find((r) => r.team === s.team) ?? null;
+      s.finishedSecs = s.gameProgress === finalIdx && finalIdx >= 0
+        ? games[finalIdx].times[s.team] ?? null
+        : null;
+    }
+
+    // Final time deltas for finished teams. Anyone ranked above a finished team
+    // must also be finished (more progress wins on splitProgress), so these are
+    // always well-defined for non-leader finishers.
+    for (let i = 0; i < standings.length; i++) {
+      const s = standings[i];
+      if (s.finishedSecs == null) continue;
+      s.finishGapToLeader = i > 0 ? s.finishedSecs - standings[0].finishedSecs : null;
+      s.finishGapToPrev   = i > 1 ? s.finishedSecs - standings[i - 1].finishedSecs : null;
+    }
+
+    const currentGames = [];
+    const seenCurrent = new Set();
+    for (const t of teams) {
+      const g = currentGameByTeam[t.team];
+      if (!g) continue;
+      if (!seenCurrent.has(g.name)) {
+        seenCurrent.add(g.name);
+        currentGames.push(g.name);
+      }
+    }
+
+    const commentary = [];
+    if (info) {
+      for (const name of currentGames) {
+        const entry = info.get(gameKey(name));
+        if (entry && entry.commentators.length) {
+          commentary.push({ game: name, people: entry.commentators });
+        }
+      }
+    }
+
+    const leaderNextGameIdx = leader.gameProgress + 2;
+    const nextGame = leaderNextGameIdx < games.length ? games[leaderNextGameIdx].name : null;
+
+    return { standings, currentGames, nextGame, commentary };
+  }
+
+  function render(status) {
+    if (!status || status.standings.length === 0) {
+      sectionEl.hidden = true;
+      return;
+    }
+    sectionEl.hidden = false;
+
+    const html = status.standings.map((row, i) => {
+      const tone = TEAM_TONE[row.team] || '';
+      const cls = ['ls-row'];
+      if (tone) cls.push(`tone-${tone}`);
+      if (i === 0) cls.push('is-leader');
+      const iconSlug = ICON_TEAMS.has(row.team) ? row.team : null;
+      const iconStyle = iconSlug
+        ? `style="--ls-icon-url: url('${BASE}images/teams/${iconSlug}.svg')"`
+        : '';
+      let subtitleHtml = '';
+      if (row.finishedSecs != null) {
+        const parts = [`Finished! Completion time: ${formatHMS(row.finishedSecs)}`];
+        if (row.finishGapToPrev != null) {
+          parts.push(`${formatGap(row.finishGapToPrev)} from ${i}${ordinalSuffix(i)}`);
+        }
+        if (row.finishGapToLeader != null) {
+          parts.push(`${formatGap(row.finishGapToLeader)} from 1st`);
+        }
+        subtitleHtml = `<span class="ls-meta ls-meta-done">${escapeHtml(parts.join(' · '))}</span>`;
+      } else {
+        const runnerLine = row.runner
+          ? `<span class="ls-meta"><span class="ls-meta-label">Runner</span>${linkName(row.runner)}</span>`
+          : '';
+        const gameLine = row.game
+          ? `<span class="ls-meta"><span class="ls-meta-label">Game</span>${escapeHtml(row.game)}</span>`
+          : '';
+        subtitleHtml = runnerLine + gameLine;
+      }
+
+      const place = i + 1;
+      const rankHtml = `<span class="ls-rank ls-rank-${place}">`
+        + `<span class="ls-rank-num">${place}</span>`
+        + `<span class="ls-rank-ord">${ordinalSuffix(place)}</span>`
+        + `</span>`;
+
+      return `<li class="${cls.join(' ')}">`
+        + `<span class="ls-icon" ${iconStyle} aria-hidden="true"></span>`
+        + `<span class="ls-team-block">`
+        +   `<span class="ls-team">${escapeHtml(row.display)}</span>`
+        +   subtitleHtml
+        + `</span>`
+        + rankHtml
+        + '</li>';
+    }).join('');
+    standingsEl.innerHTML = html;
+
+    if (status.nextGame) {
+      nextBlockEl.hidden = false;
+      nextEl.textContent = status.nextGame;
+    } else {
+      nextBlockEl.hidden = true;
+    }
+
+    if (status.commentary && status.commentary.length) {
+      commBlockEl.hidden = false;
+      commListEl.innerHTML = status.commentary.map((c) => (
+        `<li class="ls-comm-item">`
+        + `<span class="ls-comm-game">${escapeHtml(c.game)}</span>`
+        + `<span class="ls-comm-people">${c.people.map(linkName).join(', ')}</span>`
+        + '</li>'
+      )).join('');
+    } else {
+      commBlockEl.hidden = true;
+    }
+  }
+
+  async function refresh() {
+    try {
+      // Info is best-effort — if it fails the panel still renders standings without
+      // runner subtitles or commentary.
+      const bust = `&_=${Date.now()}&r=${Math.random().toString(36).slice(2)}`;
+      const [splitsRes, infoRes] = await Promise.all([
+        fetch(SPLITS_URL + bust, { cache: 'no-store' }),
+        fetch(INFO_URL + bust, { cache: 'no-store' }).catch(() => null),
+      ]);
+      if (!splitsRes.ok) return;
+      const parsed = parseSplits(await splitsRes.text());
+      if (!parsed) {
+        sectionEl.hidden = true;
+        return;
+      }
+      let info = null;
+      if (infoRes && infoRes.ok) {
+        try { info = parseInfo(await infoRes.text()); } catch {}
+      }
+      render(computeStatus(parsed, info));
+    } catch {
+      // Silent — keep showing the previous state rather than blanking.
+    }
+  }
+
+  function start() {
+    if (pollHandle != null) return;
+    refresh();
+    pollHandle = setInterval(refresh, POLL_MS);
+  }
+  function stop() {
+    if (pollHandle != null) {
+      clearInterval(pollHandle);
+      pollHandle = null;
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop();
+    else start();
+  });
+
+  start();
+</script>

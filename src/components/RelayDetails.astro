@@ -1,0 +1,302 @@
+---
+import Table, { type Column, type Cell, type CellTone } from './Table.astro';
+import data from '../data/relays.json';
+
+type Relay = (typeof data.relays)[number];
+
+const relays: Relay[] = data.relays;
+const defaultIdx = relays.length - 1;
+
+const TEAM_TONE: Record<string, CellTone> = {
+  Mog: 'blue',
+  Choco: 'yellow',
+  Tonberry: 'green',
+};
+
+function columnsForRelay(r: Relay): Column[] {
+  return [
+    { key: 'game', label: 'Game' },
+    ...r.teams.flatMap((team): Column[] => {
+      const tone = TEAM_TONE[team];
+      return [
+        { key: `${team}-runner`, label: 'Runner', group: team, tone },
+        { key: `${team}-time`, label: 'Time', align: 'center', group: team, tone },
+      ];
+    }),
+  ];
+}
+
+function rowsForRelay(r: Relay): Array<Record<string, Cell>> {
+  return r.games.map((g) => {
+    const row: Record<string, Cell> = { game: g.name };
+    for (const run of g.runs) {
+      row[`${run.team}-runner`] = run.runner;
+      row[`${run.team}-time`] = run.time;
+    }
+    return row;
+  });
+}
+---
+
+<section id="past-results-detail" class="section-pad">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+    <h3 class="section-heading">Previous Results</h3>
+    <p class="section-lead">
+      Games, runners, and final times for each Final Fantasy Relay Race. Pick a tab to jump
+      to that event.
+      <br />
+      For even more details, check out the <a href="/history">History</a> page!
+    </p>
+    <div class="tablist" role="tablist" aria-label="Per-relay details">
+      {
+        relays.map((r, i) => (
+          <button
+            type="button"
+            class:list={['tab', i === defaultIdx && 'is-active']}
+            role="tab"
+            id={`tab-relay-${r.id}`}
+            data-tab={r.id}
+            aria-controls={`panel-relay-${r.id}`}
+            aria-selected={i === defaultIdx ? 'true' : 'false'}
+            tabindex={i === defaultIdx ? 0 : -1}
+          >
+            {"Relay " + r.shortLabel}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    relays.map((r, i) => (
+      <div
+        id={`panel-relay-${r.id}`}
+        class="relay-panel"
+        role="tabpanel"
+        aria-labelledby={`tab-relay-${r.id}`}
+        hidden={i !== defaultIdx}
+      >
+        <div class="relay-table-wrap">
+          <Table columns={columnsForRelay(r)} rows={rowsForRelay(r)} compact />
+        </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+          <div class="totals">
+            {r.teams.map((team) => {
+              const isWinner = team === r.winner;
+              return (
+                <div
+                  class:list={['total', isWinner && ['is-winner', `tone-${TEAM_TONE[team]}`]]}
+                >
+                  <span class="total-label">{team}</span>
+                  <span class="total-time">{r.totals[team as keyof typeof r.totals]}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .section-pad {
+    padding: 2rem 0 6rem;
+  }
+  .section-heading {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .section-lead {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 50rem;
+  }
+  .section-lead a {
+    color: #fbbf24;
+    font-weight: 600;
+    border-bottom: 1px dashed rgba(251, 191, 36, 0.45);
+    transition:
+      color 0.2s ease,
+      border-bottom-color 0.2s ease,
+      text-shadow 0.2s ease;
+  }
+  .section-lead a:hover {
+    color: #fde047;
+    border-bottom-color: #fde047;
+    text-shadow: 0 0 10px rgba(253, 224, 71, 0.45);
+  }
+  .section-lead a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  [data-theme='light'] .section-lead a {
+    color: #a16207;
+    border-bottom-color: rgba(161, 98, 7, 0.5);
+  }
+  [data-theme='light'] .section-lead a:hover {
+    color: #713f12;
+    border-bottom-color: #713f12;
+    text-shadow: none;
+  }
+
+  .tablist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .tab {
+    appearance: none;
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    color: var(--text-dim);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.55rem 0.65rem;
+    border-radius: 0.55rem 0.55rem 0 0;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .tab:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .tab.is-active {
+    color: var(--text);
+    background: var(--bg);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1px 0 0 var(--bg);
+  }
+  [data-theme='light'] .tablist {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+  }
+  [data-theme='light'] .tab.is-active {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .relay-panel[hidden] {
+    display: none;
+  }
+
+  .relay-table-wrap {
+    width: calc(100vw - 2rem);
+    margin-left: calc(50% - 50vw + 1rem);
+    padding: 0 1rem;
+    margin-bottom: 1.25rem;
+  }
+  @media (min-width: 1280px) {
+    .relay-table-wrap {
+      width: min(100vw - 4rem, 1600px);
+      margin-left: 50%;
+      transform: translateX(-50%);
+      padding: 0;
+    }
+  }
+
+  .totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin-top: 0.25rem;
+  }
+  .total {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .total-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .total-time {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .total.is-winner {
+    border-color: currentColor;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .total.is-winner .total-time {
+    color: currentColor;
+  }
+  .total.tone-blue       { color: #38bdf8; }
+  .total.tone-yellow     { color: #fde047; }
+  .total.tone-green      { color: #4ade80; }
+  [data-theme='light'] .total.tone-blue   { color: #0c4a6e; }
+  [data-theme='light'] .total.tone-yellow { color: #713f12; }
+  [data-theme='light'] .total.tone-green  { color: #14532d; }
+</style>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.tablist .tab');
+  const panels = document.querySelectorAll<HTMLElement>('.relay-panel');
+
+  function activate(id: string): boolean {
+    let matched = false;
+    tabs.forEach((t) => {
+      const isActive = t.dataset.tab === id;
+      if (isActive) matched = true;
+      t.classList.toggle('is-active', isActive);
+      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      t.tabIndex = isActive ? 0 : -1;
+    });
+    if (!matched) return false;
+    panels.forEach((p) => {
+      p.hidden = p.id !== `panel-relay-${id}`;
+    });
+    return true;
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const id = tab.dataset.tab;
+      if (id && activate(id)) history.replaceState(null, '', `#relay-${id}`);
+    });
+  });
+
+  document.querySelector('.tablist')?.addEventListener('keydown', (e) => {
+    const evt = e as KeyboardEvent;
+    if (evt.key !== 'ArrowLeft' && evt.key !== 'ArrowRight') return;
+    const order = Array.from(tabs);
+    const current = order.findIndex((t) => t === document.activeElement);
+    if (current === -1) return;
+    const next = (current + (evt.key === 'ArrowRight' ? 1 : -1) + order.length) % order.length;
+    order[next].focus();
+    order[next].click();
+    evt.preventDefault();
+  });
+
+  const initial = window.location.hash.match(/^#relay-(.+)$/)?.[1];
+  if (initial) activate(initial);
+</script>

@@ -1,0 +1,3602 @@
+{
+  "relays": [
+    {
+      "id": "i",
+      "label": "Relay I",
+      "shortLabel": "I",
+      "title": "Final Fantasy Series Relay Race!",
+      "date": "2015-09-04",
+      "teamCount": 2,
+      "teams": [
+        "Mog",
+        "Choco"
+      ],
+      "totals": {
+        "Mog": "66:27:02",
+        "Choco": "67:16:43"
+      },
+      "winner": "Mog",
+      "games": [
+        {
+          "name": "Final Fantasy I: Any% (PSP)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Cronokirby",
+              "time": "02:00:53"
+            },
+            {
+              "team": "Choco",
+              "runner": "ElbodYkso",
+              "time": "01:54:14"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II: Any% (PSP)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Deln",
+              "time": "03:16:49"
+            },
+            {
+              "team": "Choco",
+              "runner": "SLAMDUNKWizard",
+              "time": "04:17:21"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III: Any% (Famicom)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Sk84uhlivin",
+              "time": "00:06:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "Gael",
+              "time": "00:07:35"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV: Any% No 64 Door Glitch (SNES)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Nocashnocash",
+              "time": "03:18:09"
+            },
+            {
+              "team": "Choco",
+              "runner": "the_roth",
+              "time": "03:44:46"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V: Any% Translation Patch (SNES)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Cereth",
+              "time": "04:13:38"
+            },
+            {
+              "team": "Choco",
+              "runner": "Jenja23",
+              "time": "04:07:41"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI: Any% No Sketch Glitch (SNES)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "LCC",
+              "time": "05:01:40"
+            },
+            {
+              "team": "Choco",
+              "runner": "eLmaGus",
+              "time": "05:07:56"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII: Any% No Slots (PSX)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Metako",
+              "time": "08:08:21"
+            },
+            {
+              "team": "Choco",
+              "runner": "SevenS1ns",
+              "time": "07:54:33"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII: Any% (PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Nickynoel",
+              "time": "07:37:43"
+            },
+            {
+              "team": "Choco",
+              "runner": "Luzbelheim",
+              "time": "07:31:26"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX: Any% (PSX)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Nepf",
+              "time": "09:28:51"
+            },
+            {
+              "team": "Choco",
+              "runner": "Webster141",
+              "time": "09:25:51"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X: Any% (PS2)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Tojju",
+              "time": "10:38:51"
+            },
+            {
+              "team": "Choco",
+              "runner": "Flobberworm4",
+              "time": "10:34:18"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII: Any% (PS2)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Freddeh",
+              "time": "07:14:06"
+            },
+            {
+              "team": "Choco",
+              "runner": "zer0skar_i",
+              "time": "07:11:57"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII: Any% (PS3/PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "LewdDolphin",
+              "time": "05:21:06"
+            },
+            {
+              "team": "Choco",
+              "runner": "MLSTRM",
+              "time": "05:19:34"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ii",
+      "label": "Relay II",
+      "shortLabel": "II",
+      "title": "Final Fantasy Series Relay Race II",
+      "date": "2016-06-17",
+      "teamCount": 2,
+      "teams": [
+        "Mog",
+        "Choco"
+      ],
+      "totals": {
+        "Mog": "82:40:40",
+        "Choco": "81:37:01"
+      },
+      "winner": "Choco",
+      "games": [
+        {
+          "name": "Final Fantasy I (GBA Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Leonis07",
+              "time": "03:01:01"
+            },
+            {
+              "team": "Choco",
+              "runner": "Nickynoel",
+              "time": "02:39:34"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (PSP Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Deln",
+              "time": "03:13:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "Crrool",
+              "time": "03:29:20"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (Famicom NGJ)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "NachoYacopu",
+              "time": "01:29:36"
+            },
+            {
+              "team": "Choco",
+              "runner": "CronoKirby",
+              "time": "01:32:48"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (SNES Yes 64)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Neerrm",
+              "time": "02:03:29"
+            },
+            {
+              "team": "Choco",
+              "runner": "Fathlo23",
+              "time": "02:05:04"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (SNES Translation)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Zinfogel",
+              "time": "04:31:09"
+            },
+            {
+              "team": "Choco",
+              "runner": "Swed",
+              "time": "04:04:39"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy MQ (SNES Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Jenja",
+              "time": "02:12:52"
+            },
+            {
+              "team": "Choco",
+              "runner": "eLmaGus",
+              "time": "01:58:16"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (SNES Sketch)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Liin1",
+              "time": "03:51:47"
+            },
+            {
+              "team": "Choco",
+              "runner": "TheSabin",
+              "time": "03:50:37"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII (PSX No Slots)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Ajneb174",
+              "time": "07:56:19"
+            },
+            {
+              "team": "Choco",
+              "runner": "SevenS1ns",
+              "time": "08:09:02"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Tactics (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Aithere",
+              "time": "04:34:12"
+            },
+            {
+              "team": "Choco",
+              "runner": "Claude",
+              "time": "04:08:44"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (PC Any% English)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ElbodYkso",
+              "time": "07:39:54"
+            },
+            {
+              "team": "Choco",
+              "runner": "Logeek044",
+              "time": "07:53:27"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PSX Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Hollow648",
+              "time": "9:45:29"
+            },
+            {
+              "team": "Choco",
+              "runner": "CaracarnVi",
+              "time": "9:11:01"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (PS2 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Tojju",
+              "time": "10:31:29"
+            },
+            {
+              "team": "Choco",
+              "runner": "Flobberworm4",
+              "time": "10:31:02"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X-2 (PS2 NA Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Bakvorm",
+              "time": "04:03:40"
+            },
+            {
+              "team": "Choco",
+              "runner": "Dsharper",
+              "time": "04:12:06"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII (PS2 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Roostalol",
+              "time": "06:25:57"
+            },
+            {
+              "team": "Choco",
+              "runner": "Freddeh",
+              "time": "06:50:32"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (PS3 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "LewdDolphin",
+              "time": "05:15:15"
+            },
+            {
+              "team": "Choco",
+              "runner": "MrZwanzig",
+              "time": "05:27:58"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII-2 (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Zefferss",
+              "time": "03:05:52"
+            },
+            {
+              "team": "Choco",
+              "runner": "JayFermont",
+              "time": "02:50:18"
+            }
+          ]
+        },
+        {
+          "name": "Lightning Returns: FFXIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Lilsharkie",
+              "time": "02:58:44"
+            },
+            {
+              "team": "Choco",
+              "runner": "MLSTRM",
+              "time": "02:42:37"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iii",
+      "label": "Relay III",
+      "shortLabel": "III",
+      "title": "Final Fantasy Series Relay Race III",
+      "date": "2017-04-07",
+      "teamCount": 3,
+      "teams": [
+        "Mog",
+        "Choco",
+        "Tonberry"
+      ],
+      "totals": {
+        "Mog": "75:49:59",
+        "Choco": "74:44:14",
+        "Tonberry": "75:09:49"
+      },
+      "winner": "Choco",
+      "games": [
+        {
+          "name": "Final Fantasy I (PSP Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Solimuse",
+              "time": "1:35:28"
+            },
+            {
+              "team": "Choco",
+              "runner": "Leonis07",
+              "time": "1:30:29"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "IndDragPack",
+              "time": "1:46:16"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (GBA Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Nickynoel",
+              "time": "2:40:08"
+            },
+            {
+              "team": "Choco",
+              "runner": "Dubldrop",
+              "time": "2:53:06"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "SomeGirl",
+              "time": "3:01:28"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (Famicom No Credits Warp)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ZellyFF",
+              "time": "1:37:09"
+            },
+            {
+              "team": "Choco",
+              "runner": "Nakuri",
+              "time": "0:52:25"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "NachoYacopu",
+              "time": "0:52:57"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (SNES No Credits Warp)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "RoryExtraLife",
+              "time": "2:15:20"
+            },
+            {
+              "team": "Choco",
+              "runner": "Myohmyke",
+              "time": "2:32:57"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "RiversMcCown",
+              "time": "2:01:45"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (SNES Translation)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Swed7",
+              "time": "4:10:08"
+            },
+            {
+              "team": "Choco",
+              "runner": "MrZwanzig",
+              "time": "4:05:44"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Zinfogel",
+              "time": "4:04:30"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (SNES No Sketch)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Fathlo23",
+              "time": "4:55:34"
+            },
+            {
+              "team": "Choco",
+              "runner": "Liin1",
+              "time": "4:49:34"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "CreativeEly",
+              "time": "5:17:05"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Arithium1",
+              "time": "3:08:05"
+            },
+            {
+              "team": "Choco",
+              "runner": "Gaugagu",
+              "time": "3:17:12"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "CloudyFinal",
+              "time": "3:09:07"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (PC Any% English)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Metako",
+              "time": "8:17:20"
+            },
+            {
+              "team": "Choco",
+              "runner": "Fatmn",
+              "time": "7:59:23"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "ElbodYkso",
+              "time": "7:41:42"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PSX Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Tojju",
+              "time": "9:25:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "Hollow648",
+              "time": "9:31:54"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Caracarnvi",
+              "time": "9:39:21"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X HD (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Flobberworm4",
+              "time": "9:30:04"
+            },
+            {
+              "team": "Choco",
+              "runner": "DO_Games",
+              "time": "9:41:37"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Starcrawl",
+              "time": "9:33:41"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X-2 HD (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Phoenix158sda",
+              "time": "2:52:10"
+            },
+            {
+              "team": "Choco",
+              "runner": "ChrisTenarium",
+              "time": "2:47:34"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Bakvorm",
+              "time": "2:54:31"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Hoishin",
+              "time": "7:00:35"
+            },
+            {
+              "team": "Choco",
+              "runner": "zer0skar_i",
+              "time": "6:22:02"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Roostalol",
+              "time": "6:19:54"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "xJakeDreamer",
+              "time": "5:06:14"
+            },
+            {
+              "team": "Choco",
+              "runner": "Albrecht84",
+              "time": "5:27:09"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "LewdDolphin",
+              "time": "4:54:54"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII-2 (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ShadowDeathFox",
+              "time": "3:27:34"
+            },
+            {
+              "team": "Choco",
+              "runner": "JayFermont",
+              "time": "3:03:50"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Rhyderrr",
+              "time": "3:26:25"
+            }
+          ]
+        },
+        {
+          "name": "Lightning Returns: FFXIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Neviutz",
+              "time": "2:13:26"
+            },
+            {
+              "team": "Choco",
+              "runner": "MLSTRM",
+              "time": "2:25:14"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "DaMidget2000",
+              "time": "2:09:21"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Type-0 HD (NG Cadet)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "DragonSentinal",
+              "time": "2:08:37"
+            },
+            {
+              "team": "Choco",
+              "runner": "Koinu93",
+              "time": "2:16:01"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "FellVisage",
+              "time": "2:54:18"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XV (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Malagron",
+              "time": "5:26:12"
+            },
+            {
+              "team": "Choco",
+              "runner": "Rudyxx",
+              "time": "5:08:03"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "KyosLilMonster",
+              "time": "5:22:34"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iv",
+      "label": "Relay IV",
+      "shortLabel": "IV",
+      "title": "Final Fantasy Series Relay Race IV",
+      "date": "2017-09-29",
+      "teamCount": 2,
+      "teams": [
+        "Mog",
+        "Choco"
+      ],
+      "totals": {
+        "Mog": "81:01:18",
+        "Choco": "80:52:04"
+      },
+      "winner": "Mog",
+      "games": [
+        {
+          "name": "Final Fantasy I (GBA Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kibetha",
+              "time": "2:55:12"
+            },
+            {
+              "team": "Choco",
+              "runner": "Leonis07",
+              "time": "2:53:56"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (GBA Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Dubldrop",
+              "time": "2:45:19"
+            },
+            {
+              "team": "Choco",
+              "runner": "Nickynoel",
+              "time": "2:41:17"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (DS Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Qazplm",
+              "time": "06:35:24"
+            },
+            {
+              "team": "Choco",
+              "runner": "Rhyderrr",
+              "time": "DNF"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (PSP Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "VaeVictus",
+              "time": "03:51:28"
+            },
+            {
+              "team": "Choco",
+              "runner": "Crrool",
+              "time": "3:15:51"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (SNES)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kakkkun",
+              "time": "03:54:54"
+            },
+            {
+              "team": "Choco",
+              "runner": "Zinfogel",
+              "time": "3:50:10"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Mystic Quest (SNES)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Bichphuongballz",
+              "time": "02:13:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "sylverfyre",
+              "time": "2:09:56"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (SNES Glitchless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "TheSabin",
+              "time": "05:45:00"
+            },
+            {
+              "team": "Choco",
+              "runner": "Takaze",
+              "time": "5:48:23"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII (PSX Slots)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "sk84uhlivin",
+              "time": "08:07:48"
+            },
+            {
+              "team": "Choco",
+              "runner": "muttski",
+              "time": "8:39:45"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Tactics (No Math)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "SweetCherryBoyJP",
+              "time": "4:39:07"
+            },
+            {
+              "team": "Choco",
+              "runner": "Claude",
+              "time": "4:39:59"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (PSX Any% English)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Chowzter",
+              "time": "8:47:50"
+            },
+            {
+              "team": "Choco",
+              "runner": "Cordellium",
+              "time": "8:40:19"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PSX Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Nepf",
+              "time": "9:15:34"
+            },
+            {
+              "team": "Choco",
+              "runner": "Metako",
+              "time": "9:28:32"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (PS2 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Flobberworm4",
+              "time": "10:30:36"
+            },
+            {
+              "team": "Choco",
+              "runner": "Starcrawl",
+              "time": "10:30:40"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII (PS2 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "zer0skar_I",
+              "time": "6:12:44"
+            },
+            {
+              "team": "Choco",
+              "runner": "Hoishin",
+              "time": "6:24:59"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "MrZwanzig",
+              "time": "5:26:27"
+            },
+            {
+              "team": "Choco",
+              "runner": "xJakeDreamer",
+              "time": "4:55:46"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iv-interlude",
+      "label": "Relay IV: Interlude",
+      "shortLabel": "IV-I",
+      "title": "Final Fantasy Series Relay Race IV: Interlude",
+      "date": "2018-11-23",
+      "teamCount": 2,
+      "teams": [
+        "Mog",
+        "Choco"
+      ],
+      "totals": {
+        "Mog": "53:06:19",
+        "Choco": "53:06:19"
+      },
+      "winner": "Choco",
+      "games": [
+        {
+          "name": "Crisis Core: Final Fantasy VII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Rinimt",
+              "time": "6:18:23"
+            },
+            {
+              "team": "Choco",
+              "runner": "Desa3579",
+              "time": "5:41:05"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Crystal Chronicles (Any% JP)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "LittleTonbi",
+              "time": "2:10:14"
+            },
+            {
+              "team": "Choco",
+              "runner": "VerySydney",
+              "time": "2:07:16"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X-2 (PS2 NA)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Bakvorm",
+              "time": "03:59:24"
+            },
+            {
+              "team": "Choco",
+              "runner": "TranceQuina",
+              "time": "4:12:16"
+            }
+          ]
+        },
+        {
+          "name": "World of Final Fantasy (PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ChrisTenarium",
+              "time": "04:03:23"
+            },
+            {
+              "team": "Choco",
+              "runner": "FellVisage",
+              "time": "4:14:48"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (PSP)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Poorscythe",
+              "time": "02:51:46"
+            },
+            {
+              "team": "Choco",
+              "runner": "Qazplm9000",
+              "time": "3:06:35"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Fables: Chocobo Tales (DS)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "GarfieldTheLightning",
+              "time": "02:39:56"
+            },
+            {
+              "team": "Choco",
+              "runner": "Kaeldori",
+              "time": "2:58:47"
+            }
+          ]
+        },
+        {
+          "name": "Dissidia: Final Fantasy (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "MrMizzow",
+              "time": "01:30:20"
+            },
+            {
+              "team": "Choco",
+              "runner": "Leonis07",
+              "time": "1:35:09"
+            }
+          ]
+        },
+        {
+          "name": "Lightning Returns: Final Fantasy XIII (PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ArisCarroll",
+              "time": "02:37:47"
+            },
+            {
+              "team": "Choco",
+              "runner": "SephorianBlue",
+              "time": "2:20:35"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PSX)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Cloudyfinal",
+              "time": "9:44:30"
+            },
+            {
+              "team": "Choco",
+              "runner": "Metako",
+              "time": "9:21:33"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Type-0 HD (PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Koinu93",
+              "time": "2:32:37"
+            },
+            {
+              "team": "Choco",
+              "runner": "Sent",
+              "time": "02:20:51"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy I (PSP)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "IndiSR",
+              "time": "1:39:01"
+            },
+            {
+              "team": "Choco",
+              "runner": "Crrool",
+              "time": "1:35:19"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII-2 (PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kanri",
+              "time": "2:46:30"
+            },
+            {
+              "team": "Choco",
+              "runner": "ricyosma",
+              "time": "2:53:29"
+            }
+          ]
+        },
+        {
+          "name": "Dirge of Cerberus: Final Fantasy VII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "NT1_Evolution",
+              "time": "1:44:16"
+            },
+            {
+              "team": "Choco",
+              "runner": "GocuComeBack",
+              "time": "1:41:01"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII (122333% PS2)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Roosta",
+              "time": "DNF"
+            },
+            {
+              "team": "Choco",
+              "runner": "zer0skar_I",
+              "time": "8:57:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v",
+      "label": "Relay V",
+      "shortLabel": "V",
+      "title": "Final Fantasy Series Relay Race V",
+      "date": "2020-06-05",
+      "teamCount": 3,
+      "teams": [
+        "Mog",
+        "Choco",
+        "Tonberry"
+      ],
+      "totals": {
+        "Mog": "78:11:26",
+        "Choco": "77:44:08",
+        "Tonberry": "77:59:33"
+      },
+      "winner": "Choco",
+      "games": [
+        {
+          "name": "Final Fantasy XIII (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kayarune",
+              "time": "4:48:17"
+            },
+            {
+              "team": "Choco",
+              "runner": "LewdDolphin",
+              "time": "4:54:34"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Olson",
+              "time": "4:53:34"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (PS1 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "WQ",
+              "time": "8:31:11"
+            },
+            {
+              "team": "Choco",
+              "runner": "Shug_ssb",
+              "time": "8:44:13"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Luzbelheim",
+              "time": "8:23:57"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (SNES No 64)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "RiversMcCown",
+              "time": "3:06:20"
+            },
+            {
+              "team": "Choco",
+              "runner": "Aexoden",
+              "time": "3:12:05"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Penguin8r",
+              "time": "3:11:40"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (PSP Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Poorscythe",
+              "time": "2:31:30"
+            },
+            {
+              "team": "Choco",
+              "runner": "Seri",
+              "time": "2:35:00"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Nickynoel",
+              "time": "2:39:20"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (SNES Translation)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Twirlin'Curtis",
+              "time": "4:04:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "Misut0",
+              "time": "3:53:18"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Mrzwanzig",
+              "time": "3:49:38"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (Famicom No Glitched Jobs)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kakkkun",
+              "time": "1:29:31"
+            },
+            {
+              "team": "Choco",
+              "runner": "Yogidamonk",
+              "time": "1:25:40"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Metako",
+              "time": "2:24:30"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy 13-2 (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kanri",
+              "time": "2:49:59"
+            },
+            {
+              "team": "Choco",
+              "runner": "Hawk_snow",
+              "time": "2:51:41"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "ricyosma",
+              "time": "2:53:47"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Crystal Chronicles (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Manaclaw",
+              "time": "2:09:13"
+            },
+            {
+              "team": "Choco",
+              "runner": "VerySydney",
+              "time": "2:05:21"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "TRS",
+              "time": "2:04:37"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (PS2 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Madhyama",
+              "time": "10:10:35"
+            },
+            {
+              "team": "Choco",
+              "runner": "Closetowar",
+              "time": "10:12:36"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Camp4r",
+              "time": "10:11:50"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy I (GBA Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kibetha",
+              "time": "2:42:13"
+            },
+            {
+              "team": "Choco",
+              "runner": "Tokuher0",
+              "time": "2:46:33"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Dragondarch",
+              "time": "2:36:47"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII (PS2 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Blueharvey",
+              "time": "6:09:27"
+            },
+            {
+              "team": "Choco",
+              "runner": "zer0skar_i",
+              "time": "6:01:38"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Roosta",
+              "time": "5:56:45"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XV (Any% No Ring)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Yidamoda",
+              "time": "4:15:53"
+            },
+            {
+              "team": "Choco",
+              "runner": "Kyoslilmonster",
+              "time": "4:29:52"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Barbatos",
+              "time": "4:30:21"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PS1 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "TranceQuina",
+              "time": "9:37:20"
+            },
+            {
+              "team": "Choco",
+              "runner": "Fhelwanger",
+              "time": "9:19:30"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Muttski",
+              "time": "9:14:20"
+            }
+          ]
+        },
+        {
+          "name": "Lightning Returns - Final Fantasy XIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "D_winds",
+              "time": "1:59:27"
+            },
+            {
+              "team": "Choco",
+              "runner": "KingSPi",
+              "time": "2:03:54"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "xShonnen",
+              "time": "2:13:22"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII (PS1 Any% No Slots)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Davesterio",
+              "time": "8:08:42"
+            },
+            {
+              "team": "Choco",
+              "runner": "Rupan2525",
+              "time": "7:31:27"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Zheal",
+              "time": "7:40:16"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (SNES Glitchless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "LCC",
+              "time": "5:37:10"
+            },
+            {
+              "team": "Choco",
+              "runner": "Takaze",
+              "time": "5:36:53"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Dyne",
+              "time": "5:14:36"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi",
+      "label": "Relay VI",
+      "shortLabel": "VI",
+      "title": "Final Fantasy Series Relay Race VI",
+      "date": "2021-05-28",
+      "teamCount": 3,
+      "teams": [
+        "Mog",
+        "Choco",
+        "Tonberry"
+      ],
+      "totals": {
+        "Mog": "78:31:53",
+        "Choco": "78:13:51",
+        "Tonberry": "78:26:22"
+      },
+      "winner": "Choco",
+      "games": [
+        {
+          "name": "Final Fantasy VIII (PSX Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Bramhallthefifth",
+              "time": "8:56:33"
+            },
+            {
+              "team": "Choco",
+              "runner": "Shug_ssb",
+              "time": "8:48:00"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Muttski",
+              "time": "8:46:14"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Mystic Quest (SNES Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "eLmaGus",
+              "time": "1:57:51"
+            },
+            {
+              "team": "Choco",
+              "runner": "FumoFumoMeiling",
+              "time": "2:05:08"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "R-0109",
+              "time": "2:11:09"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ChrisTenarium",
+              "time": "9:10:48"
+            },
+            {
+              "team": "Choco",
+              "runner": "CrimsonInferno9",
+              "time": "9:06:53"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Wolverine023",
+              "time": "9:34:38"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kayarune",
+              "time": "4:58:13"
+            },
+            {
+              "team": "Choco",
+              "runner": "Olson",
+              "time": "5:10:11"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Ossy3126",
+              "time": "5:14:14"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Crystal Chronicles: Remastered (Switch/PS4 Any% No DLC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Littletonbi",
+              "time": "2:39:02"
+            },
+            {
+              "team": "Choco",
+              "runner": "Manaclaw",
+              "time": "2:21:16"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "VerySydney",
+              "time": "2:28:37"
+            }
+          ]
+        },
+        {
+          "name": "World of Final Fantasy (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "HabKeineName",
+              "time": "3:24:05"
+            },
+            {
+              "team": "Choco",
+              "runner": "Rotamota",
+              "time": "3:31:10"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "BrainBugged",
+              "time": "3:15:37"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XV: Royal Edition (PC No Ring)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kyoslilmonster",
+              "time": "4:07:52"
+            },
+            {
+              "team": "Choco",
+              "runner": "Yidamoda",
+              "time": "4:01:00"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Ranmaru",
+              "time": "4:00:45"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (SNES Glitchless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "6chi8 (Muchiha)",
+              "time": "5:03:42"
+            },
+            {
+              "team": "Choco",
+              "runner": "LionMusashi",
+              "time": "5:10:17"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "DyneNuitari",
+              "time": "5:08:53"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII-2 (PC/PS3 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Hawk_snow",
+              "time": "2:48:40"
+            },
+            {
+              "team": "Choco",
+              "runner": "xShonnen",
+              "time": "2:57:06"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "zer0skar_i",
+              "time": "2:47:32"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII: The Zodiac Age (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Nickynoel",
+              "time": "2:57:10"
+            },
+            {
+              "team": "Choco",
+              "runner": "Roosta",
+              "time": "3:07:22"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "BlueHarvey",
+              "time": "2:56:20"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (PSP Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Boxmeister",
+              "time": "2:53:38"
+            },
+            {
+              "team": "Choco",
+              "runner": "Patorikku13",
+              "time": "2:40:37"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Seri17723",
+              "time": "2:31:12"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (SNES No Credits Warp)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Couch_23",
+              "time": "2:03:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "Vanni_van",
+              "time": "2:04:05"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "yelsraek",
+              "time": "2:05:04"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII: Remake (PS5 NMG Normal)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Hello1nternet",
+              "time": "6:27:12"
+            },
+            {
+              "team": "Choco",
+              "runner": "Fhelwanger",
+              "time": "6:26:39"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Goranaldo",
+              "time": "6:31:58"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (SNES Glitchless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "DarkLightBoco",
+              "time": "4:24:22"
+            },
+            {
+              "team": "Choco",
+              "runner": "Aexoden",
+              "time": "4:09:31"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "rupan2525",
+              "time": "3:59:44"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy I (PSP Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ThisGuyAreSick",
+              "time": "1:28:09"
+            },
+            {
+              "team": "Choco",
+              "runner": "Riles_G",
+              "time": "1:26:07"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Suikoboj",
+              "time": "1:35:33"
+            }
+          ]
+        },
+        {
+          "name": "Lightning Returns: Final Fantasy XIII (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "enk",
+              "time": "2:02:43"
+            },
+            {
+              "team": "Choco",
+              "runner": "KingSPi",
+              "time": "1:56:15"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Daspharaoh",
+              "time": "2:01:39"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Rhyderrr",
+              "time": "3:46:15"
+            },
+            {
+              "team": "Choco",
+              "runner": "Poorscythe",
+              "time": "4:02:45"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Soll_Ashelia",
+              "time": "3:54:25"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PSX Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Ayymart",
+              "time": "9:21:43"
+            },
+            {
+              "team": "Choco",
+              "runner": "bombom",
+              "time": "9:09:29"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "MythikdawnSC",
+              "time": "9:22:48"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vii",
+      "label": "Relay VII",
+      "shortLabel": "VII",
+      "title": "Final Fantasy Series Relay Race VII",
+      "date": "2022-08-26",
+      "teamCount": 3,
+      "teams": [
+        "Mog",
+        "Choco",
+        "Tonberry"
+      ],
+      "totals": {
+        "Mog": "75:19:32",
+        "Choco": "74:25:09",
+        "Tonberry": "74:23:02"
+      },
+      "winner": "Tonberry",
+      "games": [
+        {
+          "name": "Chocobo GP (Switch Any% Master)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ShiyugamiGaru",
+              "time": "0:33:19"
+            },
+            {
+              "team": "Choco",
+              "runner": "kariohki",
+              "time": "0:37:27"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "groggydog",
+              "time": "0:33:36"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII: The Zodiac Age (PC Any% No Seitengrat)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "LenaleeLuna",
+              "time": "3:05:42"
+            },
+            {
+              "team": "Choco",
+              "runner": "desa",
+              "time": "2:47:56"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Woadyb",
+              "time": "2:56:52"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (PC No Sphere Grid)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Camp4r",
+              "time": "10:04:56"
+            },
+            {
+              "team": "Choco",
+              "runner": "Koinu93",
+              "time": "10:26:22"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Grayfox",
+              "time": "10:22:23"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (PC Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Zic",
+              "time": "2:54:12"
+            },
+            {
+              "team": "Choco",
+              "runner": "KaguyaNicky",
+              "time": "2:49:19"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Rupan",
+              "time": "3:05:50"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Crystal Chronicles: (GCN Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "KillerOrcas",
+              "time": "1:55:04"
+            },
+            {
+              "team": "Choco",
+              "runner": "VerySydney",
+              "time": "1:54:00"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "ratyu",
+              "time": "1:50:51"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (PC Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Deln",
+              "time": "2:19:16"
+            },
+            {
+              "team": "Choco",
+              "runner": "Talbrik",
+              "time": "2:26:47"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "foxy",
+              "time": "2:36:43"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XV: Royal Edition (PS5 Any% No AMG)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Barbatos00",
+              "time": "4:37:16"
+            },
+            {
+              "team": "Choco",
+              "runner": "Matty_Ice_86",
+              "time": "4:30:37"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "DTG",
+              "time": "4:21:40"
+            }
+          ]
+        },
+        {
+          "name": "Stranger of Paradise: Final Fantasy Origin (Any% Story)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "FellVisage",
+              "time": "1:44:57"
+            },
+            {
+              "team": "Choco",
+              "runner": "relxert",
+              "time": "1:45:28"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "JT24418",
+              "time": "1:44:33"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy I (PC Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "CaptoftheDorks",
+              "time": "2:14:43"
+            },
+            {
+              "team": "Choco",
+              "runner": "patorikku13",
+              "time": "2:10:19"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Thunderclaude",
+              "time": "1:52:02"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "bodcap",
+              "time": "7:35:24"
+            },
+            {
+              "team": "Choco",
+              "runner": "awesomeWaves",
+              "time": "7:56:14"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Soph",
+              "time": "7:37:11"
+            }
+          ]
+        },
+        {
+          "name": "World of Final Fantasy (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "CrimsonInferno",
+              "time": "3:22:08"
+            },
+            {
+              "team": "Choco",
+              "runner": "Brain_Bugged",
+              "time": "3:18:17"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "HabKeineName",
+              "time": "3:24:29"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (PC Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Poorscythe",
+              "time": "2:51:45"
+            },
+            {
+              "team": "Choco",
+              "runner": "6chi8",
+              "time": "2:36:33"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "zer0skar_i",
+              "time": "2:48:12"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (SNES Glitchless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Dyne Nuitari",
+              "time": "5:11:45"
+            },
+            {
+              "team": "Choco",
+              "runner": "Im_Nightshade",
+              "time": "5:14:37"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "bdude",
+              "time": "5:16:10"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (SNES Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Metako",
+              "time": "4:29:52"
+            },
+            {
+              "team": "Choco",
+              "runner": "Aexoden",
+              "time": "3:49:28"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Mrzwanzig",
+              "time": "3:41:02"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Kayarune",
+              "time": "4:39:43"
+            },
+            {
+              "team": "Choco",
+              "runner": "Z3R01337",
+              "time": "4:40:28"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "ossy3126",
+              "time": "4:51:09"
+            }
+          ]
+        },
+        {
+          "name": "Dirge of Cerberus: Final Fantasy VII (PS2 Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "DynamiteDanTNT",
+              "time": "1:18:22"
+            },
+            {
+              "team": "Choco",
+              "runner": "NT",
+              "time": "1:19:16"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "City Hall",
+              "time": "1:23:33"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PSX Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "PeteSwanson",
+              "time": "8:57:49"
+            },
+            {
+              "team": "Choco",
+              "runner": "Wisteria_paon",
+              "time": "9:22:54"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "thebroodles",
+              "time": "9:01:26"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII (PSX Any% Slots)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "colin",
+              "time": "7:23:19"
+            },
+            {
+              "team": "Choco",
+              "runner": "RJTheDestroyer",
+              "time": "6:39:07"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Muttski",
+              "time": "6:55:20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "viii",
+      "label": "Relay VIII",
+      "shortLabel": "VIII",
+      "title": "Final Fantasy Series Relay Race VIII",
+      "date": "2023-08-25",
+      "teamCount": 3,
+      "teams": [
+        "Mog",
+        "Choco",
+        "Tonberry"
+      ],
+      "totals": {
+        "Mog": "74:19:21",
+        "Choco": "74:56:45",
+        "Tonberry": "74:27:04"
+      },
+      "winner": "Mog",
+      "games": [
+        {
+          "name": "Crisis Core: Final Fantasy 7 -- Reunion (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Hello1nternet",
+              "time": "1:24:39"
+            },
+            {
+              "team": "Choco",
+              "runner": "Goran",
+              "time": "1:19:17"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "AdrianMamba",
+              "time": "1:18:23"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Talbrik",
+              "time": "2:23:54"
+            },
+            {
+              "team": "Choco",
+              "runner": "Poorscythe",
+              "time": "2:19:36"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "seri17723",
+              "time": "2:21:21"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Tactics Advance (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "moonblazewolf",
+              "time": "4:17:46"
+            },
+            {
+              "team": "Choco",
+              "runner": "BrainBugged",
+              "time": "4:07:03"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Chyrad",
+              "time": "4:03:53"
+            }
+          ]
+        },
+        {
+          "name": "Lightning Returns: Final Fantasy XIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "KingSPi",
+              "time": "1:55:15"
+            },
+            {
+              "team": "Choco",
+              "runner": "Akiyoshi",
+              "time": "1:57:26"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "D_Winds",
+              "time": "2:13:23"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PC NMS)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "PeteSwanson",
+              "time": "7:43:08"
+            },
+            {
+              "team": "Choco",
+              "runner": "Easley18",
+              "time": "8:04:12"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "KeeperBK",
+              "time": "7:39:49"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (CSR RngFix)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Hiroshige",
+              "time": "3:38:49"
+            },
+            {
+              "team": "Choco",
+              "runner": "FoxyJira",
+              "time": "3:38:21"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Vermillion",
+              "time": "3:31:32"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Mystic Quest (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Tybalt",
+              "time": "2:09:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "eLmaGus",
+              "time": "1:56:57"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Quina",
+              "time": "2:14:06"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (PC 3D)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "BenDesch",
+              "time": "3:25:18"
+            },
+            {
+              "team": "Choco",
+              "runner": "Shadoweh",
+              "time": "3:54:21"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "BlueHarvey",
+              "time": "3:35:22"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "MMM",
+              "time": "4:41:47"
+            },
+            {
+              "team": "Choco",
+              "runner": "Z3R01337",
+              "time": "4:37:44"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Kayarune",
+              "time": "4:39:59"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "sonicglenjamin",
+              "time": "7:52:53"
+            },
+            {
+              "team": "Choco",
+              "runner": "syo",
+              "time": "7:54:54"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "xeidin",
+              "time": "8:02:02"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "KaguyaNicky",
+              "time": "2:42:21"
+            },
+            {
+              "team": "Choco",
+              "runner": "Rupan2525",
+              "time": "2:48:37"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "IonicKarma",
+              "time": "2:46:48"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII: The Zodiac Age (PC Any% No Seitengrat)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "desa",
+              "time": "2:48:49"
+            },
+            {
+              "team": "Choco",
+              "runner": "HabKeineName",
+              "time": "3:08:23"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Roosta",
+              "time": "3:06:18"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Zic3",
+              "time": "4:01:57"
+            },
+            {
+              "team": "Choco",
+              "runner": "CrimsonInferno9",
+              "time": "3:58:21"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Bdewd",
+              "time": "3:48:47"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XV: Royal Edition (Any% No Ring No AMG)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Barbatos",
+              "time": "4:22:37"
+            },
+            {
+              "team": "Choco",
+              "runner": "Matty",
+              "time": "4:24:30"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Kyoslilmonster",
+              "time": "4:13:51"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII-2 (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Daspharaoh",
+              "time": "2:46:35"
+            },
+            {
+              "team": "Choco",
+              "runner": "zer0skar_I",
+              "time": "2:47:59"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "FoxySaucado",
+              "time": "2:58:43"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII (No Slots)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "colin",
+              "time": "7:12:25"
+            },
+            {
+              "team": "Choco",
+              "runner": "phek1200",
+              "time": "6:53:10"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "thebroodles",
+              "time": "6:56:49"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X-2 (PC NCC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ChocoBungle",
+              "time": "3:12:46"
+            },
+            {
+              "team": "Choco",
+              "runner": "Bakvorm",
+              "time": "3:11:38"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Dsharper",
+              "time": "3:11:30"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy I (NES No RNG Manip)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "MrZwanzig",
+              "time": "3:20:22"
+            },
+            {
+              "team": "Choco",
+              "runner": "ShaneZell",
+              "time": "3:13:31"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "KainDeschain",
+              "time": "3:17:14"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "6chi8",
+              "time": "4:18:05"
+            },
+            {
+              "team": "Choco",
+              "runner": "lionmusashi",
+              "time": "4:40:45"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Dyne Nuitari",
+              "time": "4:27:14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ix",
+      "label": "Relay IX",
+      "shortLabel": "IX",
+      "title": "Final Fantasy Series Relay Race IX",
+      "date": "2024-08-16",
+      "teamCount": 3,
+      "teams": [
+        "Mog",
+        "Choco",
+        "Tonberry"
+      ],
+      "totals": {
+        "Mog": "81:22:39",
+        "Choco": "82:47:31",
+        "Tonberry": "81:35:10"
+      },
+      "winner": "Mog",
+      "games": [
+        {
+          "name": "Final Fantasy XV - Windows Edition (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "D_Winds",
+              "time": "1:19:41"
+            },
+            {
+              "team": "Choco",
+              "runner": "Yidamoda",
+              "time": "0:58:40"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Kyoslilmonster",
+              "time": "0:58:41"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Tactics A2: Grimoire of the Rift (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "aleksaster",
+              "time": "4:25:49"
+            },
+            {
+              "team": "Choco",
+              "runner": "BrainBugged",
+              "time": "4:16:55"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "KaguyaNicky",
+              "time": "4:03:57"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Type-0 HD (PC Cadet)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "CrimsonInferno9",
+              "time": "1:50:28"
+            },
+            {
+              "team": "Choco",
+              "runner": "FoxySaucado",
+              "time": "2:06:58"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "daspharaoh",
+              "time": "2:01:01"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Seby",
+              "time": "7:37:36"
+            },
+            {
+              "team": "Choco",
+              "runner": "Sylleath",
+              "time": "8:05:15"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Muttski",
+              "time": "8:01:22"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Mrzwanzig",
+              "time": "2:15:47"
+            },
+            {
+              "team": "Choco",
+              "runner": "Possa",
+              "time": "2:16:36"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Rupan",
+              "time": "2:17:38"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XVI (Story)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "PeteSwanson",
+              "time": "7:39:03"
+            },
+            {
+              "team": "Choco",
+              "runner": "RainbowUnicornPhoenix",
+              "time": "7:33:54"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Angel_Kal",
+              "time": "7:25:46"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII: The Zodiac Age (PC NG-)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Madelon",
+              "time": "2:58:29"
+            },
+            {
+              "team": "Choco",
+              "runner": "Harvey",
+              "time": "2:57:48"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "desa",
+              "time": "2:48:29"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII Rebirth (Easy)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Woadyb",
+              "time": "6:07:14"
+            },
+            {
+              "team": "Choco",
+              "runner": "BigSid",
+              "time": "6:02:25"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "The_Sid",
+              "time": "6:26:47"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Zic3",
+              "time": "2:53:25"
+            },
+            {
+              "team": "Choco",
+              "runner": "Kashiwa",
+              "time": "2:44:59"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "JamesRuns",
+              "time": "2:39:03"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Dyne_Nuitari",
+              "time": "4:44:52"
+            },
+            {
+              "team": "Choco",
+              "runner": "Dair",
+              "time": "5:55:28"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Im_Nightshade",
+              "time": "5:07:29"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (PC Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Foxyjira",
+              "time": "8:56:20"
+            },
+            {
+              "team": "Choco",
+              "runner": "Hiroshige",
+              "time": "9:09:28"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "NiGhTBoX",
+              "time": "8:58:28"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Adventure (Warpless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "BOWIEtheHERO",
+              "time": "2:01:38"
+            },
+            {
+              "team": "Choco",
+              "runner": "Crow!",
+              "time": "2:00:36"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "prieR57",
+              "time": "2:00:40"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII (PSX No Slots)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "RJ",
+              "time": "7:01:33"
+            },
+            {
+              "team": "Choco",
+              "runner": "Zheal",
+              "time": "6:39:20"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "DashRetro",
+              "time": "6:44:48"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "6chi8",
+              "time": "2:34:52"
+            },
+            {
+              "team": "Choco",
+              "runner": "IonicKarma",
+              "time": "2:53:55"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Nashlax",
+              "time": "2:55:28"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (PSX)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "TheBroodles",
+              "time": "8:35:24"
+            },
+            {
+              "team": "Choco",
+              "runner": "syo",
+              "time": "8:25:05"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Cordellium",
+              "time": "8:25:53"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "MMM",
+              "time": "4:35:39"
+            },
+            {
+              "team": "Choco",
+              "runner": "Z3R01337",
+              "time": "4:43:36"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Kayarune",
+              "time": "4:43:14"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy I (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Easley18",
+              "time": "2:01:48"
+            },
+            {
+              "team": "Choco",
+              "runner": "artus90",
+              "time": "2:03:03"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "seri17723",
+              "time": "2:06:55"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (SNES)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "bodcap",
+              "time": "3:43:01"
+            },
+            {
+              "team": "Choco",
+              "runner": "zer0skar_i",
+              "time": "3:53:10"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "awesomeWaves",
+              "time": "3:49:31"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "x",
+      "label": "Relay X",
+      "shortLabel": "X",
+      "title": "Final Fantasy Series Relay Race X",
+      "date": "2025-08-01",
+      "teamCount": 3,
+      "teams": [
+        "Mog",
+        "Choco",
+        "Tonberry"
+      ],
+      "totals": {
+        "Mog": "81:53:52",
+        "Choco": "82:11:24",
+        "Tonberry": "82:15:20"
+      },
+      "winner": "Mog",
+      "games": [
+        {
+          "name": "Final Fantasy I (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "knutwalker",
+              "time": "2:06:11"
+            },
+            {
+              "team": "Choco",
+              "runner": "6chi8",
+              "time": "1:40:12"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Artus90",
+              "time": "2:01:33"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Legend 2 (Glitchless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Toorima",
+              "time": "1:46:13"
+            },
+            {
+              "team": "Choco",
+              "runner": "denhonator",
+              "time": "1:41:41"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Nightshade",
+              "time": "1:47:15"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VIII (CSR)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "W1ndows",
+              "time": "4:14:31"
+            },
+            {
+              "team": "Choco",
+              "runner": "MikeDoesAudio",
+              "time": "4:33:19"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "bodcap",
+              "time": "4:21:07"
+            }
+          ]
+        },
+        {
+          "name": "Stranger of Paradise: Final Fantasy Origin (Story)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "xeidin",
+              "time": "1:45:26"
+            },
+            {
+              "team": "Choco",
+              "runner": "cyanidesugar",
+              "time": "1:59:43"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "D_Winds",
+              "time": "1:34:01"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII Remake (NMG Easy)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "ambcd33",
+              "time": "4:45:37"
+            },
+            {
+              "team": "Choco",
+              "runner": "Glint",
+              "time": "5:18:10"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Earinor",
+              "time": "5:31:23"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy V (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Zic3",
+              "time": "3:47:11"
+            },
+            {
+              "team": "Choco",
+              "runner": "Rupan",
+              "time": "3:20:54"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Kashiwa",
+              "time": "3:21:34"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IV (PC (3D) Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Soll",
+              "time": "3:48:17"
+            },
+            {
+              "team": "Choco",
+              "runner": "Desch",
+              "time": "3:20:13"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Mrzwanzig",
+              "time": "3:12:24"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XIII (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "MMM",
+              "time": "4:27:50"
+            },
+            {
+              "team": "Choco",
+              "runner": "Kayarune",
+              "time": "4:45:06"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Z3R01337",
+              "time": "4:28:59"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy Type-0 HD (PC Cadet)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "daspharaoh",
+              "time": "1:57:50"
+            },
+            {
+              "team": "Choco",
+              "runner": "FoxySaucado",
+              "time": "2:01:11"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Koinu93",
+              "time": "1:59:36"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VII Rebirth (Easy)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Woady",
+              "time": "5:52:20"
+            },
+            {
+              "team": "Choco",
+              "runner": "matrimony",
+              "time": "5:51:39"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "BigSid",
+              "time": "5:44:45"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X (CSR Manip)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "KrakenupEUW",
+              "time": "3:12:53"
+            },
+            {
+              "team": "Choco",
+              "runner": "moonblazewolf",
+              "time": "3:13:15"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Khaegar",
+              "time": "3:25:57"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XVI (Story)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Angel_KAL",
+              "time": "7:13:12"
+            },
+            {
+              "team": "Choco",
+              "runner": "Shiraishi",
+              "time": "7:19:44"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "RainbowUnicornPhoenix",
+              "time": "7:37:04"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy III (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "hamatet",
+              "time": "2:37:24"
+            },
+            {
+              "team": "Choco",
+              "runner": "IonicKarma",
+              "time": "3:01:28"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Madelon",
+              "time": "2:49:07"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XII (PS2)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Tachibana",
+              "time": "5:45:36"
+            },
+            {
+              "team": "Choco",
+              "runner": "Nekota",
+              "time": "5:45:54"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "zer0skar_i",
+              "time": "6:00:16"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy II (Pixel Remaster)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "JamesRuns",
+              "time": "2:16:46"
+            },
+            {
+              "team": "Choco",
+              "runner": "CaptoftheDorks",
+              "time": "2:21:22"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "possa",
+              "time": "2:12:49"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy X-2 (PC No CC)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Dreaxus",
+              "time": "3:27:30"
+            },
+            {
+              "team": "Choco",
+              "runner": "Sharley Keen",
+              "time": "3:12:36"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Doumeis",
+              "time": "3:10:15"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy IX (PSX)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "nicolon1",
+              "time": "8:51:56"
+            },
+            {
+              "team": "Choco",
+              "runner": "PeteSwanson",
+              "time": "8:54:16"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "eLmaGus",
+              "time": "9:13:48"
+            }
+          ]
+        },
+        {
+          "name": "World of Final Fantasy (Any%)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "BrainBugged",
+              "time": "3:08:52"
+            },
+            {
+              "team": "Choco",
+              "runner": "HabKeineName",
+              "time": "3:18:02"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "CrimsonInferno9",
+              "time": "3:04:26"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy XV (NMG)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Matty",
+              "time": "4:12:55"
+            },
+            {
+              "team": "Choco",
+              "runner": "Kyoslilmonster",
+              "time": "4:07:02"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "Aquila",
+              "time": "4:07:47"
+            }
+          ]
+        },
+        {
+          "name": "Final Fantasy VI (All Characters & Espers - Glitchless)",
+          "runs": [
+            {
+              "team": "Mog",
+              "runner": "Bdewd",
+              "time": "6:35:22"
+            },
+            {
+              "team": "Choco",
+              "runner": "Dyne Nuitari",
+              "time": "6:25:37"
+            },
+            {
+              "team": "Tonberry",
+              "runner": "MainStun",
+              "time": "6:31:14"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

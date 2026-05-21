@@ -1,0 +1,215 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Games from '../components/Games.astro';
+import Runners from '../components/Runners.astro';
+import eventData from '../data/event.json';
+
+const title = `History | ${eventData.name}`;
+const description = `Every Final Fantasy game played and every runner who has taken part across all ${eventData.name} events.`;
+---
+
+<Layout title={title} description={description}>
+  <Header />
+  <main id="main-content" class="history-page">
+    <section class="page-intro">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+        <p class="eyebrow">Archive</p>
+        <h1 class="page-heading">History</h1>
+        <p class="page-lead">
+          Every Final Fantasy title that has been part of a Relay Race, and every runner who
+          has taken part across all events.
+        </p>
+      </div>
+    </section>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+      <div class="tablist" role="tablist" aria-label="History sections">
+        <button
+          type="button"
+          class="tab is-active"
+          role="tab"
+          id="tab-games"
+          data-tab="games"
+          aria-controls="panel-games"
+          aria-selected="true"
+        >
+          Games
+        </button>
+        <button
+          type="button"
+          class="tab"
+          role="tab"
+          id="tab-runners"
+          data-tab="runners"
+          aria-controls="panel-runners"
+          aria-selected="false"
+          tabindex="-1"
+        >
+          Runners
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-area">
+      <div
+        id="panel-games"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="tab-games"
+      >
+        <Games />
+      </div>
+      <div
+        id="panel-runners"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="tab-runners"
+        hidden
+      >
+        <Runners />
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .history-page {
+    background: var(--bg);
+    min-height: 100vh;
+    padding-top: 4rem;
+  }
+  .page-intro {
+    padding: 4rem 0 2rem;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+  .page-heading {
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .page-lead {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 50rem;
+    margin-bottom: 0;
+  }
+
+  /* File-folder tabs: each tab is a labelled folder lip, with the active one
+     visually merging into the panel below via a matching bottom border. */
+  .tablist {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 2rem;
+  }
+  .tab {
+    appearance: none;
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    color: var(--text-dim);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.55rem 0.55rem 0 0;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .tab:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .tab.is-active {
+    color: var(--text);
+    background: var(--bg);
+    border-color: rgba(255, 255, 255, 0.1);
+    /* Hide the segment of the strip's border-bottom that runs under this tab. */
+    box-shadow: 0 1px 0 0 var(--bg);
+  }
+
+  [data-theme='light'] .tablist {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+  }
+  [data-theme='light'] .tab.is-active {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .panel-area {
+    padding-top: 2rem;
+  }
+  .tab-panel[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.tab');
+  const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
+
+  function activate(name: string): boolean {
+    let matched = false;
+    tabs.forEach((t) => {
+      const isActive = t.dataset.tab === name;
+      if (isActive) matched = true;
+      t.classList.toggle('is-active', isActive);
+      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      t.tabIndex = isActive ? 0 : -1;
+    });
+    if (!matched) return false;
+    panels.forEach((p) => {
+      p.hidden = p.id !== `panel-${name}`;
+    });
+    return true;
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const name = tab.dataset.tab;
+      if (!name) return;
+      if (activate(name)) {
+        history.replaceState(null, '', `#${name}`);
+      }
+    });
+  });
+
+  document.querySelector('[role="tablist"]')?.addEventListener('keydown', (e) => {
+    const evt = e as KeyboardEvent;
+    if (evt.key !== 'ArrowLeft' && evt.key !== 'ArrowRight') return;
+    const order = Array.from(tabs);
+    const current = order.findIndex((t) => t === document.activeElement);
+    if (current === -1) return;
+    const next = (current + (evt.key === 'ArrowRight' ? 1 : -1) + order.length) % order.length;
+    order[next].focus();
+    order[next].click();
+    evt.preventDefault();
+  });
+
+  const initial = window.location.hash.slice(1);
+  if (initial === 'games' || initial === 'runners') {
+    activate(initial);
+  }
+</script>

@@ -1,0 +1,249 @@
+---
+import eventData from '../data/event.json';
+
+const channel = eventData.twitch;
+const startDate = eventData.startDate;
+---
+
+<section id="live-embed" class="live-embed" hidden aria-label="Live stream">
+  <div class="le-row">
+    <button
+      id="le-chat-toggle"
+      type="button"
+      class="le-chat-toggle"
+      aria-pressed="false"
+      aria-controls="le-chat"
+      title="Hide chat"
+    >
+      <iconify-icon
+        id="le-chat-toggle-icon"
+        icon="mdi:chevron-right"
+        width="20"
+        height="20"
+        aria-hidden="true"></iconify-icon>
+      <span id="le-chat-toggle-label" class="le-chat-toggle-label">Hide chat</span>
+    </button>
+    <div class="le-stream">
+      <iframe
+        id="le-stream-iframe"
+        title="Twitch stream"
+        allowfullscreen
+        allow="autoplay; fullscreen"
+        frameborder="0"
+        scrolling="no"></iframe>
+    </div>
+    <div id="le-chat" class="le-chat">
+      <iframe id="le-chat-iframe" title="Twitch chat" frameborder="0" scrolling="no"></iframe>
+    </div>
+  </div>
+</section>
+
+<style>
+  .live-embed {
+    /* 4rem top padding clears the 4rem fixed header (Header.astro is position:fixed
+       and overlays the top of <main>). */
+    padding: 4rem 0 2rem;
+    /* `width: 100vw` on .le-row includes the vertical-scrollbar gutter, which
+       would otherwise leak past the viewport and trigger a horizontal scroll. */
+    overflow-x: clip;
+  }
+  .live-embed:has(.le-row.chat-hidden) {
+    padding-bottom: 0.5rem;
+  }
+
+  .le-row {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding: 0 0.5rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(300px, 22vw, 360px);
+    align-items: stretch;
+    gap: 0;
+    /* Animate the grid track resize so the stream iframe grows smoothly rather than
+       jumping — abrupt size changes make the Twitch player re-buffer/pause. */
+    transition: grid-template-columns 0.25s ease;
+  }
+  /* Collapse the chat track to 0 width instead of `display: none` so the chat iframe
+     stays in the DOM (no reload) and the stream isn't reparented. */
+  .le-row.chat-hidden {
+    grid-template-columns: minmax(0, 1fr) 0;
+  }
+  .le-row.chat-hidden .le-chat {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* Floating toggle pinned to the top-right corner of the embed row. Sits over the
+     chat header (or stream when chat is hidden) so it's always reachable. */
+  .le-chat-toggle {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.85);
+    color: #e2e8f0;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.15s ease;
+  }
+  .le-chat-toggle:hover {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+  }
+  .le-chat-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .le-chat-toggle iconify-icon {
+    transition: transform 0.2s ease;
+  }
+  .le-row.chat-hidden .le-chat-toggle iconify-icon {
+    transform: rotate(180deg);
+  }
+  /* Drop the label when chat is hidden so the button fits in the tighter side
+     margin beside the centered stream. Tooltip + aria still convey the action. */
+  .le-row.chat-hidden .le-chat-toggle-label {
+    display: none;
+  }
+
+  .le-stream {
+    aspect-ratio: 16 / 9;
+    min-width: 0;
+    background: #000;
+    overflow: hidden;
+  }
+  .le-stream iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  /* Desktop-only stream cap: cap by viewport height (so the player stays in-viewport
+     on landscape monitors) AND viewport width (so a ~60px side margin remains for
+     the icon-only toggle). Mobile (<900px) keeps the stream full-width since the
+     chat-hidden layout there is just "stream only" stacked. */
+  @media (min-width: 900px) {
+    .le-row.chat-hidden .le-stream {
+      /* Explicit `width` (not `max-width`) — `justify-self: center` on a grid item
+         with only a max-width collapses it to its (zero) content width. */
+      width: min(calc(100vw - 120px), calc((100vh - 4rem) * 16 / 9));
+      justify-self: center;
+    }
+  }
+
+  .le-chat {
+    background: #0e0e10;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .le-chat iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+  }
+
+  @media (max-width: 899px) {
+    .le-row {
+      grid-template-columns: 1fr;
+    }
+    .le-chat {
+      height: 60vh;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ channel, startDate }}>
+  const sectionEl = document.getElementById('live-embed');
+  const rowEl = sectionEl.querySelector('.le-row');
+  const streamIframe = document.getElementById('le-stream-iframe');
+  const chatIframe = document.getElementById('le-chat-iframe');
+  const toggleBtn = document.getElementById('le-chat-toggle');
+  const toggleLabel = document.getElementById('le-chat-toggle-label');
+
+  const CHAT_KEY = 'ffrelay-chat-hidden';
+
+  function applyChatHidden(hidden) {
+    rowEl.classList.toggle('chat-hidden', hidden);
+    toggleBtn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+    toggleBtn.setAttribute('title', hidden ? 'Show chat' : 'Hide chat');
+    toggleLabel.textContent = hidden ? 'Show chat' : 'Hide chat';
+  }
+
+  try {
+    applyChatHidden(localStorage.getItem(CHAT_KEY) === '1');
+  } catch {
+    applyChatHidden(false);
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const next = !rowEl.classList.contains('chat-hidden');
+    applyChatHidden(next);
+    try { localStorage.setItem(CHAT_KEY, next ? '1' : '0'); } catch {}
+  });
+
+  const [y, m, d] = startDate.split('-').map(Number);
+  const windowStart = Date.UTC(y, m - 1, d);
+  const windowEnd = windowStart + 5 * 86_400_000;
+
+  let active = false;
+  let currentHost = '';
+
+  function inWindow() {
+    const now = Date.now();
+    return now >= windowStart && now < windowEnd;
+  }
+
+  function chatSrc(host) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'light' ? '' : '&darkpopout';
+    return `https://www.twitch.tv/embed/${encodeURIComponent(channel)}/chat?parent=${encodeURIComponent(host)}${theme}`;
+  }
+
+  function activate() {
+    if (active) return;
+    active = true;
+    currentHost = location.hostname || 'localhost';
+    streamIframe.src = `https://player.twitch.tv/?channel=${encodeURIComponent(channel)}&parent=${encodeURIComponent(currentHost)}`;
+    chatIframe.src = chatSrc(currentHost);
+    document.body.dataset.liveEmbed = 'active';
+    sectionEl.hidden = false;
+  }
+
+  // Twitch's chat embed bakes the theme into its URL — re-point the iframe when
+  // the user toggles the site theme so chat re-skins to match. Costs one chat reload.
+  new MutationObserver(() => {
+    if (active) chatIframe.src = chatSrc(currentHost);
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  function deactivate() {
+    if (!active) return;
+    active = false;
+    streamIframe.src = '';
+    chatIframe.src = '';
+    delete document.body.dataset.liveEmbed;
+    sectionEl.hidden = true;
+  }
+
+  function evaluate() {
+    if (inWindow()) activate();
+    else deactivate();
+  }
+
+  evaluate();
+  setInterval(evaluate, 60_000);
+</script>

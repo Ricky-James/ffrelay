@@ -1,0 +1,81 @@
+{
+  "events": [
+    {
+      "event": "Relay I",
+      "date": "2015-07-04",
+      "teams": 2,
+      "winner": "Mog",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ5Wz6EBM2aNl3P14fSg2JHA"
+    },
+    {
+      "event": "Relay II",
+      "date": "2016-06-17",
+      "teams": 2,
+      "winner": "Choco",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ4YUukrBiV_mY-mWBLKOHQ7"
+    },
+    {
+      "event": "Relay III",
+      "date": "2017-04-07",
+      "teams": 3,
+      "winner": "Choco",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ6aOdJAaOT1N85I3PpX7VSJ"
+    },
+    {
+      "event": "Relay IV",
+      "date": "2017-09-29",
+      "teams": 2,
+      "winner": "Mog",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ7eB_LNUF94SflWW5avgBkI"
+    },
+    {
+      "event": "Relay IV - Interlude",
+      "date": "2018-11-23",
+      "teams": 2,
+      "winner": "Choco",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ5cklrEUt1HrmwmI6eZlprJ"
+    },
+    {
+      "event": "Relay V",
+      "date": "2020-06-05",
+      "teams": 3,
+      "winner": "Choco",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ4_nxL8SZ8ZdSck0A8BBFl6"
+    },
+    {
+      "event": "Relay VI",
+      "date": "2021-05-28",
+      "teams": 3,
+      "winner": "Choco",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ6ugQ27OwL06lYH7hNS7uPt"
+    },
+    {
+      "event": "Relay VII",
+      "date": "2022-08-26",
+      "teams": 3,
+      "winner": "Tonberry",
+      "vod": "https://www.youtube.com/watch?v=I7p73l86Dh0&list=PL8PZB25uZuZ7hLbpwdGHDi5iqgiibMDHw&pp=iAQB"
+    },
+    {
+      "event": "Relay VIII",
+      "date": "2023-08-25",
+      "teams": 3,
+      "winner": "Mog",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ7n6ARniTsxPGqzmw3UA05i"
+    },
+    {
+      "event": "Relay IX",
+      "date": "2024-08-16",
+      "teams": 3,
+      "winner": "Mog",
+      "vod": "https://www.youtube.com/playlist?list=PL8PZB25uZuZ41Pw_roh1edmEZPqIAR3zb"
+    },
+    {
+      "event": "Relay X",
+      "date": "2025-08-01",
+      "teams": 3,
+      "winner": "Mog",
+      "vod": "https://www.youtube.com/watch?v=wn8LcglWPgw&list=PL8PZB25uZuZ6LoW868lkafVFr0NIx9uyA"
+    }
+  ]
+}

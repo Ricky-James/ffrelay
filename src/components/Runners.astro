@@ -1,0 +1,80 @@
+---
+import Table, { type Column, type Cell } from './Table.astro';
+import data from '../data/runners.json';
+
+const relayShortLabels: Record<string, string> = {
+  'Relay I': 'I',
+  'Relay II': 'II',
+  'Relay III': 'III',
+  'Relay IV': 'IV',
+  'IV: Interlude': 'IV½',
+  'Relay V': 'V',
+  'Relay VI': 'VI',
+  'Relay VII': 'VII',
+  'Relay VIII': 'VIII',
+  'Relay IX': 'IX',
+  'Relay X': 'X',
+};
+
+const columns: Column[] = [
+  { key: 'name', label: 'Runner' },
+  ...data.relays.map((r) => ({
+    key: `relay-${r}`,
+    label: relayShortLabels[r] ?? r,
+    align: 'center' as const,
+    group: 'Relays',
+  })),
+  { key: 'runs', label: 'Total\nAppearances', align: 'center' },
+];
+
+const rows = data.runners.map((r) => {
+  const row: Record<string, Cell> = { name: r.name, runs: r.runs };
+  r.games.forEach((g, i) => {
+    row[`relay-${data.relays[i]}`] = g;
+  });
+  return row;
+});
+---
+
+<div class="runners-block">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+    <p class="section-lead">
+      Every runner who has taken part in a Final Fantasy Relay Race, sorted by total
+      appearances, with the game run in each relay.
+    </p>
+    <p class="runner-count">{data.runners.length} runners</p>
+  </div>
+  <div class="runners-table-wrap">
+    <Table columns={columns} rows={rows} compact />
+  </div>
+</div>
+
+<style>
+  .section-lead {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    max-width: 50rem;
+  }
+  .runner-count {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .runners-table-wrap {
+    width: calc(100vw - 2rem);
+    margin-left: calc(50% - 50vw + 1rem);
+    padding: 0 1rem;
+  }
+  @media (min-width: 1280px) {
+    .runners-table-wrap {
+      width: min(100vw - 4rem, 1600px);
+      margin-left: 50%;
+      transform: translateX(-50%);
+      padding: 0;
+    }
+  }
+</style>

@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Final F';
+    src: url('finalf.woff2') format('woff2'),
+        url('finalf.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

@@ -1,0 +1,20 @@
+{
+  "title": "Final Fantasy Relay",
+  "description": "A community speedrun relay through the Final Fantasy series. Watch the live stream, follow splits and progress, and review past events.",
+  "ogSiteName": "Final Fantasy Relay",
+  "themeStorageKey": "ffrelay-theme",
+  "navExternal": [
+    {
+      "label": "Twitch",
+      "desc": "Watch the relay live on Twitch",
+      "eventKey": "twitch",
+      "urlTemplate": "https://twitch.tv/{value}"
+    },
+    {
+      "label": "YouTube",
+      "desc": "VODs from past relays and other RPG Speedruns",
+      "eventKey": "youtube",
+      "urlTemplate": "https://youtube.com/@{value}"
+    }
+  ]
+}

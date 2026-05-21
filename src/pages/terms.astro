@@ -1,0 +1,100 @@
+---
+import Layout from '../layouts/Layout.astro';
+import eventData from '../data/event.json';
+
+const currentYear = new Date().getFullYear();
+const title = `Terms of Service | ${eventData.name}`;
+---
+
+<Layout
+  title={title}
+  description={`Terms of service for the ${eventData.name} website.`}
+>
+  <main id="main-content" class="policy-page">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl py-24">
+      <a href="/" class="back-link">← Back to {eventData.name}</a>
+
+      <h1 class="text-3xl sm:text-4xl font-bold mt-8 mb-2 gradient-text">Terms of Service</h1>
+      <p class="text-slate-500 text-sm mb-12">Last updated: May {currentYear}</p>
+
+      <div class="prose-section">
+        <h2>1. Acceptance of Terms</h2>
+        <p>
+          By accessing and using this website, you accept and agree to be bound by these Terms of
+          Service. If you do not agree to these terms, please do not use this website.
+        </p>
+
+        <h2>2. Trademarks &amp; Non-Affiliation</h2>
+        <p>
+          {eventData.name} is an independent, community-run speedrun event. We are not
+          affiliated with, endorsed by, sponsored by, or otherwise associated with Square Enix
+          Holdings Co., Ltd. or any of its subsidiaries.
+        </p>
+        <p>
+          "Final Fantasy" and all related characters, names, marks, logos, and imagery are
+          trademarks or registered trademarks of Square Enix Holdings Co., Ltd. All rights to those
+          properties are reserved by their respective owners. Any use of the name on this site is
+          nominative and descriptive only — to identify the games being run during the event — and
+          no claim of ownership is made or implied.
+        </p>
+
+        <h2>3. External Links</h2>
+        <p>
+          This site may contain links to external websites. These links are provided for convenience
+          only. We have no control over and accept no responsibility for the content of external
+          sites.
+        </p>
+
+        <h2>4. Limitation of Liability</h2>
+        <p>
+          This website is provided "as is" without any representations or warranties. We shall not
+          be liable for any loss or damage arising from use of or reliance on information on this
+          site.
+        </p>
+
+        <h2>5. Changes</h2>
+        <p>
+          These terms may be updated at any time. Continued use of the website constitutes
+          acceptance of any revised terms.
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .policy-page {
+    background-color: var(--bg);
+    min-height: 100vh;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-dim);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .prose-section h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 2rem 0 0.75rem;
+  }
+  .prose-section p {
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .prose-section a {
+    color: var(--accent);
+    transition: opacity 0.2s ease;
+  }
+  .prose-section a:hover {
+    opacity: 0.8;
+  }
+</style>

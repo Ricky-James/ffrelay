@@ -1,0 +1,467 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import eventData from '../data/event.json';
+import { csvExportUrl } from '../lib/sheetUrl';
+
+const title = `Splits | ${eventData.name}`;
+const description = `Live cumulative split times for the current ${eventData.name}.`;
+
+const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.splits);
+const POLL_MS = 30_000;
+---
+
+<Layout title={title} description={description}>
+  <Header />
+  <main id="main-content" class="splits-page">
+    <section class="page-intro">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+        <p class="eyebrow">Splits breakdown</p>
+        <h1 class="page-heading">Splits</h1>
+        <p class="page-lead">
+          Live splits for the current relay. For each team you'll see:
+        </p>
+        <ul class="lead-list">
+          <li><span class="term">Split Times</span> are the cumulative splits for the entire relay.</li>
+          <li><span class="term">Splits By Game</span> are reset for each game. Useful to see how each team performed for each game.</li>
+          <li><span class="term">Segment Times</span> are the duration of each split. Useful to see if a team might be catching up.</li>
+        </ul>
+        
+      </div>
+    </section>
+
+    <div class="splits-table-wrap" id="splits-root" data-csv-url={CSV_URL} data-poll-ms={POLL_MS}>
+      <table class="splits-table" aria-describedby="splits-status">
+        <thead id="splits-head">
+          <tr>
+            <th class="split-col placeholder-th" scope="col">Split</th>
+            <th colspan="9" class="placeholder-th">Loading…</th>
+          </tr>
+        </thead>
+        <tbody id="splits-body">
+          <tr class="placeholder-row">
+            <td colspan="10">Loading splits…</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="status" id="splits-status" aria-live="polite">Loading splits…</p>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  /* Only the page intro chrome is scoped here. The table is styled via is:global below so
+     rules survive client-side innerHTML updates (re-rendered elements lose Astro's data-attribute). */
+  .splits-page {
+    background: var(--bg);
+    min-height: 100vh;
+    padding-top: 4rem;
+  }
+  .page-intro {
+    padding: 4rem 0 2rem;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+  .page-heading {
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .page-lead {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 50rem;
+    margin-bottom: 1rem;
+  }
+  .lead-list {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 50rem;
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+  }
+  .lead-list li {
+    margin-bottom: 0.35rem;
+  }
+  .lead-list .term {
+    color: #fbbf24;
+    font-weight: 600;
+  }
+  [data-theme='light'] .lead-list .term {
+    color: #a16207;
+  }
+  .status {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    margin: 0.75rem 0 0;
+    text-align: center;
+  }
+  .status.is-stale {
+    color: #fbbf24;
+  }
+  [data-theme='light'] .status.is-stale {
+    color: #b45309;
+  }
+</style>
+
+<style is:global>
+  .splits-table-wrap {
+    width: calc(100vw - 2rem);
+    margin-left: calc(50% - 50vw + 1rem);
+    padding: 0 1rem 5rem;
+    overflow-x: auto;
+  }
+  @media (min-width: 1280px) {
+    .splits-table-wrap {
+      width: min(100vw - 4rem, 1500px);
+      margin-left: 50%;
+      transform: translateX(-50%);
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .splits-table {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+    border-collapse: collapse;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.015);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .splits-table thead {
+    background: rgba(251, 191, 36, 0.04);
+  }
+  .splits-table th {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+    white-space: nowrap;
+    text-align: center;
+  }
+  .splits-table th.split-col {
+    text-align: left;
+  }
+  .splits-table th.group-header {
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: rgba(251, 191, 36, 0.7);
+    padding: 0.45rem 0.55rem 0.3rem;
+    border-bottom: 1px dashed rgba(251, 191, 36, 0.18);
+  }
+  .splits-table th.sub-header {
+    padding: 0.45rem 0.7rem 0.6rem;
+  }
+  .splits-table th.split-col,
+  .splits-table td.split-name {
+    border-right: 2px solid rgba(255, 255, 255, 0.14);
+  }
+  .splits-table th.group-divider,
+  .splits-table td.group-divider {
+    border-left: 2px solid rgba(255, 255, 255, 0.14);
+  }
+  [data-theme='light'] .splits-table th.split-col,
+  [data-theme='light'] .splits-table td.split-name,
+  [data-theme='light'] .splits-table th.group-divider,
+  [data-theme='light'] .splits-table td.group-divider {
+    border-color: rgba(0, 0, 0, 0.16);
+  }
+
+  .splits-table td {
+    padding: 0.45rem 0.85rem;
+    text-align: center;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .splits-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .splits-table td.split-name {
+    text-align: left;
+    color: var(--text);
+    font-weight: 500;
+    padding-left: 1rem;
+    padding-right: 1.25rem;
+  }
+  .splits-table tr.game-row td {
+    background: rgba(255, 255, 255, 0.025);
+    border-bottom: 3px solid rgba(255, 255, 255, 0.22);
+    font-weight: 700;
+  }
+  .splits-table tr.game-row td.split-name {
+    color: var(--text);
+  }
+  [data-theme='light'] .splits-table tr.game-row td {
+    border-bottom-color: rgba(0, 0, 0, 0.22);
+  }
+
+  .splits-table .team-col.team-mog       { background: rgba(56, 189, 248, 0.045); }
+  .splits-table .team-col.team-choco     { background: rgba(253, 224, 71, 0.05); }
+  .splits-table .team-col.team-tonberry  { background: rgba(74, 222, 128, 0.045); }
+  .splits-table th.team-col.team-mog       { background: rgba(56, 189, 248, 0.09); color: #38bdf8; }
+  .splits-table th.team-col.team-choco     { background: rgba(253, 224, 71, 0.09); color: #fde047; }
+  .splits-table th.team-col.team-tonberry  { background: rgba(74, 222, 128, 0.09); color: #4ade80; }
+
+  .splits-table td.team-col.is-leader {
+    font-weight: 700;
+    text-shadow: 0 0 10px color-mix(in srgb, currentColor 55%, transparent);
+  }
+  .splits-table td.team-col.team-mog.is-leader      { background: rgba(56, 189, 248, 0.18); color: #38bdf8; }
+  .splits-table td.team-col.team-choco.is-leader    { background: rgba(253, 224, 71, 0.2);  color: #fde047; }
+  .splits-table td.team-col.team-tonberry.is-leader { background: rgba(74, 222, 128, 0.18); color: #4ade80; }
+
+  .splits-table .dash {
+    color: var(--text-dimmer);
+  }
+  .splits-table .placeholder-row td,
+  .splits-table th.placeholder-th {
+    padding: 1.4rem 1rem;
+    color: var(--text-dim);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+
+  [data-theme='light'] .splits-table {
+    border-color: rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.015);
+  }
+  [data-theme='light'] .splits-table thead {
+    background: rgba(202, 138, 4, 0.05);
+  }
+  [data-theme='light'] .splits-table th {
+    color: #a16207;
+    border-bottom-color: rgba(202, 138, 4, 0.25);
+  }
+  [data-theme='light'] .splits-table th.group-header {
+    color: rgba(161, 98, 7, 0.85);
+    border-bottom-color: rgba(202, 138, 4, 0.25);
+  }
+  [data-theme='light'] .splits-table .team-col.team-mog       { background: rgba(12, 74, 110, 0.06); }
+  [data-theme='light'] .splits-table .team-col.team-choco     { background: rgba(113, 63, 18, 0.08); }
+  [data-theme='light'] .splits-table .team-col.team-tonberry  { background: rgba(20, 83, 45, 0.06); }
+  [data-theme='light'] .splits-table th.team-col.team-mog       { background: rgba(12, 74, 110, 0.12); color: #0c4a6e; }
+  [data-theme='light'] .splits-table th.team-col.team-choco     { background: rgba(113, 63, 18, 0.14); color: #713f12; }
+  [data-theme='light'] .splits-table th.team-col.team-tonberry  { background: rgba(20, 83, 45, 0.12); color: #14532d; }
+  [data-theme='light'] .splits-table td.team-col.team-mog.is-leader      { background: rgba(12, 74, 110, 0.18); color: #0c4a6e; }
+  [data-theme='light'] .splits-table td.team-col.team-choco.is-leader    { background: rgba(113, 63, 18, 0.22); color: #713f12; }
+  [data-theme='light'] .splits-table td.team-col.team-tonberry.is-leader { background: rgba(20, 83, 45, 0.18); color: #14532d; }
+</style>
+
+<script>
+  // @ts-nocheck
+  import { parseCsv, timeToSeconds, teamSlug, escapeHtml } from '../lib/sheetParse';
+
+  const rootEl = document.getElementById('splits-root');
+  const CSV_URL = rootEl.dataset.csvUrl;
+  const POLL_MS = Number(rootEl.dataset.pollMs) || 30_000;
+
+  const KNOWN_TEAMS = new Set(['mog', 'choco', 'tonberry']);
+  const statusEl = document.getElementById('splits-status');
+  const headEl = document.getElementById('splits-head');
+  const bodyEl = document.getElementById('splits-body');
+  let lastSplits = null;
+  let pollHandle = null;
+
+  function teamClass(slug) {
+    return KNOWN_TEAMS.has(slug) ? `team-${slug}` : '';
+  }
+
+  // Pulls the three metric groups out of the sheet — each is a contiguous "Team X" column run,
+  // separated by blank header cells.
+  function parseSheet(text) {
+    const rows = parseCsv(text);
+
+    const headerIdx = rows.findIndex((r) => /^split name/i.test((r[0] ?? '').trim()));
+    if (headerIdx === -1) return null;
+    const labelRow = rows[headerIdx];
+    // Section names live one row above the team labels.
+    const sectionRow = rows[headerIdx - 1] ?? [];
+
+    const groups = [];
+    let i = 0;
+    while (i < labelRow.length) {
+      const v = (labelRow[i] ?? '').trim();
+      const m = v.match(/^team\s+(.+)$/i);
+      if (!m) {
+        i++;
+        continue;
+      }
+      const start = i;
+      const cols = [];
+      while (i < labelRow.length) {
+        const cell = (labelRow[i] ?? '').trim();
+        const tm = cell.match(/^team\s+(.+)$/i);
+        if (!tm) break;
+        cols.push({ col: i, label: tm[1].trim() });
+        i++;
+      }
+      // Section header sits anywhere within the group's range — usually at its first col.
+      let section = '';
+      for (let c = start; c < start + cols.length; c++) {
+        const s = (sectionRow[c] ?? '').trim();
+        if (s) {
+          section = s;
+          break;
+        }
+      }
+      groups.push({ section, cols });
+    }
+
+    if (groups.length === 0) return null;
+
+    const out = [];
+    for (let r = headerIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      const name = (row[0] ?? '').trim();
+      if (!name) continue;
+      const values = groups.map((g) => g.cols.map((c) => (row[c.col] ?? '').trim()));
+      out.push({
+        name,
+        values,
+        isGameRow: /\bfinal fantasy\b/i.test(name),
+      });
+    }
+
+    return { groups, splits: out };
+  }
+
+  function renderHead(groups) {
+    const ths = [`<th class="split-col" scope="col" rowspan="2">Split</th>`];
+    for (let gi = 0; gi < groups.length; gi++) {
+      const g = groups[gi];
+      const dividerCls = gi === 0 ? '' : ' group-divider';
+      ths.push(
+        `<th colspan="${g.cols.length}" class="group-header${dividerCls}" scope="colgroup">${escapeHtml(g.section || '')}</th>`,
+      );
+    }
+    const subThs = [];
+    for (let gi = 0; gi < groups.length; gi++) {
+      const g = groups[gi];
+      for (let ci = 0; ci < g.cols.length; ci++) {
+        const team = g.cols[ci].label;
+        const cls = `team-col sub-header ${teamClass(teamSlug(team))}${ci === 0 && gi > 0 ? ' group-divider' : ''}`;
+        subThs.push(`<th class="${cls.trim()}" scope="col">${escapeHtml(team)}</th>`);
+      }
+    }
+    headEl.innerHTML = `<tr>${ths.join('')}</tr><tr>${subThs.join('')}</tr>`;
+  }
+
+  function renderBody(groups, splits) {
+    const totalCols =
+      1 + groups.reduce((acc, g) => acc + g.cols.length, 0); // 1 = Split name col
+    if (!splits.length) {
+      bodyEl.innerHTML = `<tr class="placeholder-row"><td colspan="${totalCols}">No splits recorded yet.</td></tr>`;
+      return;
+    }
+    const html = splits.map((s) => {
+      const rowClass = s.isGameRow ? 'game-row' : '';
+      const nameCell = `<td class="split-name">${escapeHtml(s.name)}</td>`;
+      const cells = [];
+      for (let gi = 0; gi < groups.length; gi++) {
+        const g = groups[gi];
+        const groupValues = s.values[gi];
+        // Leader = lowest valid time, but only once every team in the group has reported.
+        const seconds = groupValues.map(timeToSeconds);
+        const allFilled = seconds.every((v) => v != null);
+        const leaderIdx = allFilled ? seconds.indexOf(Math.min(...seconds)) : -1;
+        for (let ci = 0; ci < g.cols.length; ci++) {
+          const team = g.cols[ci].label;
+          const tcls = teamClass(teamSlug(team));
+          const classes = ['team-col', tcls];
+          if (ci === leaderIdx) classes.push('is-leader');
+          if (ci === 0 && gi > 0) classes.push('group-divider');
+          const t = groupValues[ci];
+          const content = t ? escapeHtml(t) : '<span class="dash">—</span>';
+          cells.push(`<td class="${classes.filter(Boolean).join(' ')}">${content}</td>`);
+        }
+      }
+      return `<tr class="${rowClass}">${nameCell}${cells.join('')}</tr>`;
+    });
+    bodyEl.innerHTML = html.join('');
+  }
+
+  function setStatus(text, stale) {
+    statusEl.textContent = text;
+    statusEl.classList.toggle('is-stale', !!stale);
+  }
+
+  function formatTime(d) {
+    return d.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  }
+
+  async function refresh() {
+    try {
+      const bust = `&_=${Date.now()}&r=${Math.random().toString(36).slice(2)}`;
+      const res = await fetch(CSV_URL + bust, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const parsed = parseSheet(text);
+      if (!parsed || parsed.groups.length === 0) {
+        setStatus('Sheet format unexpected — could not find team columns.', true);
+        return;
+      }
+      renderHead(parsed.groups);
+      renderBody(parsed.groups, parsed.splits);
+      lastSplits = parsed;
+      setStatus(
+        `Updated ${formatTime(new Date())} · ${parsed.splits.length} splits`,
+        false,
+      );
+    } catch (err) {
+      const when = formatTime(new Date());
+      if (lastSplits) {
+        setStatus(`Last update failed at ${when}. Showing previous data.`, true);
+      } else {
+        setStatus(`Unable to load splits (${err.message}). Retrying…`, true);
+      }
+    }
+  }
+
+  function startPolling() {
+    if (pollHandle != null) return;
+    refresh();
+    pollHandle = setInterval(refresh, POLL_MS);
+  }
+  function stopPolling() {
+    if (pollHandle != null) {
+      clearInterval(pollHandle);
+      pollHandle = null;
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopPolling();
+    else startPolling();
+  });
+
+  startPolling();
+</script>

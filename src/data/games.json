@@ -1,0 +1,612 @@
+{
+  "relays": [
+    "Relay I",
+    "Relay II",
+    "Relay III",
+    "Relay IV",
+    "IV: Interlude",
+    "Relay V",
+    "Relay VI",
+    "Relay VII",
+    "Relay VIII",
+    "Relay IX",
+    "Relay X"
+  ],
+  "games": [
+    {
+      "name": "Final Fantasy I",
+      "platforms": [
+        "PSP",
+        "GBA",
+        "PSP",
+        "GBA",
+        "PSP",
+        "GBA",
+        "PSP",
+        "Pixel Remaster",
+        "NES",
+        "Pixel Remaster",
+        "Pixel Remaster"
+      ],
+      "total": 11
+    },
+    {
+      "name": "Final Fantasy II",
+      "platforms": [
+        "PSP",
+        "PSP",
+        "GBA",
+        "GBA",
+        "PSP",
+        "PSP",
+        "PSP",
+        "Pixel Remaster",
+        "Pixel Remaster",
+        "Pixel Remaster",
+        "Pixel Remaster"
+      ],
+      "total": 11
+    },
+    {
+      "name": "Final Fantasy III",
+      "platforms": [
+        "NES",
+        "NES",
+        "NES",
+        "DS",
+        "",
+        "NES",
+        "PC (3D)",
+        "Pixel Remaster",
+        "Pixel Remaster",
+        "Pixel Remaster",
+        "Pixel Remaster"
+      ],
+      "total": 10
+    },
+    {
+      "name": "Final Fantasy IV",
+      "platforms": [
+        "SNES",
+        "SNES",
+        "SNES",
+        "PSP",
+        "",
+        "SNES",
+        "SNES",
+        "Pixel Remaster",
+        "PC (3D)",
+        "Pixel Remaster",
+        "PC (3D)"
+      ],
+      "total": 10
+    },
+    {
+      "name": "Final Fantasy V",
+      "platforms": [
+        "SNES",
+        "SNES",
+        "SNES",
+        "SNES",
+        "",
+        "SNES",
+        "SNES",
+        "SNES",
+        "Pixel Remaster",
+        "SNES",
+        "Pixel Remaster"
+      ],
+      "total": 10
+    },
+    {
+      "name": "Final Fantasy VI",
+      "platforms": [
+        "SNES",
+        "SNES",
+        "SNES",
+        "SNES",
+        "",
+        "SNES",
+        "SNES",
+        "SNES",
+        "Pixel Remaster",
+        "Pixel Remaster",
+        "SNES"
+      ],
+      "total": 10
+    },
+    {
+      "name": "Final Fantasy VII",
+      "platforms": [
+        "PS1",
+        "PS1",
+        "PC",
+        "PS1",
+        "",
+        "PS1",
+        "",
+        "PS1",
+        "PS1",
+        "PS1",
+        ""
+      ],
+      "total": 8
+    },
+    {
+      "name": "Final Fantasy VIII",
+      "platforms": [
+        "PC",
+        "PC",
+        "PC",
+        "PS1",
+        "",
+        "PS1",
+        "PS1",
+        "PC",
+        "PC",
+        "PS1",
+        "PC"
+      ],
+      "total": 10
+    },
+    {
+      "name": "Final Fantasy IX",
+      "platforms": [
+        "PS1",
+        "PS1",
+        "PS1",
+        "PS1",
+        "PS1",
+        "PS1",
+        "PS1",
+        "PS1",
+        "PC",
+        "PC",
+        "PS1"
+      ],
+      "total": 11
+    },
+    {
+      "name": "Final Fantasy X",
+      "platforms": [
+        "PS2",
+        "PS2",
+        "PS3",
+        "PS2",
+        "",
+        "PS2",
+        "PC",
+        "PC",
+        "PC",
+        "PC",
+        "PC"
+      ],
+      "total": 10
+    },
+    {
+      "name": "Final Fantasy X-2",
+      "platforms": [
+        "",
+        "PS2",
+        "PS3",
+        "",
+        "PS2",
+        "",
+        "",
+        "",
+        "PC",
+        "",
+        "PC"
+      ],
+      "total": 5
+    },
+    {
+      "name": "Final Fantasy XII",
+      "platforms": [
+        "PS2",
+        "PS2",
+        "PS2",
+        "PS2",
+        "PS2",
+        "PS2",
+        "TZA",
+        "TZA",
+        "TZA",
+        "TZA",
+        "PS2"
+      ],
+      "total": 11
+    },
+    {
+      "name": "Final Fantasy XIII",
+      "platforms": [
+        "PS3/PC",
+        "PS3",
+        "PS3/PC",
+        "PS3/PC",
+        "",
+        "PC",
+        "PC",
+        "PC",
+        "PC",
+        "PC",
+        "PC"
+      ],
+      "total": 10
+    },
+    {
+      "name": "Final Fantasy XIII-2",
+      "platforms": [
+        "",
+        "PC",
+        "PS3/PC",
+        "",
+        "PC",
+        "PS3/PC",
+        "PC",
+        "",
+        "PC",
+        "",
+        ""
+      ],
+      "total": 6
+    },
+    {
+      "name": "Lightning Returns: Final Fantasy XIII",
+      "platforms": [
+        "",
+        "PS3/PC",
+        "PC",
+        "",
+        "PC",
+        "PS3/PC",
+        "PC",
+        "",
+        "PC",
+        "",
+        ""
+      ],
+      "total": 6
+    },
+    {
+      "name": "Final Fantasy XV",
+      "platforms": [
+        "",
+        "",
+        "PS4",
+        "",
+        "",
+        "PS4/PC",
+        "PC",
+        "PS5",
+        "PS5",
+        "PC",
+        "PC"
+      ],
+      "total": 7
+    },
+    {
+      "name": "Final Fantasy XVI",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "PS5",
+        "PS5/PC"
+      ],
+      "total": 2
+    },
+    {
+      "name": "Final Fantasy Mystic Quest",
+      "platforms": [
+        "",
+        "SNES",
+        "",
+        "SNES",
+        "",
+        "",
+        "SNES",
+        "",
+        "SNES",
+        "",
+        ""
+      ],
+      "total": 4
+    },
+    {
+      "name": "Final Fantasy Tactics",
+      "platforms": [
+        "",
+        "PS1",
+        "",
+        "PS1",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "total": 2
+    },
+    {
+      "name": "Chocobo GP",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Switch",
+        "",
+        "",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "World of Final Fantasy",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "PC",
+        "",
+        "PC",
+        "PC",
+        "",
+        "",
+        "PC"
+      ],
+      "total": 4
+    },
+    {
+      "name": "Final Fantasy Type-0 HD",
+      "platforms": [
+        "",
+        "",
+        "PC",
+        "",
+        "PC",
+        "",
+        "",
+        "",
+        "",
+        "PC",
+        "PC"
+      ],
+      "total": 4
+    },
+    {
+      "name": "Crisis Core: Final Fantasy VII",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "PSP",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "Crisis Core: Final Fantasy VII Reunion",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "PS5/PC",
+        "",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "Dirge of Cerberus: Final Fantasy VII",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "PS2",
+        "",
+        "",
+        "PS2",
+        "",
+        "",
+        ""
+      ],
+      "total": 2
+    },
+    {
+      "name": "Final Fantasy VII Remake",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "PS5",
+        "",
+        "",
+        "",
+        "PC/PS5"
+      ],
+      "total": 2
+    },
+    {
+      "name": "Final Fantasy VII Rebirth",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "PS5",
+        "PC/PS5"
+      ],
+      "total": 2
+    },
+    {
+      "name": "Final Fantasy Crystal Chronicles",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "GCN",
+        "GCN",
+        "Switch",
+        "GCN",
+        "",
+        "",
+        ""
+      ],
+      "total": 4
+    },
+    {
+      "name": "Final Fantasy Dissidia",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "PSP",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "Final Fantasy Fables: Chocobo Tales",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "DS",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "Final Fantasy Tactics Advance",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "GBA",
+        "",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "Final Fantasy Tactics A2: Grimoire of the Rift",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "DS",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "Final Fantasy Adventure",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "GB",
+        ""
+      ],
+      "total": 1
+    },
+    {
+      "name": "Stranger of Paradise: Final Fantasy Origin",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "PS5",
+        "",
+        "",
+        "PC/XSS"
+      ],
+      "total": 2
+    },
+    {
+      "name": "Final Fantasy Legend 2",
+      "platforms": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "GB"
+      ],
+      "total": 1
+    }
+  ]
+}
