@@ -1,16 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import PastEvents from '../components/PastEvents.astro';
-import eventData from '../data/event.json';
-
-const title = `Past Results | ${eventData.name}`;
-const description = `Previous winners and full per-relay breakdowns for every ${eventData.name}.`;
+import PagePastResults from '../components/PagePastResults.astro';
 ---
 
-<Layout title={title} description={description}>
-  <Header />
-    <PastEvents />
-  <Footer />
-</Layout>
+<PagePastResults />

@@ -3,18 +3,48 @@ import eventData from '../data/event.json';
 import menu from '../data/menu.json';
 import siteData from '../data/site.json';
 import { getSocialLinks } from '../lib/socialLinks';
+import {
+  localeFromAstro,
+  localizedPath,
+  localizedTwitchHandle,
+  otherLocale,
+  pathInOtherLocale,
+  t,
+  tField,
+  tRaw,
+  type Locale,
+} from '../lib/i18n';
 
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const sections = menu.sections.map((s) => ({
-  ...s,
-  href: s.href.startsWith('/') ? base + s.href.replace(/^\//, '') : s.href,
-}));
+interface Props {
+  lang?: Locale;
+}
 
-const socialLinks = getSocialLinks(eventData as unknown as Record<string, string | string[]>);
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
 
+interface NavStrings { label: string; shortLabel: string; desc: string; }
+
+// menu.json defines route order; labels/desc live in i18n JSONs under `nav.<href>`.
+const sections = menu.sections.map((s) => {
+  const navStrings = tRaw<NavStrings>(`nav.${s.href}`, lang);
+  return {
+    label: navStrings?.label ?? s.href,
+    shortLabel: navStrings?.shortLabel ?? s.href,
+    desc: navStrings?.desc ?? '',
+    href: s.href.startsWith('/') ? localizedPath(s.href, lang) : s.href,
+  };
+});
+
+const localizedTwitch = localizedTwitchHandle(eventData, lang);
+const socialPersonal: Record<string, string | string[]> = {
+  ...(eventData as unknown as Record<string, string>),
+  twitch: localizedTwitch,
+};
+const socialLinks = getSocialLinks(socialPersonal);
+
+const eventLookup = eventData as unknown as Record<string, string>;
 const external = siteData.navExternal
   .map((item) => {
-    const value = (eventData as unknown as Record<string, string>)[item.eventKey] ?? '';
+    const value = item.eventKey === 'twitch' ? localizedTwitch : (eventLookup[item.eventKey] ?? '');
     if (!value) return null;
     return {
       label: item.label,
@@ -23,13 +53,20 @@ const external = siteData.navExternal
     };
   })
   .filter(Boolean) as { label: string; desc: string; url: string }[];
+
+const eventName = tField(eventData, 'name', lang);
+
+const otherLang = otherLocale(lang);
+const otherLangPath = pathInOtherLocale(Astro.url.pathname, lang);
+const langSwitchLabel = t('languageSwitch.linkLabel', lang);
+const langSwitchTitle = t('languageSwitch.linkTitle', lang);
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
   <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
-      <a href={base} class="header-title text-lg gradient-text shrink-0">
-        {eventData.name}
+      <a href={localizedPath('/', lang)} class="header-title text-lg gradient-text shrink-0">
+        {eventName}
       </a>
 
       <div class="hidden lg:flex items-center gap-6">
@@ -59,7 +96,17 @@ const external = siteData.navExternal
             ))
           }
         </div>
-        <label class="switch" aria-label="Toggle light/dark mode" title="Toggle light / dark mode">
+        <a
+          href={otherLangPath}
+          class="lang-switch"
+          title={langSwitchTitle}
+          aria-label={langSwitchTitle}
+          hreflang={otherLang}
+          lang={otherLang}
+        >
+          {langSwitchLabel}
+        </a>
+        <label class="switch" aria-label={t('header.themeToggle', lang)} title={t('header.themeToggle', lang)}>
           <span class="sun"
             ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
               ><g fill="#918155"
@@ -80,7 +127,7 @@ const external = siteData.navExternal
           <span class="slider"></span>
         </label>
 
-        <button id="menu-open-btn" class="hamburger-btn" aria-label="Open menu">
+        <button id="menu-open-btn" class="hamburger-btn" aria-label={t('header.openMenu', lang)}>
           <span></span>
           <span></span>
           <span></span>
@@ -96,10 +143,10 @@ const external = siteData.navExternal
   class="overlay"
   role="dialog"
   aria-modal="true"
-  aria-label="Site navigation"
+  aria-label={t('header.siteNav', lang)}
   aria-hidden="true"
 >
-  <button id="menu-close-btn" class="overlay-close" aria-label="Close menu">
+  <button id="menu-close-btn" class="overlay-close" aria-label={t('header.closeMenu', lang)}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
     </svg>
@@ -108,7 +155,7 @@ const external = siteData.navExternal
   <div class="overlay-glow" aria-hidden="true"></div>
 
   <div class="overlay-inner">
-    <p class="overlay-eyebrow">Explore</p>
+    <p class="overlay-eyebrow">{t('header.overlayExplore', lang)}</p>
     <nav class="overlay-nav">
       {
         sections.map((item, i) => (
@@ -137,7 +184,7 @@ const external = siteData.navExternal
     </nav>
 
     <div class="overlay-bottom">
-      <p class="overlay-bottom-label">External</p>
+      <p class="overlay-bottom-label">{t('header.overlayExternal', lang)}</p>
       {
         external.map((link) => (
           <a href={link.url} target="_blank" rel="noopener" class="overlay-quick-link">
@@ -194,6 +241,35 @@ const external = siteData.navExternal
     transform: translateY(-1px);
   }
   .header-social-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 0.55rem;
+    border-radius: 0.5rem;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+  .lang-switch:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+  }
+  .lang-switch:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }

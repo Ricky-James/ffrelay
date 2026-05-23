@@ -1,0 +1,169 @@
+{
+  "nav": {
+    "/": { "label": "ホーム", "shortLabel": "ホーム", "desc": "FF リレーとは？" },
+    "/schedule": { "label": "スケジュール", "shortLabel": "スケジュール", "desc": "現地時間で表示される予定スケジュール" },
+    "/splits": { "label": "スプリット", "shortLabel": "スプリット", "desc": "現在のランのゲーム別スプリットタイム" },
+    "/past-results": { "label": "過去の結果", "shortLabel": "過去の\n結果", "desc": "過去の優勝者と各リレーの詳細" },
+    "/history": { "label": "ヒストリー", "shortLabel": "ヒストリー", "desc": "参加した全ファイナルファンタジー作品とランナー" }
+  },
+  "header": {
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる",
+    "siteNav": "サイトナビゲーション",
+    "themeToggle": "ライト / ダークモード切り替え",
+    "overlayExplore": "ページ一覧",
+    "overlayExternal": "外部リンク"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "languageSwitch": {
+    "linkLabel": "English",
+    "linkTitle": "英語に切り替える"
+  },
+  "hero": {
+    "watchSentence": "{relay}をTwitchで生配信",
+    "watchCta": "Twitchで視聴",
+    "relayPrefix": "リレー"
+  },
+  "info": {
+    "eyebrow": "イベント概要",
+    "heading": "ファイナルファンタジー リレーとは？",
+    "paragraph1": "ファイナルファンタジーシリーズ リレーレースは、ファイナルファンタジーのスピードランを祝うコミュニティイベントです。4日間に渡って休みなく進行し、2チームまたは3チームがファイナルファンタジーシリーズの複数作品を最短合計タイムで完走することを競います。",
+    "paragraph2": "本イベントはリレー方式で行われます。あるランナーがゲームをクリアすると、同じチームの次のゲーム担当ランナーがすぐにスタートします。全てのゲームを最初に完走したチームが優勝となります！"
+  },
+  "liveEmbed": {
+    "ariaLabel": "ライブ配信",
+    "hideChat": "チャットを非表示",
+    "showChat": "チャットを表示",
+    "streamTitle": "Twitch 配信",
+    "chatTitle": "Twitch チャット"
+  },
+  "liveStatus": {
+    "ariaLabel": "現在のリレー状況",
+    "standings": "順位",
+    "onCommentary": "解説",
+    "upNext": "次のゲーム",
+    "runner": "ランナー",
+    "game": "ゲーム",
+    "finishedPrefix": "完走！ クリアタイム:",
+    "gapFromOrdinal": "{ordinal}との差 {gap}",
+    "gapFromFirst": "1位との差 {gap}",
+    "chartCaption": "各ラインは3チームの平均との累計スプリット差です — 下にあるほど速い。"
+  },
+  "schedule": {
+    "metaTitle": "スケジュール",
+    "metaDescription": "現在の{eventName}の予定スケジュール（現地時間で表示）。",
+    "eyebrowPre": "スケジュール",
+    "eyebrow": "予定スケジュール",
+    "heading": "スケジュール",
+    "placeholderLead": "スケジュールはイベント開始が近づくとここに表示されます。",
+    "tzLead": "開始予定時刻。お使いの地域のタイムゾーンに調整済み: ({tz})。",
+    "aggressiveLead": "このスケジュールでは積極的なラン見積もりを使用しています。通常のスピードランイベントとは異なり、予定より早く進んだ場合に中断することができないためです。本イベントではランナーが見積もりタイムを上回ることは通常期待されていません。",
+    "updatedLead": "スケジュールはランが完了するたびに更新されます。直近のランは後半のランよりも開始時刻が正確になります。",
+    "loadingStatus": "スケジュールを読み込み中…",
+    "colGame": "ゲーム",
+    "colStart": "開始",
+    "colEnd": "終了",
+    "colDuration": "所要時間",
+    "colStatus": "ステータス",
+    "endOfEvent": "イベント終了",
+    "noRunsScheduled": "まだ予定されたランはありません。",
+    "sheetFormatUnexpected": "シートの形式が想定外のため、「Game」「Time」「Start UTC」列が見つかりませんでした。",
+    "statusUpdated": "更新 {ts} · {n}ラン · 時刻表示: {tz}",
+    "statusLastFailed": "{ts}に更新失敗。前回のデータを表示しています。",
+    "commentaryLabel": "解説:",
+    "pillLive": "ライブ",
+    "pillDone": "完了",
+    "pillUpcoming": "予定"
+  },
+  "splits": {
+    "metaTitle": "スプリット",
+    "metaDescription": "現在の{eventName}の累計スプリットタイム（ライブ）。",
+    "eyebrow": "スプリット詳細",
+    "heading": "スプリット",
+    "lead": "現在のリレーのライブスプリット。各チームについて以下が表示されます:",
+    "splitTimesTerm": "スプリットタイム",
+    "splitTimesDesc": "リレー全体の累計スプリットです。",
+    "splitsByGameTerm": "ゲーム別スプリット",
+    "splitsByGameDesc": "ゲームごとにリセットされます。各チームのゲーム別のパフォーマンスを確認できます。",
+    "segmentTimesTerm": "セグメントタイム",
+    "segmentTimesDesc": "各スプリットの所要時間です。チームが追い上げているかを確認できます。",
+    "loadingStatus": "スプリットを読み込み中…",
+    "colSplit": "スプリット",
+    "colLoading": "読み込み中…",
+    "noSplitsRecorded": "まだ記録されたスプリットはありません。",
+    "sheetFormatUnexpected": "シートの形式が想定外のため、チーム列を特定できませんでした。",
+    "statusUpdated": "更新 {ts} · {n}件のスプリット",
+    "statusLastFailed": "{ts}に更新失敗。前回のデータを表示しています。",
+    "statusLoadFailed": "スプリットを読み込めませんでした ({err})。再試行中…"
+  },
+  "history": {
+    "metaTitle": "ヒストリー",
+    "metaDescription": "全 {eventName} イベントでプレイされた全ファイナルファンタジー作品と、参加した全ランナーです。",
+    "eyebrow": "アーカイブ",
+    "heading": "ヒストリー",
+    "lead": "これまでにリレーレースで取り上げられた全ファイナルファンタジー作品と、全イベントに参加したランナー一覧です。",
+    "tabsAriaLabel": "ヒストリーのセクション",
+    "tabGames": "ゲーム",
+    "tabRunners": "ランナー"
+  },
+  "games": {
+    "lead": "これまでにリレーレースで取り上げられた全ファイナルファンタジー作品、各リレーでプレイされたバージョン、そして合計出場回数の一覧です。",
+    "count": "{n}本のゲーム",
+    "colGame": "ゲーム",
+    "colTotalAppearances": "合計\n出場回数",
+    "groupRelays": "リレー"
+  },
+  "runners": {
+    "lead": "ファイナルファンタジー リレーレースに参加した全ランナーを、合計出場回数順に並べ、各リレーで担当したゲームと共に表示しています。",
+    "count": "{n}人のランナー",
+    "colRunner": "ランナー",
+    "colTotalAppearances": "合計\n出場回数",
+    "groupRelays": "リレー"
+  },
+  "pastResults": {
+    "metaTitle": "過去の結果",
+    "metaDescription": "各 {eventName} の過去の優勝チームと、リレー別の詳細です。",
+    "heading": "過去の優勝チーム",
+    "lead": "これまで開催された全ファイナルファンタジー リレーレースを、チーム数、優勝チーム、VoD リンクと共に掲載しています。",
+    "colEvent": "イベント",
+    "colDate": "日付",
+    "colTeams": "チーム数",
+    "colWinner": "優勝",
+    "colVod": "VoD",
+    "vodLinkText": "リンク",
+    "detailHeading": "過去の結果",
+    "detailLead": "各ファイナルファンタジー リレーレースのゲーム、ランナー、最終タイムです。タブを選択して該当イベントに移動してください。",
+    "detailFollowup": "より詳しい情報は",
+    "detailFollowupSuffix": "ページをご覧ください！",
+    "historyLinkText": "ヒストリー",
+    "tabsAriaLabel": "リレー別の詳細",
+    "tabRelayPrefix": "リレー",
+    "interludeSuffix": "インタールード",
+    "colRelayGame": "ゲーム",
+    "colRelayRunner": "ランナー",
+    "colRelayTime": "タイム",
+    "finalTime": "合計タイム"
+  },
+  "progressChart": {
+    "zoom": "ズーム",
+    "zoomAriaLabel": "チャートのズームレベル",
+    "hintPre": "スクロール、ドラッグ、ピンチ /",
+    "hintKey": "Ctrl",
+    "hintPost": "+ホイールでズーム",
+    "legendAriaLabel": "チームカラー凡例",
+    "ariaLabel": "チーム別の累計スプリット差（3チーム平均との分単位）",
+    "loadingText": "スプリットを読み込み中…",
+    "loadingStatus": "読み込み中…",
+    "emptyText": "完了済みのスプリットはまだありません。",
+    "statusUpdatedWaiting": "更新 {ts} · 全チームによる最初のスプリット完了を待機中",
+    "statusUpdatedOne": "更新 {ts} · {n}件のスプリット完了",
+    "statusUpdatedMany": "更新 {ts} · {n}件のスプリット完了",
+    "statusLastFailed": "{ts}に更新失敗。前回のデータを表示しています。",
+    "statusLoadFailed": "データを読み込めませんでした ({err})。再試行中…",
+    "statusUnexpectedFormat": "シートの形式が想定外のため、チーム列を特定できませんでした。",
+    "deltaTooltipFrom": "平均との差"
+  }
+}

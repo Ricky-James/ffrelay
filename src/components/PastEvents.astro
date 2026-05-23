@@ -2,16 +2,23 @@
 import Table, { type Column, type Cell, type CellTone } from './Table.astro';
 import RelayDetails from './RelayDetails.astro';
 import data from '../data/past-events.json';
+import { localeFromAstro, t, tTeamName, type Locale } from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
 
 const columns: Column[] = [
-  { key: 'event', label: 'Event' },
-  { key: 'date', label: 'Date', align: 'center', width: '8rem' },
-  { key: 'teams', label: 'Teams', align: 'center', width: '5rem' },
-  { key: 'winner', label: 'Winner', align: 'center', width: '8rem' },
-  { key: 'vod', label: 'VoD', align: 'center', width: '5rem' },
+  { key: 'event', label: t('pastResults.colEvent', lang) },
+  { key: 'date', label: t('pastResults.colDate', lang), align: 'center', width: '8rem' },
+  { key: 'teams', label: t('pastResults.colTeams', lang), align: 'center', width: '5rem' },
+  { key: 'winner', label: t('pastResults.colWinner', lang), align: 'center', width: '8rem' },
+  { key: 'vod', label: t('pastResults.colVod', lang), align: 'center', width: '5rem' },
 ];
 
-const dateFmt = new Intl.DateTimeFormat('en-GB', {
+const dateFmt = new Intl.DateTimeFormat(lang === 'ja' ? 'ja-JP' : 'en-GB', {
   day: '2-digit',
   month: 'short',
   year: 'numeric',
@@ -26,16 +33,28 @@ const TEAM_TONES: Record<string, CellTone> = {
 function winnerCell(name: string): Cell {
   if (!name) return '';
   const tone = TEAM_TONES[name];
-  return tone ? { tag: name, tone } : name;
+  const display = tTeamName(name, lang);
+  return tone ? { tag: display, tone } : display;
+}
+
+const vodLinkText = t('pastResults.vodLinkText', lang);
+const relayPrefix = t('pastResults.tabRelayPrefix', lang);
+const interludeLabel = t('pastResults.interludeSuffix', lang);
+
+// EN keys default to the English value in en.json so EN renders unchanged.
+function localizeEventName(name: string): string {
+  return name
+    .replace(/^Relay\b/, relayPrefix)
+    .replace(/\bInterlude\b/, interludeLabel);
 }
 
 const rows = data.events.map((e) => {
   const row: Record<string, Cell> = {
-    event: e.event,
+    event: localizeEventName(e.event),
     date: e.date ? dateFmt.format(new Date(e.date)) : '',
     teams: e.teams,
     winner: winnerCell(e.winner),
-    vod: e.vod ? { href: e.vod, text: 'Link' } : '',
+    vod: e.vod ? { href: e.vod, text: vodLinkText } : '',
   };
   return row;
 });
@@ -45,10 +64,8 @@ const rowTones = data.events.map((e) => TEAM_TONES[e.winner]);
 
 <section id="previous-winners" class="section-pad">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-    <h2 class="section-heading">Previous Winners</h2>
-    <p class="section-lead">
-      Every Final Fantasy Relay Race held to date, with team count, winner, and links to the VoDs.
-    </p>
+    <h2 class="section-heading">{t('pastResults.heading', lang)}</h2>
+    <p class="section-lead">{t('pastResults.lead', lang)}</p>
     <Table columns={columns} rows={rows} rowTones={rowTones} />
   </div>
   <RelayDetails />

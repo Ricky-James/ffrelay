@@ -2,47 +2,75 @@
 import eventData from '../data/event.json';
 import { csvExportUrl } from '../lib/sheetUrl';
 import ProgressChart from './ProgressChart.astro';
+import {
+  buildGameNameMap,
+  localeFromAstro,
+  t,
+  type Locale,
+} from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
 
 const SPLITS_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.splits);
 const INFO_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.info);
 const POLL_MS = 30_000;
 const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const ariaLabel = t('liveStatus.ariaLabel', lang);
+const standingsLabel = t('liveStatus.standings', lang);
+const onCommentaryLabel = t('liveStatus.onCommentary', lang);
+const upNextLabel = t('liveStatus.upNext', lang);
+const chartCaption = t('liveStatus.chartCaption', lang);
+
+const STRINGS_JSON = JSON.stringify({
+  finishedPrefix: t('liveStatus.finishedPrefix', lang),
+  gapFromOrdinal: t('liveStatus.gapFromOrdinal', lang),
+  gapFromFirst: t('liveStatus.gapFromFirst', lang),
+  runner: t('liveStatus.runner', lang),
+  game: t('liveStatus.game', lang),
+});
+const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
 ---
 
 <section
   id="live-status"
   class="live-status"
   hidden
-  aria-label="Current relay status"
+  aria-label={ariaLabel}
   data-splits-url={SPLITS_URL}
   data-info-url={INFO_URL}
   data-poll-ms={POLL_MS}
   data-base={BASE}
+  data-locale={lang}
+  data-name-map={NAME_MAP_JSON}
+  data-strings={STRINGS_JSON}
 >
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="ls-grid">
       <div class="ls-card">
         <div class="ls-standings">
-          <p class="ls-label">Standings</p>
+          <p class="ls-label">{standingsLabel}</p>
           <ol id="ls-standings-list" class="ls-list"></ol>
         </div>
 
         <div id="ls-commentary-block" class="ls-commentary" hidden>
-          <p class="ls-label">On commentary</p>
+          <p class="ls-label">{onCommentaryLabel}</p>
           <ul id="ls-commentary-list" class="ls-comm-list"></ul>
         </div>
 
         <div id="ls-next-block" class="ls-upnext" hidden>
-          <span class="ls-upnext-label">Up next</span>
+          <span class="ls-upnext-label">{upNextLabel}</span>
           <span class="ls-upnext-arrow" aria-hidden="true">→</span>
           <span id="ls-next" class="ls-upnext-game">—</span>
         </div>
       </div>
 
       <div class="ls-chart-col">
-        <p class="ls-chart-caption">
-          Each line is a team's cumulative split delta vs the 3-team average — lower is faster.
-        </p>
+        <p class="ls-chart-caption">{chartCaption}</p>
         <ProgressChart />
       </div>
     </div>
@@ -364,6 +392,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     parseInfo,
     linkName as linkNameLib,
   } from '../lib/sheetParse';
+  import { fillTemplate, makeTranslator, readDataJson, tTeamName } from '../lib/clientI18n';
 
   const TEAM_TONE = { mog: 'blue', choco: 'yellow', tonberry: 'green' };
   const ICON_TEAMS = new Set(['mog', 'choco', 'tonberry']);
@@ -378,15 +407,20 @@ const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   const INFO_URL = sectionEl.dataset.infoUrl;
   const POLL_MS = Number(sectionEl.dataset.pollMs) || 30_000;
   const BASE = sectionEl.dataset.base;
+  const LOCALE = sectionEl.dataset.locale || 'en';
+  const STRINGS = readDataJson(sectionEl, 'strings');
+  const tGame = makeTranslator(readDataJson(sectionEl, 'nameMap'));
 
   let pollHandle = null;
 
   const linkName = (p) => linkNameLib(p, 'ls-link');
 
-  function ordinalSuffix(n) {
+  // English uses 1st/2nd/3rd/…; Japanese uses 1位/2位/3位/….
+  function ordinal(n) {
+    if (LOCALE === 'ja') return `${n}位`;
     const v = n % 100;
-    if (v >= 11 && v <= 13) return 'th';
-    return ['th', 'st', 'nd', 'rd'][n % 10] || 'th';
+    if (v >= 11 && v <= 13) return `${n}th`;
+    return `${n}${['th', 'st', 'nd', 'rd'][n % 10] || 'th'}`;
   }
 
   function formatHMS(secs) {
@@ -551,20 +585,25 @@ const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         : '';
       let subtitleHtml = '';
       if (row.finishedSecs != null) {
-        const parts = [`Finished! Completion time: ${formatHMS(row.finishedSecs)}`];
+        const parts = [`${STRINGS.finishedPrefix} ${formatHMS(row.finishedSecs)}`];
         if (row.finishGapToPrev != null) {
-          parts.push(`${formatGap(row.finishGapToPrev)} from ${i}${ordinalSuffix(i)}`);
+          parts.push(fillTemplate(STRINGS.gapFromOrdinal, {
+            gap: formatGap(row.finishGapToPrev),
+            ordinal: ordinal(i),
+          }));
         }
         if (row.finishGapToLeader != null) {
-          parts.push(`${formatGap(row.finishGapToLeader)} from 1st`);
+          parts.push(fillTemplate(STRINGS.gapFromFirst, {
+            gap: formatGap(row.finishGapToLeader),
+          }));
         }
         subtitleHtml = `<span class="ls-meta ls-meta-done">${escapeHtml(parts.join(' · '))}</span>`;
       } else {
         const runnerLine = row.runner
-          ? `<span class="ls-meta"><span class="ls-meta-label">Runner</span>${linkName(row.runner)}</span>`
+          ? `<span class="ls-meta"><span class="ls-meta-label">${escapeHtml(STRINGS.runner)}</span>${linkName(row.runner)}</span>`
           : '';
         const gameLine = row.game
-          ? `<span class="ls-meta"><span class="ls-meta-label">Game</span>${escapeHtml(row.game)}</span>`
+          ? `<span class="ls-meta"><span class="ls-meta-label">${escapeHtml(STRINGS.game)}</span>${escapeHtml(tGame(row.game))}</span>`
           : '';
         subtitleHtml = runnerLine + gameLine;
       }
@@ -572,13 +611,13 @@ const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       const place = i + 1;
       const rankHtml = `<span class="ls-rank ls-rank-${place}">`
         + `<span class="ls-rank-num">${place}</span>`
-        + `<span class="ls-rank-ord">${ordinalSuffix(place)}</span>`
+        + `<span class="ls-rank-ord">${escapeHtml(LOCALE === 'ja' ? '位' : (ordinal(place).replace(String(place), '')))}</span>`
         + `</span>`;
 
       return `<li class="${cls.join(' ')}">`
         + `<span class="ls-icon" ${iconStyle} aria-hidden="true"></span>`
         + `<span class="ls-team-block">`
-        +   `<span class="ls-team">${escapeHtml(row.display)}</span>`
+        +   `<span class="ls-team">${escapeHtml(tTeamName(row.display, LOCALE))}</span>`
         +   subtitleHtml
         + `</span>`
         + rankHtml
@@ -588,7 +627,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
     if (status.nextGame) {
       nextBlockEl.hidden = false;
-      nextEl.textContent = status.nextGame;
+      nextEl.textContent = tGame(status.nextGame);
     } else {
       nextBlockEl.hidden = true;
     }
@@ -597,7 +636,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       commBlockEl.hidden = false;
       commListEl.innerHTML = status.commentary.map((c) => (
         `<li class="ls-comm-item">`
-        + `<span class="ls-comm-game">${escapeHtml(c.game)}</span>`
+        + `<span class="ls-comm-game">${escapeHtml(tGame(c.game))}</span>`
         + `<span class="ls-comm-people">${c.people.map(linkName).join(', ')}</span>`
         + '</li>'
       )).join('');

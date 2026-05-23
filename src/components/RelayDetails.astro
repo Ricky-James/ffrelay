@@ -1,6 +1,13 @@
 ---
-import Table, { type Column, type Cell, type CellTone } from './Table.astro';
+import Table, { type Column, type Cell, type CellTone, type FooterCell } from './Table.astro';
 import data from '../data/relays.json';
+import { localeFromAstro, localizedPath, t, tCompoundName, tTeamName, type Locale } from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
 
 type Relay = (typeof data.relays)[number];
 
@@ -13,14 +20,22 @@ const TEAM_TONE: Record<string, CellTone> = {
   Tonberry: 'green',
 };
 
+const colGameLabel = t('pastResults.colRelayGame', lang);
+const colRunnerLabel = t('pastResults.colRelayRunner', lang);
+const colTimeLabel = t('pastResults.colRelayTime', lang);
+const relayPrefix = t('pastResults.tabRelayPrefix', lang);
+const finalTimeLabel = t('pastResults.finalTime', lang);
+
 function columnsForRelay(r: Relay): Column[] {
   return [
-    { key: 'game', label: 'Game' },
+    { key: 'game', label: colGameLabel },
     ...r.teams.flatMap((team): Column[] => {
       const tone = TEAM_TONE[team];
+      // Column keys stay English (data lookup keys); only the visible group label localizes.
+      const groupLabel = tTeamName(team, lang);
       return [
-        { key: `${team}-runner`, label: 'Runner', group: team, tone },
-        { key: `${team}-time`, label: 'Time', align: 'center', group: team, tone },
+        { key: `${team}-runner`, label: colRunnerLabel, group: groupLabel, tone },
+        { key: `${team}-time`, label: colTimeLabel, align: 'center', group: groupLabel, tone },
       ];
     }),
   ];
@@ -28,7 +43,7 @@ function columnsForRelay(r: Relay): Column[] {
 
 function rowsForRelay(r: Relay): Array<Record<string, Cell>> {
   return r.games.map((g) => {
-    const row: Record<string, Cell> = { game: g.name };
+    const row: Record<string, Cell> = { game: tCompoundName(g.name, lang) };
     for (const run of g.runs) {
       row[`${run.team}-runner`] = run.runner;
       row[`${run.team}-time`] = run.time;
@@ -36,18 +51,37 @@ function rowsForRelay(r: Relay): Array<Record<string, Cell>> {
     return row;
   });
 }
+
+// Each team's total spans the runner+time pair so it centers under the team header.
+// Winner gets a TagCell for the colored glow.
+function footerForRelay(r: Relay): FooterCell[] {
+  return [
+    { value: finalTimeLabel },
+    ...r.teams.map((team): FooterCell => {
+      const total = r.totals[team as keyof typeof r.totals] ?? '';
+      const isWinner = team === r.winner;
+      const tone = TEAM_TONE[team];
+      return {
+        colspan: 2,
+        align: 'center',
+        value: isWinner && tone && total ? { tag: total, tone } : total,
+      };
+    }),
+  ];
+}
+
+const historyHref = localizedPath('/history', lang);
 ---
 
 <section id="past-results-detail" class="section-pad">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-    <h3 class="section-heading">Previous Results</h3>
+    <h3 class="section-heading">{t('pastResults.detailHeading', lang)}</h3>
     <p class="section-lead">
-      Games, runners, and final times for each Final Fantasy Relay Race. Pick a tab to jump
-      to that event.
+      {t('pastResults.detailLead', lang)}
       <br />
-      For even more details, check out the <a href="/history">History</a> page!
+      {t('pastResults.detailFollowup', lang)} <a href={historyHref}>{t('pastResults.historyLinkText', lang)}</a> {t('pastResults.detailFollowupSuffix', lang)}
     </p>
-    <div class="tablist" role="tablist" aria-label="Per-relay details">
+    <div class="tablist" role="tablist" aria-label={t('pastResults.tabsAriaLabel', lang)}>
       {
         relays.map((r, i) => (
           <button
@@ -60,7 +94,7 @@ function rowsForRelay(r: Relay): Array<Record<string, Cell>> {
             aria-selected={i === defaultIdx ? 'true' : 'false'}
             tabindex={i === defaultIdx ? 0 : -1}
           >
-            {"Relay " + r.shortLabel}
+            {relayPrefix + " " + r.shortLabel}
           </button>
         ))
       }
@@ -77,22 +111,7 @@ function rowsForRelay(r: Relay): Array<Record<string, Cell>> {
         hidden={i !== defaultIdx}
       >
         <div class="relay-table-wrap">
-          <Table columns={columnsForRelay(r)} rows={rowsForRelay(r)} compact />
-        </div>
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-          <div class="totals">
-            {r.teams.map((team) => {
-              const isWinner = team === r.winner;
-              return (
-                <div
-                  class:list={['total', isWinner && ['is-winner', `tone-${TEAM_TONE[team]}`]]}
-                >
-                  <span class="total-label">{team}</span>
-                  <span class="total-time">{r.totals[team as keyof typeof r.totals]}</span>
-                </div>
-              );
-            })}
-          </div>
+          <Table columns={columnsForRelay(r)} rows={rowsForRelay(r)} footerRow={footerForRelay(r)} compact />
         </div>
       </div>
     ))
@@ -214,48 +233,6 @@ function rowsForRelay(r: Relay): Array<Record<string, Cell>> {
     }
   }
 
-  .totals {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 0.75rem;
-    margin-top: 0.25rem;
-  }
-  .total {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    padding: 0.45rem 0.85rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--text-dim);
-    font-variant-numeric: tabular-nums;
-  }
-  .total-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .total-time {
-    color: var(--text);
-    font-weight: 600;
-    font-size: 1rem;
-  }
-
-  .total.is-winner {
-    border-color: currentColor;
-    background: color-mix(in srgb, currentColor 10%, transparent);
-  }
-  .total.is-winner .total-time {
-    color: currentColor;
-  }
-  .total.tone-blue       { color: #38bdf8; }
-  .total.tone-yellow     { color: #fde047; }
-  .total.tone-green      { color: #4ade80; }
-  [data-theme='light'] .total.tone-blue   { color: #0c4a6e; }
-  [data-theme='light'] .total.tone-yellow { color: #713f12; }
-  [data-theme='light'] .total.tone-green  { color: #14532d; }
 </style>
 
 <script>

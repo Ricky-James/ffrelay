@@ -1,14 +1,21 @@
+---
+import { localeFromAstro, t, type Locale } from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
+---
+
 <section id="info" class="section-pad">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-    <p class="eyebrow">About the event</p>
-    <h2 class="section-heading">What is the Final Fantasy Relay?</h2>
+    <p class="eyebrow">{t('info.eyebrow', lang)}</p>
+    <h2 class="section-heading">{t('info.heading', lang)}</h2>
 
     <div class="info-body">
-      <p>
-        The Final Fantasy Series Relay Race is a community celebration of Final Fantasy Speedrunning. The race runs non-stop across 4 days, while 2 or 3 teams compete to finish a set of games from the Final Fantasy franchise in the shortest combined time.
-      </p><p>
-        The event is run as a relay race, which means when a runner completes  game, the runner for the next game on the same team starts immediately. The team that finishes all of the games first is the winner!
-      </p>
+      <p>{t('info.paragraph1', lang)}</p>
+      <p>{t('info.paragraph2', lang)}</p>
     </div>
   </div>
 </section>

@@ -1,14 +1,51 @@
 ---
 import eventData from '../data/event.json';
 import { csvExportUrl } from '../lib/sheetUrl';
+import { buildBossNameMap, localeFromAstro, t, tTeamName, type Locale } from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
 
 const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.splits);
+
+// Merged boss+game map so intermediate boss/event labels pick up boss-translations.
+const NAME_MAP_JSON = JSON.stringify(buildBossNameMap(lang));
+const STRINGS_JSON = JSON.stringify({
+  emptyText: t('progressChart.emptyText', lang),
+  updatedWaiting: t('progressChart.statusUpdatedWaiting', lang),
+  updatedOne: t('progressChart.statusUpdatedOne', lang),
+  updatedMany: t('progressChart.statusUpdatedMany', lang),
+  lastFailed: t('progressChart.statusLastFailed', lang),
+  loadFailed: t('progressChart.statusLoadFailed', lang),
+  unexpectedFormat: t('progressChart.statusUnexpectedFormat', lang),
+  deltaTooltipFrom: t('progressChart.deltaTooltipFrom', lang),
+});
+
+const zoomLabel = t('progressChart.zoom', lang);
+const zoomAriaLabel = t('progressChart.zoomAriaLabel', lang);
+const hintPre = t('progressChart.hintPre', lang);
+const hintKey = t('progressChart.hintKey', lang);
+const hintPost = t('progressChart.hintPost', lang);
+const legendAriaLabel = t('progressChart.legendAriaLabel', lang);
+const chartAriaLabel = t('progressChart.ariaLabel', lang);
+const loadingText = t('progressChart.loadingText', lang);
+const loadingStatus = t('progressChart.loadingStatus', lang);
 ---
 
-<div class="progress-chart" id="progress-chart" data-csv-url={CSV_URL}>
+<div
+  class="progress-chart"
+  id="progress-chart"
+  data-csv-url={CSV_URL}
+  data-locale={lang}
+  data-name-map={NAME_MAP_JSON}
+  data-strings={STRINGS_JSON}
+>
   <div class="chart-controls">
     <label class="zoom-label">
-      <span class="zoom-text">Zoom</span>
+      <span class="zoom-text">{zoomLabel}</span>
       <input
         type="range"
         id="chart-zoom"
@@ -16,10 +53,10 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
         max="1"
         step="any"
         value="0.7"
-        aria-label="Chart zoom level"
+        aria-label={zoomAriaLabel}
       />
     </label>
-    <p class="chart-hint">Scroll, drag, or pinch / <kbd>Ctrl</kbd>+wheel to zoom</p>
+    <p class="chart-hint">{hintPre} <kbd>{hintKey}</kbd>{hintPost}</p>
   </div>
 
   <div class="chart-frame">
@@ -31,22 +68,22 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
         id="chart-svg"
         class="chart-svg"
         role="img"
-        aria-label="Cumulative split delta per team, in minutes from the three-team average"
+        aria-label={chartAriaLabel}
       >
         <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="empty-text">
-          Loading splits…
+          {loadingText}
         </text>
       </svg>
     </div>
   </div>
 
   <div class="chart-footer">
-    <div class="chart-legend" aria-label="Team colour key">
-      <span class="legend-item legend-mog"><span class="legend-swatch"></span>Mog</span>
-      <span class="legend-item legend-choco"><span class="legend-swatch"></span>Choco</span>
-      <span class="legend-item legend-tonberry"><span class="legend-swatch"></span>Tonberry</span>
+    <div class="chart-legend" aria-label={legendAriaLabel}>
+      <span class="legend-item legend-mog"><span class="legend-swatch"></span>{tTeamName('Mog', lang)}</span>
+      <span class="legend-item legend-choco"><span class="legend-swatch"></span>{tTeamName('Choco', lang)}</span>
+      <span class="legend-item legend-tonberry"><span class="legend-swatch"></span>{tTeamName('Tonberry', lang)}</span>
     </div>
-    <p class="chart-status" id="chart-status" aria-live="polite">Loading…</p>
+    <p class="chart-status" id="chart-status" aria-live="polite">{loadingStatus}</p>
   </div>
 </div>
 
@@ -275,24 +312,38 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
 
 <script>
   // @ts-nocheck
-  import { parseCsv, timeToSeconds, teamSlug, escapeHtml } from '../lib/sheetParse';
+  import { parseCsv, timeToSeconds, teamSlug, escapeHtml, gameKey } from '../lib/sheetParse';
+  import { fillTemplate, intlLocaleFor, makeCompoundTranslator, readDataJson, tTeamName } from '../lib/clientI18n';
 
-  const CSV_URL = document.getElementById('progress-chart').dataset.csvUrl;
+  const rootEl = document.getElementById('progress-chart');
+  const CSV_URL = rootEl.dataset.csvUrl;
+  const LOCALE = rootEl.dataset.locale || 'en';
+  const STRINGS = readDataJson(rootEl, 'strings');
+  const tName = makeCompoundTranslator(readDataJson(rootEl, 'nameMap'), gameKey);
+
   const KNOWN_TEAMS = ['mog', 'choco', 'tonberry'];
 
-  // Shorter x-axis labels for verbose game names. Tooltips still show the full sheet name.
+  // Label-shortening rules. Match against the RAW English name (consistent regex
+  // surface across locales), then return the locale-appropriate short form.
+  // Katakana is w i d e so be careful
   const LABEL_OVERRIDES = [
-    { match: /lightning returns/i, label: 'Lightning Returns' },
-    { match: /reunion/i, label: 'Crisis Core Reunion' },
-    { match: /dirge of cerberus/i, label: 'Dirge of Cerberus' },
-    { match: /tactics\s*(?:a2|advance\s*2)/i, label: 'Final Fantasy Tactics A2' },
-    { match: /stranger of paradise/i, label: 'Stranger of Paradise' },
+    { match: /lightning returns/i,            label: 'Lightning Returns',         labelJa: 'ライトニング リターンズ' },
+    { match: /reunion/i,                      label: 'Crisis Core Reunion',       labelJa: 'CCFF7 リユニオン' },
+    { match: /dirge of cerberus/i,            label: 'Dirge of Cerberus',         labelJa: 'ダージュ オブ ケルベロス' },
+    // Tactics A2 must precede the bare "Tactics Advance" rule below — first match wins.
+    { match: /tactics\s*(?:a2|advance\s*2)/i, label: 'Final Fantasy Tactics A2',  labelJa: 'タクティクス A2' },
+    { match: /tactics\s*advance/i,            label: 'Tactics Advance',           labelJa: 'タクティクス アドバンス' },
+    { match: /stranger of paradise/i,         label: 'Stranger of Paradise',      labelJa: 'SoP' },
+    { match: /rebirth/i,                      label: 'Final Fantasy VII Rebirth', labelJa: 'FF7 リバース' },
+    { match: /VII remake/i,                   label: 'Final Fantasy VII Remake',  labelJa: 'FF7 リメイク' },
+    { match: /crystal chronicles/i,           label: 'Crystal Chronicles',        labelJa: 'クリスタルクロニクル' },
+    { match: /world of final fantasy/i,       label: 'World of Final Fantasy',    labelJa: 'WoFF' },
   ];
-  function shortLabel(name) {
-    for (const { match, label } of LABEL_OVERRIDES) {
-      if (match.test(name)) return label;
+  function displayName(rawName) {
+    for (const { match, label, labelJa } of LABEL_OVERRIDES) {
+      if (match.test(rawName)) return LOCALE === 'ja' && labelJa ? labelJa : label;
     }
-    return name;
+    return tName(rawName);
   }
 
   const svgEl = document.getElementById('chart-svg');
@@ -304,15 +355,12 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const CHART_H = 380;
   const PAD_TOP = 18;
-  const PAD_BOTTOM = 140; // room for 45°-rotated long game-name labels
+  const PAD_BOTTOM = 140;
   const YAXIS_W = 56;
   const PAD_LEFT = YAXIS_W;
   const PAD_RIGHT = 16;
   const YAXIS_H = PAD_TOP + (CHART_H - PAD_TOP - PAD_BOTTOM);
 
-  // Zoom uses a logarithmic mapping between slider position (0..1) and pxPerSplit, so
-  // equal slider distance corresponds to equal multiplicative zoom — a linear scale
-  // felt warped because each px increment near minPx doubled the visible width.
   const MAX_PX = 110;
   const POLL_MS = 30_000;
   let pollHandle = null;
@@ -332,7 +380,6 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
     zoomEl.value = String(Math.max(0, Math.min(1, sliderTFromPx(pxPerSplit))));
   }
 
-  // Pull only the FIRST team-column group (cumulative-across-relay). Partial rows are dropped.
   function parseCumulativeForChart(text) {
     const rows = parseCsv(text);
     const headerIdx = rows.findIndex((r) => /^split name/i.test((r[0] ?? '').trim()));
@@ -353,7 +400,6 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
     const teamsInOrder = cols.map((c) => c.team).filter((t) => KNOWN_TEAMS.includes(t));
 
     const splits = [];
-    // Drives whether the parent <section> is shown — same hide-when-empty rule as LiveStatus.
     let anyData = false;
     for (let r = headerIdx + 1; r < rows.length; r++) {
       const row = rows[r];
@@ -368,9 +414,7 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
         anyData = true;
         times[c.team] = secs;
       }
-      // Advance the chart only when every team has finished this split.
       if (!allFilled) continue;
-      // "Final Fantasy <something>" rows are per-game totals — render as game boundaries.
       const isGameEnd = /\bfinal fantasy\b/i.test(name);
       splits.push({ name, times, isGameEnd });
     }
@@ -383,7 +427,6 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
       const sum = teams.reduce((a, t) => a + s.times[t], 0);
       const avg = sum / teams.length;
       const deltas = {};
-      // Positive = behind average (slower = higher time → team − avg > 0). Faster teams plot lower.
       for (const t of teams) deltas[t] = (s.times[t] - avg) / 60;
       return { name: s.name, deltas, isGameEnd: s.isGameEnd };
     });
@@ -429,7 +472,7 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
   function render(parsed) {
     const n = parsed.splits.length;
     if (n === 0) {
-      renderEmpty('No fully-completed splits yet.');
+      renderEmpty(STRINGS.emptyText);
       return;
     }
     const deltas = computeDeltas(parsed);
@@ -447,7 +490,6 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
     function xOf(i) { return PAD_LEFT + (i + 0.5) * pxPerSplit; }
     function yOf(v) { return PAD_TOP + ((yMax - v) / (yMax - yMin)) * plotH; }
 
-    // (n - 0.5) trims the trailing half-slot so the last point lands flush with the right edge.
     const plotW = pxPerSplit * Math.max(0.5, n - 0.5);
     const totalW = PAD_LEFT + plotW + PAD_RIGHT;
 
@@ -471,9 +513,7 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
       parts.push(`<line class="${cls}" x1="${PAD_LEFT}" y1="${y}" x2="${totalW - PAD_RIGHT}" y2="${y}" />`);
     }
 
-    // Zoomed out we drop segment labels and keep only per-game totals as anchors.
     const showAllLabels = pxPerSplit >= 28;
-    // Game-end dots always render; segment dots fade out as the chart densifies.
     const showSegmentDots = pxPerSplit >= 20;
 
     const labelY = CHART_H - PAD_BOTTOM + 14;
@@ -482,7 +522,7 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
       parts.push(`<line class="tick" x1="${x}" y1="${CHART_H - PAD_BOTTOM}" x2="${x}" y2="${CHART_H - PAD_BOTTOM + 4}" />`);
       const isEnd = deltas[i].isGameEnd;
       if (!showAllLabels && !isEnd) continue;
-      const name = shortLabel(deltas[i].name);
+      const name = displayName(deltas[i].name);
       const cls = isEnd ? 'axis-label x-label x-label-game' : 'axis-label x-label';
       parts.push(
         `<text class="${cls}" x="${x}" y="${labelY}" text-anchor="end" transform="rotate(-45 ${x} ${labelY})">${escapeHtml(name)}</text>`,
@@ -497,7 +537,9 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
         if (!isEnd && !showSegmentDots) continue;
         const cx = xOf(i);
         const cy = yOf(deltas[i].deltas[team]);
-        const label = `${team[0].toUpperCase()}${team.slice(1)} · ${deltas[i].name}: ${formatDelta(deltas[i].deltas[team])} from avg`;
+        const teamLabel = tTeamName(`${team[0].toUpperCase()}${team.slice(1)}`, LOCALE);
+        const splitDisplay = displayName(deltas[i].name);
+        const label = `${teamLabel} · ${splitDisplay}: ${formatDelta(deltas[i].deltas[team])} ${STRINGS.deltaTooltipFrom}`;
         const cls = isEnd ? `dot dot-${team} dot-game` : `dot dot-${team}`;
         const r = isEnd ? 5 : 3.5;
         parts.push(
@@ -525,29 +567,32 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
       const text = await res.text();
       const parsed = parseCumulativeForChart(text);
       if (!parsed) {
-        setStatus('Sheet format unexpected — could not find team columns.', true);
+        setStatus(STRINGS.unexpectedFormat, true);
         return;
       }
       lastParsed = parsed;
-      // Stick to the right edge across data updates so the latest splits stay in view.
-      // If the user has scrolled away from the end, leave their position alone.
       const wasAtEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
-      // updateZoomMin may render via setZoom — only render here if it didn't, to avoid a double draw.
       if (!updateZoomMin()) render(parsed);
       if (wasAtEnd) scrollEl.scrollLeft = scrollEl.scrollWidth;
-      const ts = new Date().toLocaleTimeString(undefined, {
+      const ts = new Date().toLocaleTimeString(intlLocaleFor(LOCALE), {
         hour: '2-digit', minute: '2-digit', second: '2-digit',
       });
-      setStatus(
-        parsed.splits.length === 0
-          ? `Updated ${ts} · waiting for the first split to be completed by all teams`
-          : `Updated ${ts} · ${parsed.splits.length} completed split${parsed.splits.length === 1 ? '' : 's'}`,
-        false,
-      );
+      const n = parsed.splits.length;
+      let statusText;
+      if (n === 0) {
+        statusText = fillTemplate(STRINGS.updatedWaiting, { ts });
+      } else {
+        const tpl = n === 1 ? STRINGS.updatedOne : STRINGS.updatedMany;
+        statusText = fillTemplate(tpl, { ts, n });
+      }
+      setStatus(statusText, false);
     } catch (err) {
-      const ts = new Date().toLocaleTimeString();
-      if (lastParsed) setStatus(`Last update failed at ${ts}. Showing previous data.`, true);
-      else setStatus(`Unable to load data (${err.message}). Retrying…`, true);
+      const ts = new Date().toLocaleTimeString(intlLocaleFor(LOCALE));
+      if (lastParsed) {
+        setStatus(fillTemplate(STRINGS.lastFailed, { ts }), true);
+      } else {
+        setStatus(fillTemplate(STRINGS.loadFailed, { err: err.message }), true);
+      }
     }
   }
 
@@ -567,7 +612,6 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
     else startPolling();
   });
 
-  // If focalClientX is given, keep the split under that point anchored as we rescale.
   function setZoom(next, focalClientX = null) {
     next = Math.max(minPx, Math.min(MAX_PX, next));
     if (Math.abs(next - pxPerSplit) < 0.001) return;
@@ -592,17 +636,13 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
   }
 
   zoomEl.addEventListener('input', () => {
-    // Anchor to the right edge so zooming in lands on the latest split.
     setZoom(pxFromSliderT(parseFloat(zoomEl.value)), scrollEl.getBoundingClientRect().right);
   });
 
-  // minPx = "every split fits in view". Recomputed as data and viewport grow.
-  // Returns true when it already triggered a render via setZoom.
   function updateZoomMin() {
     if (!lastParsed || lastParsed.splits.length === 0) return false;
     const avail = scrollEl.clientWidth - PAD_LEFT - PAD_RIGHT;
     if (avail <= 0) return false;
-    // Must match plotW's slot count in render().
     const slots = Math.max(0.5, lastParsed.splits.length - 0.5);
     minPx = Math.max(0.1, avail / slots);
     if (pxPerSplit < minPx - 0.001) {
@@ -622,7 +662,6 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
     }, 150);
   });
 
-  // Ctrl+wheel = zoom; plain vertical wheel = horizontal scroll (chart is intrinsically wide).
   scrollEl.addEventListener('wheel', (e) => {
     if (e.ctrlKey) {
       e.preventDefault();
@@ -639,8 +678,6 @@ const CSV_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.split
   let pinchStartPx = pxPerSplit;
   let pinchCenter = 0;
 
-  // Mouse click-drag to scroll horizontally. Capture only after the cursor moves
-  // past a small threshold so single clicks (which surface dot tooltips) still work.
   const DRAG_THRESHOLD = 4;
   let drag = null;
 

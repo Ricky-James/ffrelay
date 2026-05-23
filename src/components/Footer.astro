@@ -1,8 +1,23 @@
+---
+import { localeFromAstro, t, type Locale } from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+// No /ja/privacy or /ja/terms — JA pages link back to the unprefixed EN routes.
+const privacyHref = `${base}privacy`;
+const termsHref = `${base}terms`;
+---
+
 <footer id="site-footer" class="site-footer">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
     <p class="footer-line">
-      <a href="privacy">Privacy</a>
-      &nbsp;·&nbsp;<a href="terms">Terms</a>
+      <a href={privacyHref}>{t('footer.privacy', lang)}</a>
+      &nbsp;·&nbsp;<a href={termsHref}>{t('footer.terms', lang)}</a>
     </p>
   </div>
 </footer>

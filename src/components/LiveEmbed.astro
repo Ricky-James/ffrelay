@@ -1,11 +1,24 @@
 ---
 import eventData from '../data/event.json';
+import { localeFromAstro, localizedTwitchHandle, t, type Locale } from '../lib/i18n';
 
-const channel = eventData.twitch;
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
+
+const channel = localizedTwitchHandle(eventData, lang);
 const startDate = eventData.startDate;
+
+const ariaLabel = t('liveEmbed.ariaLabel', lang);
+const hideChat = t('liveEmbed.hideChat', lang);
+const showChat = t('liveEmbed.showChat', lang);
+const streamTitle = t('liveEmbed.streamTitle', lang);
+const chatTitle = t('liveEmbed.chatTitle', lang);
 ---
 
-<section id="live-embed" class="live-embed" hidden aria-label="Live stream">
+<section id="live-embed" class="live-embed" hidden aria-label={ariaLabel}>
   <div class="le-row">
     <button
       id="le-chat-toggle"
@@ -13,7 +26,7 @@ const startDate = eventData.startDate;
       class="le-chat-toggle"
       aria-pressed="false"
       aria-controls="le-chat"
-      title="Hide chat"
+      title={hideChat}
     >
       <iconify-icon
         id="le-chat-toggle-icon"
@@ -21,19 +34,19 @@ const startDate = eventData.startDate;
         width="20"
         height="20"
         aria-hidden="true"></iconify-icon>
-      <span id="le-chat-toggle-label" class="le-chat-toggle-label">Hide chat</span>
+      <span id="le-chat-toggle-label" class="le-chat-toggle-label">{hideChat}</span>
     </button>
     <div class="le-stream">
       <iframe
         id="le-stream-iframe"
-        title="Twitch stream"
+        title={streamTitle}
         allowfullscreen
         allow="autoplay; fullscreen"
         frameborder="0"
         scrolling="no"></iframe>
     </div>
     <div id="le-chat" class="le-chat">
-      <iframe id="le-chat-iframe" title="Twitch chat" frameborder="0" scrolling="no"></iframe>
+      <iframe id="le-chat-iframe" title={chatTitle} frameborder="0" scrolling="no"></iframe>
     </div>
   </div>
 </section>
@@ -168,7 +181,7 @@ const startDate = eventData.startDate;
   }
 </style>
 
-<script is:inline define:vars={{ channel, startDate }}>
+<script is:inline define:vars={{ channel, startDate, hideChat, showChat }}>
   const sectionEl = document.getElementById('live-embed');
   const rowEl = sectionEl.querySelector('.le-row');
   const streamIframe = document.getElementById('le-stream-iframe');
@@ -181,8 +194,8 @@ const startDate = eventData.startDate;
   function applyChatHidden(hidden) {
     rowEl.classList.toggle('chat-hidden', hidden);
     toggleBtn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
-    toggleBtn.setAttribute('title', hidden ? 'Show chat' : 'Hide chat');
-    toggleLabel.textContent = hidden ? 'Show chat' : 'Hide chat';
+    toggleBtn.setAttribute('title', hidden ? showChat : hideChat);
+    toggleLabel.textContent = hidden ? showChat : hideChat;
   }
 
   try {

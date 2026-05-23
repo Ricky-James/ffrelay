@@ -1,13 +1,20 @@
 ---
 import Table, { type Column, type Cell } from './Table.astro';
 import data from '../data/games.json';
+import { localeFromAstro, t, tGameName, type Locale } from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
 
 const relayShortLabels: Record<string, string> = {
   'Relay I': 'I',
   'Relay II': 'II',
   'Relay III': 'III',
   'Relay IV': 'IV',
-  'IV: Interlude': 'IV½',
+  'IV: Interlude': 'IV-I',
   'Relay V': 'V',
   'Relay VI': 'VI',
   'Relay VII': 'VII',
@@ -16,19 +23,23 @@ const relayShortLabels: Record<string, string> = {
   'Relay X': 'X',
 };
 
+const groupRelaysLabel = t('games.groupRelays', lang);
+const colGameLabel = t('games.colGame', lang);
+const colTotalLabel = t('games.colTotalAppearances', lang);
+
 const columns: Column[] = [
-  { key: 'name', label: 'Game' },
+  { key: 'name', label: colGameLabel },
   ...data.relays.map((r) => ({
     key: `relay-${r}`,
     label: relayShortLabels[r] ?? r,
     align: 'center' as const,
-    group: 'Relays',
+    group: groupRelaysLabel,
   })),
-  { key: 'total', label: 'Total\nAppearances', align: 'center' as const },
+  { key: 'total', label: colTotalLabel, align: 'center' as const },
 ];
 
 const rows = data.games.map((g) => {
-  const row: Record<string, Cell> = { name: g.name, total: g.total };
+  const row: Record<string, Cell> = { name: tGameName(g.name, lang), total: g.total };
   g.platforms.forEach((p, i) => {
     row[`relay-${data.relays[i]}`] = p;
   });
@@ -38,11 +49,8 @@ const rows = data.games.map((g) => {
 
 <div class="games-block">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-    <p class="section-lead">
-      Every Final Fantasy title that has been part of a Relay Race, the version played in each
-      relay, and how many times the game has been featured overall.
-    </p>
-    <p class="game-count">{data.games.length} games</p>
+    <p class="section-lead">{t('games.lead', lang)}</p>
+    <p class="game-count">{t('games.count', lang, { n: data.games.length })}</p>
   </div>
   <div class="games-table-wrap">
     <Table columns={columns} rows={rows} compact />

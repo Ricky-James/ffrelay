@@ -2,17 +2,41 @@
 import '../styles/global.css';
 import siteData from '../data/site.json';
 import eventData from '../data/event.json';
+import {
+  canonicalPath,
+  localeFromAstro,
+  otherLocale,
+  pathInOtherLocale,
+  tField,
+  type Locale,
+} from '../lib/i18n';
 
 interface Props {
   title?: string;
   description?: string;
+  lang?: Locale;
 }
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const { title = siteData.title, description = siteData.description } = Astro.props;
+const lang = Astro.props.lang ?? localeFromAstro(Astro);
+
+const localizedTitle = tField(siteData, 'title', lang);
+const localizedDescription = tField(siteData, 'description', lang);
+const localizedOgSiteName = tField(siteData, 'ogSiteName', lang);
+const localizedEventName = tField(eventData, 'name', lang);
+const localizedTagline = tField(eventData, 'tagline', lang);
+
+const { title = localizedTitle, description = localizedDescription } = Astro.props;
 
 const siteOrigin = Astro.site?.origin ?? eventData.url;
-const canonicalURL = `${siteOrigin}${Astro.url.pathname}`;
+// Clean-URL form so canonical matches the hreflang alternates and the nav links.
+const canonicalURL = `${siteOrigin}${canonicalPath(Astro.url.pathname, lang)}`;
+const altOtherURL = `${siteOrigin}${pathInOtherLocale(Astro.url.pathname, lang)}`;
+const enURL = lang === 'en' ? canonicalURL : altOtherURL;
+
+const otherLang = otherLocale(lang);
+const ogLocale = lang === 'ja' ? 'ja_JP' : 'en_US';
+const ogLocaleAlternate = otherLang === 'ja' ? 'ja_JP' : 'en_US';
 
 const sameAsLinks = [
   eventData.twitch && `https://twitch.tv/${eventData.twitch}`,
@@ -25,19 +49,21 @@ const defaultSchema = {
     {
       "@type": "Event",
       "@id": `${eventData.url}/#event`,
-      name: eventData.name,
-      description: eventData.tagline,
+      name: localizedEventName,
+      description: localizedTagline,
       url: eventData.url,
       eventStatus: "https://schema.org/EventScheduled",
       eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
       sameAs: sameAsLinks,
+      inLanguage: lang === 'ja' ? 'ja' : 'en',
     },
     {
       "@type": "WebSite",
       "@id": `${eventData.url}/#website`,
-      name: siteData.title,
+      name: localizedTitle,
       description: description,
       url: eventData.url,
+      inLanguage: lang === 'ja' ? 'ja' : 'en',
     },
   ],
 };
@@ -48,23 +74,27 @@ function safeJsonLd(obj: object): string {
 ---
 
 <!doctype html>
-<html lang="en" style="color-scheme: dark; background: #020617;" data-theme-key={siteData.themeStorageKey}>
+<html lang={lang} style="color-scheme: dark; background: #020617;" data-theme-key={siteData.themeStorageKey} data-locale={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
-    <meta name="author" content={eventData.name} />
-    <meta name="application-name" content={siteData.ogSiteName} />
+    <meta name="author" content={localizedEventName} />
+    <meta name="application-name" content={localizedOgSiteName} />
     <meta name="color-scheme" content="dark light" />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang="en" href={lang === 'en' ? canonicalURL : altOtherURL} />
+    <link rel="alternate" hreflang="ja" href={lang === 'ja' ? canonicalURL : altOtherURL} />
+    <link rel="alternate" hreflang="x-default" href={enURL} />
 
     <meta property="og:type"         content="website" />
     <meta property="og:url"          content={canonicalURL} />
     <meta property="og:title"        content={title} />
     <meta property="og:description"  content={description} />
-    <meta property="og:site_name"    content={siteData.ogSiteName} />
-    <meta property="og:locale"       content="en_US" />
+    <meta property="og:site_name"    content={localizedOgSiteName} />
+    <meta property="og:locale"       content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
 
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content={title} />

@@ -1,13 +1,20 @@
 ---
 import Table, { type Column, type Cell } from './Table.astro';
 import data from '../data/runners.json';
+import { localeFromAstro, t, tGameName, type Locale } from '../lib/i18n';
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
 
 const relayShortLabels: Record<string, string> = {
   'Relay I': 'I',
   'Relay II': 'II',
   'Relay III': 'III',
   'Relay IV': 'IV',
-  'IV: Interlude': 'IV½',
+  'IV: Interlude': 'IV-I',
   'Relay V': 'V',
   'Relay VI': 'VI',
   'Relay VII': 'VII',
@@ -16,21 +23,26 @@ const relayShortLabels: Record<string, string> = {
   'Relay X': 'X',
 };
 
+const groupRelaysLabel = t('runners.groupRelays', lang);
+const colRunnerLabel = t('runners.colRunner', lang);
+const colTotalLabel = t('runners.colTotalAppearances', lang);
+
 const columns: Column[] = [
-  { key: 'name', label: 'Runner' },
+  { key: 'name', label: colRunnerLabel },
   ...data.relays.map((r) => ({
     key: `relay-${r}`,
     label: relayShortLabels[r] ?? r,
     align: 'center' as const,
-    group: 'Relays',
+    group: groupRelaysLabel,
   })),
-  { key: 'runs', label: 'Total\nAppearances', align: 'center' },
+  { key: 'runs', label: colTotalLabel, align: 'center' },
 ];
 
+// Runner handles are proper nouns — never translated. Only per-relay game cells localize.
 const rows = data.runners.map((r) => {
   const row: Record<string, Cell> = { name: r.name, runs: r.runs };
   r.games.forEach((g, i) => {
-    row[`relay-${data.relays[i]}`] = g;
+    row[`relay-${data.relays[i]}`] = g ? tGameName(g, lang) : g;
   });
   return row;
 });
@@ -38,11 +50,8 @@ const rows = data.runners.map((r) => {
 
 <div class="runners-block">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-    <p class="section-lead">
-      Every runner who has taken part in a Final Fantasy Relay Race, sorted by total
-      appearances, with the game run in each relay.
-    </p>
-    <p class="runner-count">{data.runners.length} runners</p>
+    <p class="section-lead">{t('runners.lead', lang)}</p>
+    <p class="runner-count">{t('runners.count', lang, { n: data.runners.length })}</p>
   </div>
   <div class="runners-table-wrap">
     <Table columns={columns} rows={rows} compact />

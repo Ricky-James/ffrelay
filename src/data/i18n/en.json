@@ -1,0 +1,169 @@
+{
+  "nav": {
+    "/": { "label": "Home", "shortLabel": "Home", "desc": "What is the FF Relay?" },
+    "/schedule": { "label": "Schedule", "shortLabel": "Schedule", "desc": "Predicted run schedule in your local timezone" },
+    "/splits": { "label": "Splits", "shortLabel": "Detailed\nSplits", "desc": "Per-game split times for the current run" },
+    "/past-results": { "label": "Past Results", "shortLabel": "Past\nResults", "desc": "Previous winners and full per-relay breakdowns" },
+    "/history": { "label": "History", "shortLabel": "History", "desc": "Every Final Fantasy game and runner who has taken part" }
+  },
+  "header": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "siteNav": "Site navigation",
+    "themeToggle": "Toggle light / dark mode",
+    "overlayExplore": "Explore",
+    "overlayExternal": "External"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "languageSwitch": {
+    "linkLabel": "日本語",
+    "linkTitle": "Switch to Japanese"
+  },
+  "hero": {
+    "watchSentence": "Watch {relay} Live on Twitch",
+    "watchCta": "Watch on Twitch",
+    "relayPrefix": "Relay"
+  },
+  "info": {
+    "eyebrow": "About the event",
+    "heading": "What is the Final Fantasy Relay?",
+    "paragraph1": "The Final Fantasy Series Relay Race is a community celebration of Final Fantasy Speedrunning. The race runs non-stop across 4 days, while 2 or 3 teams compete to finish a set of games from the Final Fantasy franchise in the shortest combined time.",
+    "paragraph2": "The event is run as a relay race, which means when a runner completes their game, the runner for the next game on the same team starts immediately. The team that finishes all of the games first is the winner!"
+  },
+  "liveEmbed": {
+    "ariaLabel": "Live stream",
+    "hideChat": "Hide chat",
+    "showChat": "Show chat",
+    "streamTitle": "Twitch stream",
+    "chatTitle": "Twitch chat"
+  },
+  "liveStatus": {
+    "ariaLabel": "Current relay status",
+    "standings": "Standings",
+    "onCommentary": "On commentary",
+    "upNext": "Up next",
+    "runner": "Runner",
+    "game": "Game",
+    "finishedPrefix": "Finished! Completion time:",
+    "gapFromOrdinal": "{gap} from {ordinal}",
+    "gapFromFirst": "{gap} from 1st",
+    "chartCaption": "Each line is a team's cumulative split delta vs the 3-team average — lower is faster."
+  },
+  "schedule": {
+    "metaTitle": "Schedule",
+    "metaDescription": "Predicted run schedule for the current {eventName}, shown in your local timezone.",
+    "eyebrowPre": "Schedule",
+    "eyebrow": "Predicted schedule",
+    "heading": "Schedule",
+    "placeholderLead": "The schedule will appear here closer to the event.",
+    "tzLead": "Estimated start times. Adjusted for your local time zone: ({tz}).",
+    "aggressiveLead": "This schedule uses aggressive run estimates. This is because, unlike traditional speedrun events, we cannot pause if we are ahead of schedule. For this event, runners are typically not expected to beat the estimate given.",
+    "updatedLead": "This schedule is updated as runs are completed. Runs coming up soon will have a more accurate start time than runs later in the event.",
+    "loadingStatus": "Loading schedule…",
+    "colGame": "Game",
+    "colStart": "Start",
+    "colEnd": "End",
+    "colDuration": "Duration",
+    "colStatus": "Status",
+    "endOfEvent": "End of event",
+    "noRunsScheduled": "No runs scheduled yet.",
+    "sheetFormatUnexpected": "Sheet format unexpected — could not find \"Game\", \"Time\", and \"Start UTC\" columns.",
+    "statusUpdated": "Updated {ts} · {n} runs · Times in {tz}",
+    "statusLastFailed": "Last update failed at {ts}. Showing previous data.",
+    "commentaryLabel": "Commentary:",
+    "pillLive": "Live",
+    "pillDone": "Done",
+    "pillUpcoming": "Upcoming"
+  },
+  "splits": {
+    "metaTitle": "Splits",
+    "metaDescription": "Live cumulative split times for the current {eventName}.",
+    "eyebrow": "Splits breakdown",
+    "heading": "Splits",
+    "lead": "Live splits for the current relay. For each team you'll see:",
+    "splitTimesTerm": "Split Times",
+    "splitTimesDesc": "are the cumulative splits for the entire relay.",
+    "splitsByGameTerm": "Splits By Game",
+    "splitsByGameDesc": "are reset for each game. Useful to see how each team performed for each game.",
+    "segmentTimesTerm": "Segment Times",
+    "segmentTimesDesc": "are the duration of each split. Useful to see if a team might be catching up.",
+    "loadingStatus": "Loading splits…",
+    "colSplit": "Split",
+    "colLoading": "Loading…",
+    "noSplitsRecorded": "No splits recorded yet.",
+    "sheetFormatUnexpected": "Sheet format unexpected — could not find team columns.",
+    "statusUpdated": "Updated {ts} · {n} splits",
+    "statusLastFailed": "Last update failed at {ts}. Showing previous data.",
+    "statusLoadFailed": "Unable to load splits ({err}). Retrying…"
+  },
+  "history": {
+    "metaTitle": "History",
+    "metaDescription": "Every Final Fantasy game played and every runner who has taken part across all {eventName} events.",
+    "eyebrow": "Archive",
+    "heading": "History",
+    "lead": "Every Final Fantasy title that has been part of a Relay Race, and every runner who has taken part across all events.",
+    "tabsAriaLabel": "History sections",
+    "tabGames": "Games",
+    "tabRunners": "Runners"
+  },
+  "games": {
+    "lead": "Every Final Fantasy title that has been part of a Relay Race, the version played in each relay, and how many times the game has been featured overall.",
+    "count": "{n} games",
+    "colGame": "Game",
+    "colTotalAppearances": "Total\nAppearances",
+    "groupRelays": "Relays"
+  },
+  "runners": {
+    "lead": "Every runner who has taken part in a Final Fantasy Relay Race, sorted by total appearances, with the game run in each relay.",
+    "count": "{n} runners",
+    "colRunner": "Runner",
+    "colTotalAppearances": "Total\nAppearances",
+    "groupRelays": "Relays"
+  },
+  "pastResults": {
+    "metaTitle": "Past Results",
+    "metaDescription": "Previous winners and full per-relay breakdowns for every {eventName}.",
+    "heading": "Previous Winners",
+    "lead": "Every Final Fantasy Relay Race held to date, with team count, winner, and links to the VoDs.",
+    "colEvent": "Event",
+    "colDate": "Date",
+    "colTeams": "Teams",
+    "colWinner": "Winner",
+    "colVod": "VoD",
+    "vodLinkText": "Link",
+    "detailHeading": "Previous Results",
+    "detailLead": "Games, runners, and final times for each Final Fantasy Relay Race. Pick a tab to jump to that event.",
+    "detailFollowup": "For even more details, check out the",
+    "detailFollowupSuffix": "page!",
+    "historyLinkText": "History",
+    "tabsAriaLabel": "Per-relay details",
+    "tabRelayPrefix": "Relay",
+    "interludeSuffix": "Interlude",
+    "colRelayGame": "Game",
+    "colRelayRunner": "Runner",
+    "colRelayTime": "Time",
+    "finalTime": "Final Time"
+  },
+  "progressChart": {
+    "zoom": "Zoom",
+    "zoomAriaLabel": "Chart zoom level",
+    "hintPre": "Scroll, drag, or pinch /",
+    "hintKey": "Ctrl",
+    "hintPost": "+wheel to zoom",
+    "legendAriaLabel": "Team colour key",
+    "ariaLabel": "Cumulative split delta per team, in minutes from the three-team average",
+    "loadingText": "Loading splits…",
+    "loadingStatus": "Loading…",
+    "emptyText": "No fully-completed splits yet.",
+    "statusUpdatedWaiting": "Updated {ts} · waiting for the first split to be completed by all teams",
+    "statusUpdatedOne": "Updated {ts} · {n} completed split",
+    "statusUpdatedMany": "Updated {ts} · {n} completed splits",
+    "statusLastFailed": "Last update failed at {ts}. Showing previous data.",
+    "statusLoadFailed": "Unable to load data ({err}). Retrying…",
+    "statusUnexpectedFormat": "Sheet format unexpected — could not find team columns.",
+    "deltaTooltipFrom": "from avg"
+  }
+}

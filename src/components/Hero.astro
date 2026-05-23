@@ -1,9 +1,39 @@
 ---
 import eventData from '../data/event.json';
 import { getSocialLinks } from '../lib/socialLinks';
+import {
+  localeFromAstro,
+  localizedTwitchHandle,
+  t,
+  tField,
+  type Locale,
+} from '../lib/i18n';
 
-const socialLinks = getSocialLinks(eventData as unknown as Record<string, string | string[]>);
-const twitchUrl = `https://twitch.tv/${eventData.twitch}`;
+interface Props {
+  lang?: Locale;
+}
+
+const lang: Locale = Astro.props.lang ?? localeFromAstro(Astro);
+
+const twitchHandle = localizedTwitchHandle(eventData, lang);
+const twitchUrl = `https://twitch.tv/${twitchHandle}`;
+
+const socialPersonal: Record<string, string | string[]> = {
+  ...(eventData as unknown as Record<string, string>),
+  twitch: twitchHandle,
+};
+const socialLinks = getSocialLinks(socialPersonal);
+
+const eventName = tField(eventData, 'name', lang);
+const tagline = tField(eventData, 'tagline', lang);
+const eventDates = tField(eventData, 'eventDates', lang);
+
+const relayPrefix = t('hero.relayPrefix', lang);
+const watchCta = t('hero.watchCta', lang);
+// Translators own the full sentence + word order; set:html is safe because the template
+// is from our own JSON, not user input.
+const relayHtml = `<span class="cta-event">${relayPrefix} ${eventData.eventNumber}</span>`;
+const watchSentenceHtml = t('hero.watchSentence', lang, { relay: relayHtml });
 ---
 
 <section id="home" class="relative overflow-hidden flex items-center">
@@ -16,9 +46,9 @@ const twitchUrl = `https://twitch.tv/${eventData.twitch}`;
     <div class="hero-grid">
       <div class="hero-copy">
         <h1 class="hero-title">
-          <span class="gradient-text">{eventData.name}</span>
+          <span class="gradient-text">{eventName}</span>
         </h1>
-        <p class="hero-tagline">{eventData.tagline}</p>
+        <p class="hero-tagline">{tagline}</p>
 
         <div class="hero-actions">
           {
@@ -39,14 +69,12 @@ const twitchUrl = `https://twitch.tv/${eventData.twitch}`;
       </div>
 
       <div class="hero-cta">
-        <p class="cta-headline">
-          Watch <span class="cta-event">Relay {eventData.eventNumber}</span> Live on Twitch
-        </p>
-        <p class="cta-dates">{eventData.eventDates}</p>
+        <p class="cta-headline" set:html={watchSentenceHtml} />
+        <p class="cta-dates">{eventDates}</p>
         <a href={twitchUrl} class="cta-btn" target="_blank" rel="noopener noreferrer">
           <iconify-icon icon="simple-icons:twitch" width="22" height="22" aria-hidden="true"
           ></iconify-icon>
-          <span>Watch on Twitch</span>
+          <span>{watchCta}</span>
         </a>
       </div>
     </div>

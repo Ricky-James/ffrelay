@@ -5,6 +5,14 @@ export type LinkCell = { href: string; text: string; external?: boolean };
 export type TagCell = { tag: string; tone: CellTone };
 export type Cell = string | number | null | undefined | LinkCell | TagCell;
 
+/** Positional (not keyed) so cells can colspan body column groups. */
+export type FooterCell = {
+  value: Cell;
+  colspan?: number;
+  align?: 'left' | 'center' | 'right';
+  tone?: CellTone;
+};
+
 export interface Column {
   key: string;
   label: string;
@@ -25,6 +33,8 @@ export interface Props {
   emptyMessage?: string;
   /** Shrinks the table to content width, centers it, and applies dense typography. */
   compact?: boolean;
+  /** Optional <tfoot> row; caller is responsible for matching the total column span. */
+  footerRow?: FooterCell[];
 }
 
 const {
@@ -34,6 +44,7 @@ const {
   caption,
   emptyMessage = 'No entries yet.',
   compact = false,
+  footerRow,
 } = Astro.props;
 
 function isLink(v: Cell): v is { href: string; text: string; external?: boolean } {
@@ -197,6 +208,36 @@ if (hasGroups) {
               </tr>
             ))}
           </tbody>
+          {footerRow && footerRow.length > 0 && (
+            <tfoot>
+              <tr class="totals-row">
+                {footerRow.map((cell) => {
+                  const align = cell.align ?? 'left';
+                  const toneClass = cell.tone ? `cell-tone-${cell.tone}` : null;
+                  if (isTag(cell.value)) {
+                    return (
+                      <td
+                        colspan={cell.colspan ?? 1}
+                        class:list={[toneClass]}
+                        style={`text-align:${align};`}
+                      >
+                        <span class:list={['cell-tag', `cell-tag-${cell.value.tone}`]}>{cell.value.tag}</span>
+                      </td>
+                    );
+                  }
+                  return (
+                    <td
+                      colspan={cell.colspan ?? 1}
+                      class:list={[toneClass]}
+                      style={`text-align:${align};`}
+                    >
+                      {cell.value == null || cell.value === '' ? '' : cell.value}
+                    </td>
+                  );
+                })}
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
     )
@@ -390,6 +431,32 @@ if (hasGroups) {
   [data-theme='light'] .cell-tag-blue { color: #0c4a6e; }
   [data-theme='light'] .cell-tag-yellow { color: #713f12; }
   [data-theme='light'] .cell-tag-green { color: #14532d; }
+
+  .data-table tfoot .totals-row td {
+    padding: 0.85rem 1rem;
+    border-top: 2px solid rgba(251, 191, 36, 0.25);
+    background: rgba(251, 191, 36, 0.03);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .data-table-dense tfoot .totals-row td {
+    padding: 0.6rem 0.55rem;
+    font-size: 0.92rem;
+  }
+  .data-table tfoot .totals-row td:first-child {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  [data-theme='light'] .data-table tfoot .totals-row td {
+    border-top-color: rgba(202, 138, 4, 0.3);
+    background: rgba(202, 138, 4, 0.04);
+  }
 
   .table-empty {
     padding: 1.5rem 1rem;

@@ -196,6 +196,28 @@
   }
 }
 
+/* Wide letter-spacing stretches CJK glyphs unnaturally; uppercase is a no-op on kana. */
+html[lang="ja"] {
+  --label-letter-spacing: 0;
+}
+html[lang="ja"] .eyebrow,
+html[lang="ja"] .ls-label,
+html[lang="ja"] .ls-meta-label,
+html[lang="ja"] .ls-upnext-label,
+html[lang="ja"] .ls-comm-game,
+html[lang="ja"] .overlay-eyebrow,
+html[lang="ja"] .overlay-bottom-label,
+html[lang="ja"] .nav-link-sm,
+html[lang="ja"] .run-comm-label,
+html[lang="ja"] .pill,
+html[lang="ja"] .schedule-table th,
+html[lang="ja"] .schedule-table tr.day-row td,
+html[lang="ja"] .schedule-table tr.end-row td.col-game,
+html[lang="ja"] .splits-table th {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 body.page-hidden * {
   animation-play-state: paused !important;
 }

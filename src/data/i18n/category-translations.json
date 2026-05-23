@@ -1,0 +1,28 @@
+{
+  "_comment": "Speedrun category names. Pass-through when missing — JP speedrun community generally keeps these in English.",
+  "_comment2": "_platforms lists tokens the parser should never translate (always pass-through as-is).",
+
+  "_platforms": [
+    "PSP", "GBA", "NES", "Famicom", "SNES", "PS1", "PSX", "PS2", "PS3", "PS4", "PS5",
+    "PC", "Switch", "NDS", "DS", "3DS", "GameCube", "GC", "Xbox", "Mobile", "iOS", "Android",
+    "Pixel Remaster"
+  ],
+
+  "Any%": "Any%",
+  "100%": "100%",
+  "CSR": "ムービー除去Mod",
+  "Glitchless": "バグなし",
+  "Warpless": "Warpless",
+  "No Slots": "スロットなし",
+  "Pixel Remaster": "ピクセルリマスター",
+  "No Seitengrat": "ザイテングラートなし",
+  "No AMG": "Active Menu Glitch禁止",
+  "No CC": "クリーチャークリエイトなし",
+  "No Creature Creator": "クリーチャークリエイトなし",
+  "Sketch": "スケッチバグあり",
+  "No Sketch": "スケッチバグなし",
+  "No 64": "64階層バグ禁止",
+  "Slots": "スロットあり"
+
+
+}
