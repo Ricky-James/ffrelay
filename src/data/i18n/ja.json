@@ -47,9 +47,9 @@
     "upNext": "次のゲーム",
     "runner": "ランナー",
     "game": "ゲーム",
-    "finishedPrefix": "完走！ クリアタイム:",
-    "gapFromOrdinal": "{ordinal}との差 {gap}",
-    "gapFromFirst": "1位との差 {gap}",
+    "completionTimeLabel": "クリアタイム",
+    "gapFromOrdinalLabel": "{ordinal}との差",
+    "gapFromFirstLabel": "1位との差",
     "chartCaption": "各ラインは3チームの平均との累計スプリット差です — 下にあるほど速い。"
   },
   "schedule": {

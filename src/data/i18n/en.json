@@ -47,9 +47,9 @@
     "upNext": "Up next",
     "runner": "Runner",
     "game": "Game",
-    "finishedPrefix": "Finished! Completion time:",
-    "gapFromOrdinal": "{gap} from {ordinal}",
-    "gapFromFirst": "{gap} from 1st",
+    "completionTimeLabel": "Completion time",
+    "gapFromOrdinalLabel": "From {ordinal}",
+    "gapFromFirstLabel": "From 1st",
     "chartCaption": "Each line is a team's cumulative split delta vs the 3-team average — lower is faster."
   },
   "schedule": {

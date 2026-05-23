@@ -27,9 +27,9 @@ const upNextLabel = t('liveStatus.upNext', lang);
 const chartCaption = t('liveStatus.chartCaption', lang);
 
 const STRINGS_JSON = JSON.stringify({
-  finishedPrefix: t('liveStatus.finishedPrefix', lang),
-  gapFromOrdinal: t('liveStatus.gapFromOrdinal', lang),
-  gapFromFirst: t('liveStatus.gapFromFirst', lang),
+  completionTimeLabel: t('liveStatus.completionTimeLabel', lang),
+  gapFromOrdinalLabel: t('liveStatus.gapFromOrdinalLabel', lang),
+  gapFromFirstLabel: t('liveStatus.gapFromFirstLabel', lang),
   runner: t('liveStatus.runner', lang),
   game: t('liveStatus.game', lang),
 });
@@ -236,11 +236,6 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
     outline-offset: 2px;
     border-radius: 2px;
   }
-  .ls-meta-done {
-    font-weight: 700;
-    white-space: normal;
-    color: var(--text);
-  }
   /* Medal palette (gold/silver/bronze) — kept distinct from team tones. */
   .ls-rank {
     display: inline-flex;
@@ -318,8 +313,6 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
   [data-theme='light'] .ls-row.tone-yellow { color: #713f12; }
   [data-theme='light'] .ls-row.tone-green  { color: #14532d; }
 
-  /* Outrank the leader rule above so a finished leader's subtitle stays neutral. */
-  .ls-row .ls-meta-done { color: var(--text); }
 
   .ls-commentary {
     margin-top: 1.5rem;
@@ -585,19 +578,26 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
         : '';
       let subtitleHtml = '';
       if (row.finishedSecs != null) {
-        const parts = [`${STRINGS.finishedPrefix} ${formatHMS(row.finishedSecs)}`];
+        // Mirror the Runner/Game label+value pattern used in the active state below.
+        const parts = [{
+          label: STRINGS.completionTimeLabel,
+          value: formatHMS(row.finishedSecs),
+        }];
         if (row.finishGapToPrev != null) {
-          parts.push(fillTemplate(STRINGS.gapFromOrdinal, {
-            gap: formatGap(row.finishGapToPrev),
-            ordinal: ordinal(i),
-          }));
+          parts.push({
+            label: fillTemplate(STRINGS.gapFromOrdinalLabel, { ordinal: ordinal(i) }),
+            value: formatGap(row.finishGapToPrev),
+          });
         }
         if (row.finishGapToLeader != null) {
-          parts.push(fillTemplate(STRINGS.gapFromFirst, {
-            gap: formatGap(row.finishGapToLeader),
-          }));
+          parts.push({
+            label: STRINGS.gapFromFirstLabel,
+            value: formatGap(row.finishGapToLeader),
+          });
         }
-        subtitleHtml = `<span class="ls-meta ls-meta-done">${escapeHtml(parts.join(' · '))}</span>`;
+        subtitleHtml = parts.map(({ label, value }) =>
+          `<span class="ls-meta"><span class="ls-meta-label">${escapeHtml(label)}</span>${escapeHtml(value)}</span>`,
+        ).join('');
       } else {
         const runnerLine = row.runner
           ? `<span class="ls-meta"><span class="ls-meta-label">${escapeHtml(STRINGS.runner)}</span>${linkName(row.runner)}</span>`
