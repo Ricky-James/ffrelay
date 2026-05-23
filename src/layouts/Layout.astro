@@ -1,5 +1,17 @@
 ---
 import '../styles/global.css';
+// Shippori Mincho — Japanese subset (unicode-range targets kana/kanji codepoints
+// so the JP subset is selected automatically). Latin subset also imported so
+// mixed-script content (e.g. JP game titles with English category suffixes)
+// can render in a single mincho voice — opt-in per element via font-family.
+import '@fontsource/shippori-mincho/japanese-400.css';
+import '@fontsource/shippori-mincho/japanese-600.css';
+import '@fontsource/shippori-mincho/japanese-700.css';
+import '@fontsource/shippori-mincho/japanese-800.css';
+import '@fontsource/shippori-mincho/latin-400.css';
+import '@fontsource/shippori-mincho/latin-600.css';
+import '@fontsource/shippori-mincho/latin-700.css';
+import '@fontsource/shippori-mincho/latin-800.css';
 import siteData from '../data/site.json';
 import eventData from '../data/event.json';
 import {

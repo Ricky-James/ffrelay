@@ -481,4 +481,25 @@ if (hasGroups) {
     color: #713f12;
     border-bottom-color: #713f12;
   }
+
+  /* JA overrides live in this scoped block so the data-astro-cid attribute Astro
+     adds to `.data-table th` lifts their specificity above anything global.css
+     could write. Cell weight drops to 400 so Latin runner handles render Regular
+     rather than inheriting body Medium. */
+  :global(html[lang="ja"]) .data-table th {
+    font-size: 0.96rem;
+    letter-spacing: 0;
+  }
+  :global(html[lang="ja"]) .data-table th.group-header {
+    font-size: 0.65rem;
+  }
+  :global(html[lang="ja"]) .data-table-dense th {
+    font-size: 0.8rem;
+  }
+  :global(html[lang="ja"]) .data-table-dense th.group-header {
+    font-size: 1rem;
+  }
+  :global(html[lang="ja"]) .data-table td {
+    font-weight: 400;
+  }
 </style>

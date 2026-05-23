@@ -1,10 +1,10 @@
 {
-  "title": "Final Fantasy Relay",
-  "titleJa": "ファイナルファンタジー リレー",
+  "title": "Final Fantasy Series Relay",
+  "titleJa": "FINAL FANTASY シリーズ リレー",
   "description": "A community speedrun relay through the Final Fantasy series. Watch the live stream, follow splits and progress, and review past events.",
   "descriptionJa": "ファイナルファンタジーシリーズを駆け抜けるコミュニティ主催のスピードランリレーイベント。ライブ配信を観戦したり、スプリットと進捗を追跡したり、過去のイベントを振り返ったりできます。",
-  "ogSiteName": "Final Fantasy Relay",
-  "ogSiteNameJa": "ファイナルファンタジー リレー",
+  "ogSiteName": "Final Fantasy Series Relay",
+  "ogSiteNameJa": "FINAL FANTASY シリーズ リレー",
   "themeStorageKey": "ffrelay-theme",
   "navExternal": [
     {

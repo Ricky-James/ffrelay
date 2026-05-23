@@ -44,7 +44,7 @@
   }
 
   body {
-    font-family: "Inter", sans-serif;
+    font-family: "Inter", "Shippori Mincho", sans-serif;
     background-color: var(--bg);
     color: var(--text);
     background-image:
@@ -196,10 +196,68 @@
   }
 }
 
-/* Wide letter-spacing stretches CJK glyphs unnaturally; uppercase is a no-op on kana. */
 html[lang="ja"] {
   --label-letter-spacing: 0;
 }
+/* Body weight 500 = Inter Medium / Mincho 400 (rounded); heavier weights opt in
+   per-element below so Inter never lands on ExtraBold. `palt` is a Shippori-only
+   feature that tightens kana/punctuation and is a no-op on Latin glyphs. */
+html[lang="ja"] body {
+  font-feature-settings: "palt";
+  font-weight: 500;
+}
+
+/* Kana needs more px than equivalent Inter to stay legible. */
+html[lang="ja"] .eyebrow,
+html[lang="ja"] .ls-label,
+html[lang="ja"] .ls-upnext-label,
+html[lang="ja"] .ls-meta,
+html[lang="ja"] .ls-meta-label,
+html[lang="ja"] .overlay-eyebrow,
+html[lang="ja"] .overlay-bottom-label,
+html[lang="ja"] .pill,
+html[lang="ja"] .run-comm-label,
+html[lang="ja"] .schedule-table tr.day-row td,
+html[lang="ja"] .schedule-table tr.end-row td.col-game {
+  font-size: 0.88rem;
+}
+/* .data-table th lives in Table.astro — Astro scoping outranks global.css. */
+html[lang="ja"] .schedule-table th,
+html[lang="ja"] .splits-table th {
+  font-size: 0.95rem;
+}
+/* .data-table omitted intentionally — History cells track EN at the dense default. */
+html[lang="ja"] .splits-table,
+html[lang="ja"] .schedule-table {
+  font-size: 1rem;
+}
+
+html[lang="ja"] .schedule-table td.col-game {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+/* Latin suffixes ("(Pixel Remaster)", "Any%") would otherwise fall back to Inter
+   beside the kana — force unified mincho on title spans only. */
+html[lang="ja"] .schedule-table .run-name,
+html[lang="ja"] .splits-table .split-name {
+  font-family: "Shippori Mincho", "Inter", sans-serif;
+  font-weight: 600;
+}
+
+/* Predominantly-kana inheritors that need stroke weight. Elements holding Latin
+   proper-noun handles (.ls-meta, .ls-comm-people, .run-runners, .run-commentary)
+   are deliberately excluded so Inter doesn't render heavy. */
+html[lang="ja"] .nav-link,
+html[lang="ja"] .nav-link-sm,
+html[lang="ja"] .hero-tagline,
+html[lang="ja"] .ls-chart-caption,
+html[lang="ja"] .overlay-link-desc,
+html[lang="ja"] .schedule-table .time-day,
+html[lang="ja"] .chart-hint {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
 html[lang="ja"] .eyebrow,
 html[lang="ja"] .ls-label,
 html[lang="ja"] .ls-meta-label,
@@ -217,6 +275,18 @@ html[lang="ja"] .splits-table th {
   letter-spacing: 0;
   text-transform: none;
 }
+
+/* `keep-all` for short headings only — long paragraphs need default per-char
+   wrapping or they overflow. */
+html[lang="ja"] .hero-title,
+html[lang="ja"] .hero-tagline,
+html[lang="ja"] .cta-headline,
+html[lang="ja"] .page-heading,
+html[lang="ja"] .section-heading {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
 
 body.page-hidden * {
   animation-play-state: paused !important;
