@@ -21,10 +21,13 @@ const POLL_MS = 30_000;
 const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 const ariaLabel = t('liveStatus.ariaLabel', lang);
-const standingsLabel = t('liveStatus.standings', lang);
 const onCommentaryLabel = t('liveStatus.onCommentary', lang);
 const upNextLabel = t('liveStatus.upNext', lang);
 const chartCaption = t('liveStatus.chartCaption', lang);
+const tabRaceLabel = t('liveStatus.tabRace', lang);
+const tabPerGameLabel = t('liveStatus.tabPerGame', lang);
+const tabsHeading = t('liveStatus.tabsHeading', lang);
+const gameSelectAriaLabel = t('liveStatus.gameSelectAriaLabel', lang);
 
 const STRINGS_JSON = JSON.stringify({
   completionTimeLabel: t('liveStatus.completionTimeLabel', lang),
@@ -52,8 +55,43 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="ls-grid">
       <div class="ls-card">
+        <div class="ls-controls-block">
+          <p id="ls-view-controls-heading" class="ls-view-controls-heading">
+            <iconify-icon
+              icon="mdi:tune-variant"
+              width="18"
+              height="18"
+              aria-hidden="true"
+            ></iconify-icon>
+            <span>{tabsHeading}</span>
+          </p>
+          <div class="ls-view-controls">
+            <div class="ls-tabs" role="tablist" aria-labelledby="ls-view-controls-heading">
+              <button
+                type="button"
+                class="ls-tab is-active"
+                role="tab"
+                data-mode="race"
+                aria-selected="true"
+              >
+                {tabRaceLabel}
+              </button>
+              <button
+                type="button"
+                class="ls-tab"
+                role="tab"
+                data-mode="per-game"
+                aria-selected="false"
+              >
+                {tabPerGameLabel}
+              </button>
+            </div>
+            <div id="ls-pergame-select-wrap" class="ls-pergame-select-wrap" hidden>
+              <select id="ls-pergame-select" aria-label={gameSelectAriaLabel}></select>
+            </div>
+          </div>
+        </div>
         <div class="ls-standings">
-          <p class="ls-label">{standingsLabel}</p>
           <ol id="ls-standings-list" class="ls-list"></ol>
         </div>
 
@@ -135,6 +173,124 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
     text-transform: uppercase;
     color: var(--text-dimmer);
     margin: 0 0 0.7rem;
+  }
+
+  .ls-controls-block {
+    padding-bottom: 1.1rem;
+    margin-bottom: 1.1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .ls-view-controls-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.005em;
+    margin: 0 0 0.65rem;
+  }
+  .ls-view-controls-heading iconify-icon {
+    color: #fde047;
+    flex: none;
+  }
+  [data-theme='light'] .ls-view-controls-heading iconify-icon {
+    color: #b45309;
+  }
+  .ls-view-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 0.85rem;
+  }
+
+  .ls-tabs {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  [data-theme='light'] .ls-tabs {
+    border-color: rgba(0, 0, 0, 0.14);
+    background: rgba(0, 0, 0, 0.03);
+  }
+  .ls-tab {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.38rem 0.85rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .ls-tab:hover { background: rgba(255, 255, 255, 0.04); }
+  [data-theme='light'] .ls-tab:hover { background: rgba(0, 0, 0, 0.04); }
+  .ls-tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .ls-tab.is-active {
+    background: rgba(251, 191, 36, 0.22);
+    color: #fde047;
+  }
+  .ls-tab.is-active:hover {
+    background: rgba(251, 191, 36, 0.22);
+  }
+  [data-theme='light'] .ls-tab.is-active {
+    background: #b45309;
+    color: #ffffff;
+  }
+  [data-theme='light'] .ls-tab.is-active:hover {
+    color: #ffffff;
+  }
+  .ls-pergame-select-wrap {
+    margin: 0;
+    min-width: 14rem;
+    max-width: 24rem;
+    flex: 0 1 auto;
+  }
+  #ls-pergame-select {
+    appearance: none;
+    color-scheme: dark;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.4rem;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    padding: 0.4rem 1.9rem 0.4rem 0.7rem;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+                      linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+    background-position: right 0.85rem center, right 0.55rem center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    width: 100%;
+  }
+  #ls-pergame-select option {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+  [data-theme='light'] #ls-pergame-select {
+    color-scheme: light;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.18);
+  }
+  [data-theme='light'] #ls-pergame-select option {
+    background-color: #ffffff;
+    color: #1e293b;
+  }
+  #ls-pergame-select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .ls-list {
@@ -395,6 +551,9 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
   const nextBlockEl = document.getElementById('ls-next-block');
   const commBlockEl = document.getElementById('ls-commentary-block');
   const commListEl = document.getElementById('ls-commentary-list');
+  const tabElsLs = Array.from(sectionEl.querySelectorAll('.ls-tab'));
+  const pergameSelectEl = document.getElementById('ls-pergame-select');
+  const pergameSelectWrapEl = document.getElementById('ls-pergame-select-wrap');
 
   const SPLITS_URL = sectionEl.dataset.splitsUrl;
   const INFO_URL = sectionEl.dataset.infoUrl;
@@ -405,6 +564,22 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
   const tGame = makeTranslator(readDataJson(sectionEl, 'nameMap'));
 
   let pollHandle = null;
+  let standingsMode = 'race';     // 'race' | 'per-game'
+  let selectedStandingsGame = null;  // raw game name to display in per-game mode
+  let lastParsedSplits = null;
+  let lastInfo = null;
+
+  // Idempotent so the 30s poll doesn't churn the chart on unchanged state.
+  let lastBroadcastedMode;
+  let lastBroadcastedGame;
+  function broadcastViewState() {
+    if (standingsMode === lastBroadcastedMode && selectedStandingsGame === lastBroadcastedGame) return;
+    lastBroadcastedMode = standingsMode;
+    lastBroadcastedGame = selectedStandingsGame;
+    document.dispatchEvent(new CustomEvent('ffrelay:view-state', {
+      detail: { mode: standingsMode, game: selectedStandingsGame },
+    }));
+  }
 
   const linkName = (p) => linkNameLib(p, 'ls-link');
 
@@ -533,6 +708,35 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
       s.finishGapToPrev   = i > 1 ? s.finishedSecs - standings[i - 1].finishedSecs : null;
     }
 
+    // Two-part gap: race-time delta at our last common split, AND the leader's
+    // wall-clock advance from any extra splits they've done since. Taking the max
+    // avoids showing +0:00 when we tied at the common point but the leader has
+    // since pulled ahead by completing more splits. Teams ranked above always
+    // have splitProgress >= mine (sort order), so lookups at my split are safe.
+    for (let i = 0; i < standings.length; i++) {
+      const s = standings[i];
+      if (s.finishedSecs != null) continue;
+      if (s.splitProgress < 0 || s.ownSecs == null) continue;
+      if (i > 0) {
+        const leader = standings[0];
+        const leaderAtMine = splits[s.splitProgress].times[leader.team];
+        if (leaderAtMine != null) {
+          const gapAtCommon = s.ownSecs - leaderAtMine;
+          const gapByProgress = leader.ownSecs != null ? leader.ownSecs - s.ownSecs : -Infinity;
+          s.liveGapToLeader = Math.max(gapAtCommon, gapByProgress);
+        }
+      }
+      if (i > 1) {
+        const prev = standings[i - 1];
+        const prevAtMine = splits[s.splitProgress].times[prev.team];
+        if (prevAtMine != null) {
+          const gapAtCommon = s.ownSecs - prevAtMine;
+          const gapByProgress = prev.ownSecs != null ? prev.ownSecs - s.ownSecs : -Infinity;
+          s.liveGapToPrev = Math.max(gapAtCommon, gapByProgress);
+        }
+      }
+    }
+
     const currentGames = [];
     const seenCurrent = new Set();
     for (const t of teams) {
@@ -558,6 +762,92 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
     const nextGame = leaderNextGameIdx < games.length ? games[leaderNextGameIdx].name : null;
 
     return { standings, currentGames, nextGame, commentary };
+  }
+
+  // Falls back to the most recent game with data when targetGameName is
+  // unset/unknown — keeps the panel populated with the just-finished game
+  // when the current game has no splits yet.
+  function computeStatusPerGame(parsed, info, targetGameName) {
+    const { teams, splits } = parsed;
+
+    const groups = [];
+    let bucket = [];
+    for (const s of splits) {
+      bucket.push(s);
+      if (s.isGameEnd) {
+        groups.push({ name: s.name, rows: bucket });
+        bucket = [];
+      }
+    }
+    if (groups.length === 0) return null;
+
+    let displayedIdx = targetGameName
+      ? groups.findIndex((g) => g.name === targetGameName)
+      : -1;
+    if (displayedIdx === -1) {
+      for (let i = groups.length - 1; i >= 0; i--) {
+        if (groups[i].rows.some((r) => teams.some((t) => r.times[t.team] != null))) {
+          displayedIdx = i; break;
+        }
+      }
+    }
+    if (displayedIdx === -1) return null;
+
+    const group = groups[displayedIdx];
+
+    // Per-team because cumulative ordering means a team with intra-game data
+    // here necessarily finished the previous game — so the baseline exists.
+    const baseline = {};
+    for (const t of teams) baseline[t.team] = 0;
+    if (displayedIdx > 0) {
+      const prev = groups[displayedIdx - 1].rows[groups[displayedIdx - 1].rows.length - 1];
+      for (const t of teams) {
+        if (prev.times[t.team] != null) baseline[t.team] = prev.times[t.team];
+      }
+    }
+
+    const finalIdx = group.rows.length - 1;
+    const teamData = teams.map((t) => {
+      let lastDoneIdx = -1;
+      for (let i = 0; i < group.rows.length; i++) {
+        if (group.rows[i].times[t.team] != null) lastDoneIdx = i;
+      }
+      const intraCumSecs = lastDoneIdx >= 0
+        ? group.rows[lastDoneIdx].times[t.team] - baseline[t.team]
+        : null;
+      return {
+        team: t.team,
+        display: t.display,
+        lastDoneIdx,
+        intraCumSecs,
+        finished: lastDoneIdx === finalIdx,
+      };
+    });
+
+    const standings = teamData.sort((a, b) => {
+      if (b.lastDoneIdx !== a.lastDoneIdx) return b.lastDoneIdx - a.lastDoneIdx;
+      if (a.intraCumSecs == null) return 1;
+      if (b.intraCumSecs == null) return -1;
+      return a.intraCumSecs - b.intraCumSecs;
+    });
+
+    const entry = info ? info.get(gameKey(group.name)) : null;
+    for (const s of standings) {
+      s.game = group.name;
+      s.runner = entry?.runners.find((r) => r.team === s.team) ?? null;
+      s.finishedSecs = s.finished ? s.intraCumSecs : null;
+    }
+
+    // Individual Game intentionally omits From 1st / From 2nd deltas — the
+    // race-wide standings carry that cross-team context already.
+
+    const commentary = [];
+    if (entry && entry.commentators.length) {
+      commentary.push({ game: group.name, people: entry.commentators });
+    }
+    const nextGame = displayedIdx + 1 < groups.length ? groups[displayedIdx + 1].name : null;
+
+    return { standings, currentGames: [group.name], nextGame, commentary, displayedGameName: group.name };
   }
 
   function render(status) {
@@ -605,7 +895,23 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
         const gameLine = row.game
           ? `<span class="ls-meta"><span class="ls-meta-label">${escapeHtml(STRINGS.game)}</span>${escapeHtml(tGame(row.game))}</span>`
           : '';
-        subtitleHtml = runnerLine + gameLine;
+        const gapParts = [];
+        if (row.liveGapToPrev != null) {
+          gapParts.push({
+            label: fillTemplate(STRINGS.gapFromOrdinalLabel, { ordinal: ordinal(i) }),
+            value: formatGap(row.liveGapToPrev),
+          });
+        }
+        if (row.liveGapToLeader != null) {
+          gapParts.push({
+            label: STRINGS.gapFromFirstLabel,
+            value: formatGap(row.liveGapToLeader),
+          });
+        }
+        const gapHtml = gapParts.map(({ label, value }) =>
+          `<span class="ls-meta"><span class="ls-meta-label">${escapeHtml(label)}</span>${escapeHtml(value)}</span>`,
+        ).join('');
+        subtitleHtml = runnerLine + gameLine + gapHtml;
       }
 
       const place = i + 1;
@@ -645,6 +951,71 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
     }
   }
 
+  function populatePergameSelect(names) {
+    const existing = Array.from(pergameSelectEl.options).map((o) => o.value);
+    if (existing.length === names.length && existing.every((v, i) => v === names[i])) return;
+    pergameSelectEl.innerHTML = names
+      .map((n) => `<option value="${escapeHtml(n)}">${escapeHtml(tGame(n))}</option>`)
+      .join('');
+    if (selectedStandingsGame && names.includes(selectedStandingsGame)) {
+      pergameSelectEl.value = selectedStandingsGame;
+    }
+  }
+
+  function ensureStandingsGame() {
+    if (!lastParsedSplits) return;
+    const groups = [];
+    let bucket = [];
+    for (const s of lastParsedSplits.splits) {
+      bucket.push(s);
+      if (s.isGameEnd) {
+        groups.push({ name: s.name, rows: bucket });
+        bucket = [];
+      }
+    }
+    const started = groups.filter((g) =>
+      g.rows.some((r) => lastParsedSplits.teams.some((t) => r.times[t.team] != null)),
+    );
+    const names = started.map((g) => g.name);
+    populatePergameSelect(names);
+    if (selectedStandingsGame && names.includes(selectedStandingsGame)) return;
+    selectedStandingsGame = names.length > 0 ? names[names.length - 1] : null;
+    if (selectedStandingsGame) pergameSelectEl.value = selectedStandingsGame;
+  }
+
+  function rerender() {
+    if (!lastParsedSplits) {
+      sectionEl.hidden = true;
+      pergameSelectWrapEl.hidden = true;
+      return;
+    }
+    ensureStandingsGame();
+    const status = standingsMode === 'per-game'
+      ? computeStatusPerGame(lastParsedSplits, lastInfo, selectedStandingsGame)
+      : computeStatus(lastParsedSplits, lastInfo);
+    render(status);
+    broadcastViewState();
+  }
+
+  function setStandingsMode(next) {
+    if (next === standingsMode) return;
+    standingsMode = next;
+    for (const t of tabElsLs) {
+      const isActive = t.dataset.mode === standingsMode;
+      t.classList.toggle('is-active', isActive);
+      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    }
+    pergameSelectWrapEl.hidden = standingsMode !== 'per-game';
+    rerender();
+  }
+  for (const tab of tabElsLs) {
+    tab.addEventListener('click', () => setStandingsMode(tab.dataset.mode));
+  }
+  pergameSelectEl.addEventListener('change', () => {
+    selectedStandingsGame = pergameSelectEl.value;
+    rerender();
+  });
+
   async function refresh() {
     try {
       // Info is best-effort — if it fails the panel still renders standings without
@@ -664,7 +1035,9 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
       if (infoRes && infoRes.ok) {
         try { info = parseInfo(await infoRes.text()); } catch {}
       }
-      render(computeStatus(parsed, info));
+      lastParsedSplits = parsed;
+      lastInfo = info;
+      rerender();
     } catch {
       // Silent — keep showing the previous state rather than blanking.
     }

@@ -353,8 +353,7 @@ const countdownSecs = t('hero.countdownSecs', lang);
     const startDate = cdEl.dataset.startDate ?? '';
     const scheduleUrl = cdEl.dataset.scheduleUrl ?? '';
     const [y, m, d] = startDate.split('-').map(Number);
-    // Provisional target: UTC midnight on startDate. The schedule sheet's first
-    // run is the real start (later the same day); we refine to that once fetched.
+    // Provisional — refined to the schedule's first-run time on fetch.
     let targetMs = Date.UTC(y, m - 1, d);
     const dEl = cdEl.querySelector('[data-cd="d"]') as HTMLElement | null;
     const hEl = cdEl.querySelector('[data-cd="h"]') as HTMLElement | null;
@@ -379,7 +378,6 @@ const countdownSecs = t('hero.countdownSecs', lang);
       return true;
     }
 
-    // First valid "DAY @ HH:MM:SS" cell under the schedule's "Start (UTC)" column.
     function findFirstStartTime(csv: string): Date | null {
       const rows = parseCsv(csv);
       const headerIdx = rows.findIndex((r) => /^game$/i.test((r[0] ?? '').trim()));

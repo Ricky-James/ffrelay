@@ -55,7 +55,11 @@
     "completionTimeLabel": "クリアタイム",
     "gapFromOrdinalLabel": "{ordinal}との差",
     "gapFromFirstLabel": "1位との差",
-    "chartCaption": "各ラインは3チームの平均との累計スプリット差です — 下にあるほど速い。"
+    "chartCaption": "各ラインは3チームの平均との累計スプリット差です — 下にあるほど速い。",
+    "tabRace": "リレー全体",
+    "tabPerGame": "個別ゲーム",
+    "tabsHeading": "比較を切替",
+    "gameSelectAriaLabel": "ゲームを選択"
   },
   "schedule": {
     "metaTitle": "スケジュール",
@@ -169,6 +173,8 @@
     "statusLastFailed": "{ts}に更新失敗。前回のデータを表示しています。",
     "statusLoadFailed": "データを読み込めませんでした ({err})。再試行中…",
     "statusUnexpectedFormat": "シートの形式が想定外のため、チーム列を特定できませんでした。",
-    "deltaTooltipFrom": "平均との差"
+    "deltaTooltipFrom": "平均との差",
+    "perGameStartLabel": "開始",
+    "perGameEmptyText": "このゲームの完了スプリットはまだありません。"
   }
 }

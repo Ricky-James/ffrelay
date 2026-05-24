@@ -22,6 +22,8 @@ const STRINGS_JSON = JSON.stringify({
   loadFailed: t('progressChart.statusLoadFailed', lang),
   unexpectedFormat: t('progressChart.statusUnexpectedFormat', lang),
   deltaTooltipFrom: t('progressChart.deltaTooltipFrom', lang),
+  perGameStartLabel: t('progressChart.perGameStartLabel', lang),
+  perGameEmptyText: t('progressChart.perGameEmptyText', lang),
 });
 
 const zoomLabel = t('progressChart.zoom', lang);
@@ -44,7 +46,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   data-strings={STRINGS_JSON}
 >
   <div class="chart-controls">
-    <label class="zoom-label">
+    <label class="zoom-label" id="zoom-control-wrap">
       <span class="zoom-text">{zoomLabel}</span>
       <input
         type="range"
@@ -56,7 +58,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
         aria-label={zoomAriaLabel}
       />
     </label>
-    <p class="chart-hint">{hintPre} <kbd>{hintKey}</kbd>{hintPost}</p>
+    <p class="chart-hint" id="chart-hint">{hintPre} <kbd>{hintKey}</kbd>{hintPost}</p>
   </div>
 
   <div class="chart-frame">
@@ -351,6 +353,13 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   const scrollEl = document.getElementById('chart-scroll');
   const zoomEl = document.getElementById('chart-zoom');
   const statusEl = document.getElementById('chart-status');
+  const zoomWrapEl = document.getElementById('zoom-control-wrap');
+  const chartHintEl = document.getElementById('chart-hint');
+
+  // Defaults match LiveStatus's so the first render is sane before its
+  // ffrelay:view-state broadcast lands.
+  let mode = 'race';           // 'race' | 'per-game'
+  let selectedGame = null;
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const CHART_H = 380;
@@ -400,25 +409,81 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     const teamsInOrder = cols.map((c) => c.team).filter((t) => KNOWN_TEAMS.includes(t));
 
     const splits = [];
+    const allSplits = [];
     let anyData = false;
     for (let r = headerIdx + 1; r < rows.length; r++) {
       const row = rows[r];
       const name = (row[0] ?? '').trim();
       if (!name) continue;
       const times = {};
-      let allFilled = true;
+      let filledCount = 0;
       for (const c of cols) {
         if (!KNOWN_TEAMS.includes(c.team)) continue;
         const secs = timeToSeconds((row[c.col] ?? '').trim());
-        if (secs == null) { allFilled = false; continue; }
-        anyData = true;
+        if (secs == null) continue;
         times[c.team] = secs;
+        filledCount++;
+        anyData = true;
       }
-      if (!allFilled) continue;
       const isGameEnd = /\bfinal fantasy\b/i.test(name);
-      splits.push({ name, times, isGameEnd });
+      const allFilled = filledCount === teamsInOrder.length;
+      const entry = { name, times, isGameEnd, allFilled };
+      allSplits.push(entry);
+      if (allFilled) splits.push(entry);
     }
-    return { teams: teamsInOrder, splits, anyData };
+    return { teams: teamsInOrder, splits, allSplits, anyData };
+  }
+
+  // Trailing rows after the last game-end row are dropped, so unscheduled
+  // ad-hoc splits don't appear as a phantom game.
+  function buildGameGroups(parsed) {
+    const groups = [];
+    let current = [];
+    for (const s of parsed.allSplits) {
+      current.push(s);
+      if (s.isGameEnd) {
+        groups.push({ name: s.name, rows: current });
+        current = [];
+      }
+    }
+    return groups;
+  }
+
+  // Per-team because cumulative ordering means a team with intra-game data
+  // here necessarily finished the previous game — so the baseline exists.
+  function buildPerGameData(parsed, gameName) {
+    const groups = buildGameGroups(parsed);
+    const gi = groups.findIndex((g) => g.name === gameName);
+    if (gi === -1) return null;
+    const teams = parsed.teams;
+
+    const baseline = {};
+    for (const t of teams) baseline[t] = 0;
+    if (gi > 0) {
+      const prev = groups[gi - 1].rows[groups[gi - 1].rows.length - 1];
+      for (const t of teams) {
+        if (prev.times[t] != null) baseline[t] = prev.times[t];
+      }
+    }
+
+    const startTimes = {};
+    for (const t of teams) startTimes[t] = 0;
+    const scoped = [{ name: STRINGS.perGameStartLabel, times: startTimes, isGameEnd: false }];
+
+    for (const row of groups[gi].rows) {
+      if (!row.allFilled) continue;
+      const times = {};
+      for (const t of teams) times[t] = row.times[t] - baseline[t];
+      scoped.push({ name: row.name, times, isGameEnd: row.isGameEnd });
+    }
+    return { teams, splits: scoped, allSplits: scoped, anyData: scoped.length > 1 };
+  }
+
+  function currentRenderData() {
+    if (!lastParsed) return null;
+    if (mode === 'race') return lastParsed;
+    if (!selectedGame) return null;
+    return buildPerGameData(lastParsed, selectedGame);
   }
 
   function computeDeltas(parsed) {
@@ -559,6 +624,22 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     statusEl.classList.toggle('is-stale', !!stale);
   }
 
+  function redraw() {
+    if (!lastParsed) { renderEmpty(STRINGS.emptyText); return; }
+    if (mode === 'race') {
+      if (lastParsed.splits.length === 0) renderEmpty(STRINGS.emptyText);
+      else render(lastParsed);
+      return;
+    }
+    const data = currentRenderData();
+    // <= 1 = only the synthetic Start row, no real splits yet.
+    if (!data || data.splits.length <= 1) {
+      renderEmpty(STRINGS.perGameEmptyText);
+      return;
+    }
+    render(data);
+  }
+
   async function refresh() {
     try {
       const url = `${CSV_URL}&_=${Date.now()}&r=${Math.random().toString(36).slice(2)}`;
@@ -572,7 +653,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
       }
       lastParsed = parsed;
       const wasAtEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
-      if (!updateZoomMin()) render(parsed);
+      if (!updateZoomMin()) redraw();
       if (wasAtEnd) scrollEl.scrollLeft = scrollEl.scrollWidth;
       const ts = new Date().toLocaleTimeString(intlLocaleFor(LOCALE), {
         hour: '2-digit', minute: '2-digit', second: '2-digit',
@@ -613,6 +694,8 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   });
 
   function setZoom(next, focalClientX = null) {
+    // Per-game ignores user zoom — always fit-to-container.
+    if (mode === 'per-game') next = minPx;
     next = Math.max(minPx, Math.min(MAX_PX, next));
     if (Math.abs(next - pxPerSplit) < 0.001) return;
 
@@ -626,7 +709,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
 
     pxPerSplit = next;
     syncSlider();
-    if (lastParsed) render(lastParsed);
+    redraw();
 
     if (anchorRatio != null) {
       const newPlotX = anchorRatio * pxPerSplit + PAD_LEFT;
@@ -640,13 +723,15 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   });
 
   function updateZoomMin() {
-    if (!lastParsed || lastParsed.splits.length === 0) return false;
+    const data = currentRenderData();
+    if (!data || data.splits.length === 0) return false;
     const avail = scrollEl.clientWidth - PAD_LEFT - PAD_RIGHT;
     if (avail <= 0) return false;
-    const slots = Math.max(0.5, lastParsed.splits.length - 0.5);
+    const slots = Math.max(0.5, data.splits.length - 0.5);
     minPx = Math.max(0.1, avail / slots);
-    if (pxPerSplit < minPx - 0.001) {
-      setZoom(minPx);
+    const targetPx = mode === 'per-game' ? minPx : Math.max(pxPerSplit, minPx);
+    if (Math.abs(pxPerSplit - targetPx) > 0.001) {
+      setZoom(targetPx);
       return true;
     }
     syncSlider();
@@ -657,9 +742,31 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       const wasAtEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
-      if (!updateZoomMin() && lastParsed) render(lastParsed);
+      if (!updateZoomMin()) redraw();
       if (wasAtEnd) scrollEl.scrollLeft = scrollEl.scrollWidth;
     }, 150);
+  });
+
+  // Idempotent so the 30s LiveStatus poll doesn't churn the chart.
+  document.addEventListener('ffrelay:view-state', (e) => {
+    const detail = e.detail || {};
+    const nextMode = detail.mode === 'per-game' ? 'per-game' : 'race';
+    const nextGame = detail.game ?? null;
+    const modeChanged = nextMode !== mode;
+    const gameChanged = nextGame !== selectedGame;
+    if (!modeChanged && !gameChanged) return;
+    mode = nextMode;
+    selectedGame = nextGame;
+
+    const zoomHidden = mode === 'per-game';
+    zoomWrapEl.hidden = zoomHidden;
+    chartHintEl.hidden = zoomHidden;
+
+    if (!updateZoomMin()) redraw();
+    // Gating on *Changed avoids yanking the user's scroll position on the
+    // initial broadcast (game: null → default while still in race mode).
+    if (modeChanged && mode === 'race') scrollEl.scrollLeft = scrollEl.scrollWidth;
+    else if (gameChanged && mode === 'per-game') scrollEl.scrollLeft = 0;
   });
 
   scrollEl.addEventListener('wheel', (e) => {

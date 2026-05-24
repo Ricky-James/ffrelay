@@ -55,7 +55,11 @@
     "completionTimeLabel": "Completion time",
     "gapFromOrdinalLabel": "From {ordinal}",
     "gapFromFirstLabel": "From 1st",
-    "chartCaption": "Each line is a team's cumulative split delta vs the 3-team average — lower is faster."
+    "chartCaption": "Each line is a team's cumulative split delta vs the 3-team average — lower is faster.",
+    "tabRace": "Full Relay",
+    "tabPerGame": "Individual Game",
+    "tabsHeading": "Change Comparison",
+    "gameSelectAriaLabel": "Select a game"
   },
   "schedule": {
     "metaTitle": "Schedule",
@@ -169,6 +173,8 @@
     "statusLastFailed": "Last update failed at {ts}. Showing previous data.",
     "statusLoadFailed": "Unable to load data ({err}). Retrying…",
     "statusUnexpectedFormat": "Sheet format unexpected — could not find team columns.",
-    "deltaTooltipFrom": "from avg"
+    "deltaTooltipFrom": "from avg",
+    "perGameStartLabel": "Start",
+    "perGameEmptyText": "No completed splits for this game yet."
   }
 }
