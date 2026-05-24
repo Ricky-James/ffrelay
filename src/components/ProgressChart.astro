@@ -96,7 +96,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     padding: 1rem;
     font-variant-numeric: tabular-nums;
   }
-  [data-theme='light'] .progress-chart {
+  :global([data-theme='light']) .progress-chart {
     background: rgba(0, 0, 0, 0.02);
     border-color: rgba(0, 0, 0, 0.08);
   }
@@ -136,7 +136,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     padding: 0 0.3rem;
     font-size: 0.72rem;
   }
-  [data-theme='light'] .chart-hint kbd {
+  :global([data-theme='light']) .chart-hint kbd {
     background: rgba(0, 0, 0, 0.04);
     border-color: rgba(0, 0, 0, 0.12);
   }
@@ -150,7 +150,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     background: var(--bg);
     overflow: hidden;
   }
-  [data-theme='light'] .chart-frame {
+  :global([data-theme='light']) .chart-frame {
     border-color: rgba(0, 0, 0, 0.08);
   }
   .chart-yaxis {
@@ -167,7 +167,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     pointer-events: none;
     overflow:visible;
   }
-  [data-theme='light'] .chart-yaxis {
+  :global([data-theme='light']) .chart-yaxis {
     border-right-color: rgba(0, 0, 0, 0.08);
   }
   .chart-scroll {
@@ -258,27 +258,27 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     stroke: rgba(255, 255, 255, 0.85);
     stroke-width: 1.5;
   }
-  [data-theme='light'] :global(.chart-svg .dot-game) {
+  :global([data-theme='light'] .chart-svg .dot-game) {
     stroke: rgba(15, 23, 42, 0.7);
   }
 
-  [data-theme='light'] :global(.chart-svg .grid),
-  [data-theme='light'] :global(.chart-yaxis .grid) {
+  :global([data-theme='light'] .chart-svg .grid),
+  :global([data-theme='light'] .chart-yaxis .grid) {
     stroke: rgba(0, 0, 0, 0.07);
   }
-  [data-theme='light'] :global(.chart-svg .zero),
-  [data-theme='light'] :global(.chart-yaxis .zero) {
+  :global([data-theme='light'] .chart-svg .zero),
+  :global([data-theme='light'] .chart-yaxis .zero) {
     stroke: rgba(0, 0, 0, 0.3);
   }
-  [data-theme='light'] :global(.chart-svg .tick) {
+  :global([data-theme='light'] .chart-svg .tick) {
     stroke: rgba(0, 0, 0, 0.18);
   }
-  [data-theme='light'] :global(.chart-svg .line-choco),
-  [data-theme='light'] :global(.chart-svg .dot-choco) {
+  :global([data-theme='light'] .chart-svg .line-choco),
+  :global([data-theme='light'] .chart-svg .dot-choco) {
     stroke: #a16207;
     fill: #a16207;
   }
-  [data-theme='light'] :global(.chart-svg .line-choco) { fill: none; }
+  :global([data-theme='light'] .chart-svg .line-choco) { fill: none; }
 
   .chart-footer {
     display: flex;
@@ -309,7 +309,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   .legend-mog .legend-swatch { background: #38bdf8; }
   .legend-choco .legend-swatch { background: #fde047; }
   .legend-tonberry .legend-swatch { background: #4ade80; }
-  [data-theme='light'] .legend-choco .legend-swatch { background: #a16207; }
+  :global([data-theme='light']) .legend-choco .legend-swatch { background: #a16207; }
 
   .chart-status {
     margin: 0;
@@ -317,7 +317,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     color: var(--text-dim);
   }
   .chart-status.is-stale { color: #fbbf24; }
-  [data-theme='light'] .chart-status.is-stale { color: #b45309; }
+  :global([data-theme='light']) .chart-status.is-stale { color: #b45309; }
 </style>
 
 <script>
@@ -381,9 +381,21 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   const MAX_PX = 110;
   const POLL_MS = 30_000;
   let pollHandle = null;
-  let pxPerSplit = 75;
+  let hasInitialScrolled = false;
+  function attemptInitialScroll() {
+    if (hasInitialScrolled || !lastParsed || mode !== 'race') return;
+    if (scrollEl.clientWidth === 0) return;
+    scrollEl.scrollLeft = scrollEl.scrollWidth;
+    hasInitialScrolled = true;
+  }
+  // Race mode has user-controllable zoom; per-game is always fit-to-container.
+  // pxPerSplit() resolves to the right one based on mode.
+  let racePxPerSplit = 75;
   let minPx = 1;
   let lastParsed = null;
+  function pxPerSplit() {
+    return mode === 'per-game' ? minPx : racePxPerSplit;
+  }
 
   function pxFromSliderT(t) {
     if (MAX_PX <= minPx) return minPx;
@@ -394,7 +406,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     return Math.log(px / minPx) / Math.log(MAX_PX / minPx);
   }
   function syncSlider() {
-    zoomEl.value = String(Math.max(0, Math.min(1, sliderTFromPx(pxPerSplit))));
+    zoomEl.value = String(Math.max(0, Math.min(1, sliderTFromPx(racePxPerSplit))));
   }
 
   function parseCumulativeForChart(text) {
@@ -618,10 +630,11 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     const yMin = -yTop;
     const yMax = yTop;
 
-    function xOf(i) { return PAD_LEFT + (i + 0.5) * pxPerSplit; }
+    const px = pxPerSplit();
+    function xOf(i) { return PAD_LEFT + (i + 0.5) * px; }
     function yOf(v) { return PAD_TOP + ((yMax - v) / (yMax - yMin)) * plotH; }
 
-    const plotW = pxPerSplit * Math.max(0.5, n - 0.5);
+    const plotW = px * Math.max(0.5, n - 0.5);
     const totalW = PAD_LEFT + plotW + PAD_RIGHT;
 
     const yParts = [];
@@ -644,8 +657,8 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
       parts.push(`<line class="${cls}" x1="${PAD_LEFT}" y1="${y}" x2="${totalW - PAD_RIGHT}" y2="${y}" />`);
     }
 
-    const showAllLabels = pxPerSplit >= 28;
-    const showSegmentDots = pxPerSplit >= 20;
+    const showAllLabels = px >= 28;
+    const showSegmentDots = px >= 20;
 
     const labelY = CHART_H - PAD_BOTTOM + 14;
     for (let i = 0; i < n; i++) {
@@ -752,13 +765,13 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
         setStatus(STRINGS.unexpectedFormat, true);
         return;
       }
-      const isFirstRender = !lastParsed;
       lastParsed = parsed;
       const wasAtEnd =
-        isFirstRender ||
+        !hasInitialScrolled ||
         scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
       if (!updateZoomMin()) redraw();
       if (wasAtEnd) scrollEl.scrollLeft = scrollEl.scrollWidth;
+      attemptInitialScroll();
       const ts = new Date().toLocaleTimeString(intlLocaleFor(LOCALE), {
         hour: '2-digit', minute: '2-digit', second: '2-digit',
       });
@@ -798,25 +811,24 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   });
 
   function setZoom(next, focalClientX = null) {
-    // Per-game ignores user zoom — always fit-to-container.
-    if (mode === 'per-game') next = minPx;
+    if (mode === 'per-game') return;
     next = Math.max(minPx, Math.min(MAX_PX, next));
-    if (Math.abs(next - pxPerSplit) < 0.001) return;
+    if (Math.abs(next - racePxPerSplit) < 0.001) return;
 
     let anchorRatio = null;
     if (focalClientX != null) {
       const rect = scrollEl.getBoundingClientRect();
       const beforeScroll = scrollEl.scrollLeft;
       const xInPlot = (focalClientX - rect.left) + beforeScroll - PAD_LEFT;
-      anchorRatio = xInPlot / pxPerSplit;
+      anchorRatio = xInPlot / racePxPerSplit;
     }
 
-    pxPerSplit = next;
+    racePxPerSplit = next;
     syncSlider();
     redraw();
 
     if (anchorRatio != null) {
-      const newPlotX = anchorRatio * pxPerSplit + PAD_LEFT;
+      const newPlotX = anchorRatio * racePxPerSplit + PAD_LEFT;
       const rect = scrollEl.getBoundingClientRect();
       scrollEl.scrollLeft = newPlotX - (focalClientX - rect.left);
     }
@@ -836,9 +848,10 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     if (avail <= 0) return false;
     const slots = Math.max(0.5, slotCount - 0.5);
     minPx = Math.max(0.1, avail / slots);
-    const targetPx = mode === 'per-game' ? minPx : Math.max(pxPerSplit, minPx);
-    if (Math.abs(pxPerSplit - targetPx) > 0.001) {
-      setZoom(targetPx);
+    // Race needs an explicit bump when minPx outgrows the user's zoom.
+    // Per-game reads minPx directly via pxPerSplit() — nothing to do.
+    if (mode === 'race' && racePxPerSplit < minPx - 0.001) {
+      setZoom(minPx);
       return true;
     }
     syncSlider();
@@ -862,6 +875,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     const modeChanged = nextMode !== mode;
     const gameChanged = nextGame !== selectedGame;
     if (!modeChanged && !gameChanged) return;
+
     mode = nextMode;
     selectedGame = nextGame;
 
@@ -874,13 +888,14 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     // initial broadcast (game: null → default while still in race mode).
     if (modeChanged && mode === 'race') scrollEl.scrollLeft = scrollEl.scrollWidth;
     else if (gameChanged && mode === 'per-game') scrollEl.scrollLeft = 0;
+    attemptInitialScroll();
   });
 
   scrollEl.addEventListener('wheel', (e) => {
     if (e.ctrlKey) {
       e.preventDefault();
       const factor = e.deltaY > 0 ? 1 / 1.1 : 1.1;
-      setZoom(pxPerSplit * factor, e.clientX);
+      setZoom(pxPerSplit() * factor, e.clientX);
     } else if (e.deltaY !== 0 && e.deltaX === 0) {
       scrollEl.scrollLeft += e.deltaY;
       e.preventDefault();
@@ -889,7 +904,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
 
   const activePointers = new Map();
   let pinchStartDist = 0;
-  let pinchStartPx = pxPerSplit;
+  let pinchStartPx = pxPerSplit();
   let pinchCenter = 0;
 
   const DRAG_THRESHOLD = 4;
@@ -905,7 +920,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     if (activePointers.size === 2) {
       const [a, b] = [...activePointers.values()];
       pinchStartDist = Math.hypot(a.x - b.x, a.y - b.y);
-      pinchStartPx = pxPerSplit;
+      pinchStartPx = pxPerSplit();
       pinchCenter = (a.x + b.x) / 2;
     }
   });
