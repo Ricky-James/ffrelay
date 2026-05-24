@@ -752,8 +752,11 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
         setStatus(STRINGS.unexpectedFormat, true);
         return;
       }
+      const isFirstRender = !lastParsed;
       lastParsed = parsed;
-      const wasAtEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
+      const wasAtEnd =
+        isFirstRender ||
+        scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - 2;
       if (!updateZoomMin()) redraw();
       if (wasAtEnd) scrollEl.scrollLeft = scrollEl.scrollWidth;
       const ts = new Date().toLocaleTimeString(intlLocaleFor(LOCALE), {
