@@ -845,9 +845,8 @@ const NAME_MAP_JSON = JSON.stringify(buildGameNameMap(lang));
     if (entry && entry.commentators.length) {
       commentary.push({ game: group.name, people: entry.commentators });
     }
-    const nextGame = displayedIdx + 1 < groups.length ? groups[displayedIdx + 1].name : null;
 
-    return { standings, currentGames: [group.name], nextGame, commentary, displayedGameName: group.name };
+    return { standings, currentGames: [group.name], nextGame: null, commentary, displayedGameName: group.name };
   }
 
   function render(status) {
