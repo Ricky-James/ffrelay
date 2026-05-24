@@ -432,6 +432,7 @@ const STRINGS_JSON = JSON.stringify({
     escapeHtml,
     gameKey,
     parseInfo,
+    parseUtcDayTime,
     linkName as linkNameLib,
   } from '../lib/sheetParse';
   import { fillTemplate, intlLocaleFor, makeCompoundTranslator, readDataJson } from '../lib/clientI18n';
@@ -561,18 +562,6 @@ const STRINGS_JSON = JSON.stringify({
       map.set(gameKey(g.name), allDone ? 'done' : isLive ? 'live' : 'upcoming');
     }
     return map;
-  }
-
-  function parseUtcDayTime(cell, startDateStr) {
-    const m = String(cell ?? '').trim().match(/^(\d{1,2})\s*@\s*(\d{1,2}):(\d{2}):(\d{2})$/);
-    if (!m) return null;
-    const dayNum = parseInt(m[1], 10);
-    const hh = parseInt(m[2], 10);
-    const mm = parseInt(m[3], 10);
-    const ss = parseInt(m[4], 10);
-    const [y, mo, d] = startDateStr.split('-').map(Number);
-    const base = Date.UTC(y, mo - 1, d) + (dayNum - 1) * 86_400_000;
-    return new Date(base + hh * 3_600_000 + mm * 60_000 + ss * 1_000);
   }
 
   function findColumn(headerRow, predicate) {

@@ -30,6 +30,20 @@ export function durationToMs(s: unknown): number | null {
   return secs == null ? null : secs * 1000;
 }
 
+// Schedule sheet cells encode start times as "DAY @ HH:MM:SS" UTC, where day 1
+// corresponds to `startDateStr` (YYYY-MM-DD, interpreted as UTC midnight).
+export function parseUtcDayTime(cell: unknown, startDateStr: string): Date | null {
+  const m = String(cell ?? '').trim().match(/^(\d{1,2})\s*@\s*(\d{1,2}):(\d{2}):(\d{2})$/);
+  if (!m) return null;
+  const dayNum = parseInt(m[1], 10);
+  const hh = parseInt(m[2], 10);
+  const mm = parseInt(m[3], 10);
+  const ss = parseInt(m[4], 10);
+  const [y, mo, d] = startDateStr.split('-').map(Number);
+  const base = Date.UTC(y, mo - 1, d) + (dayNum - 1) * 86_400_000;
+  return new Date(base + hh * 3_600_000 + mm * 60_000 + ss * 1_000);
+}
+
 export function teamSlug(label: string): string {
   return label.toLowerCase().replace(/^team\s+/i, '').trim().replace(/\s+/g, '-');
 }

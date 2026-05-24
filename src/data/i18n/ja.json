@@ -25,7 +25,12 @@
   "hero": {
     "watchSentence": "{relay}をTwitchで生配信",
     "watchCta": "Twitchで視聴",
-    "relayPrefix": "リレー"
+    "relayPrefix": "リレー",
+    "countdownLabel": "開始まで",
+    "countdownDays": "日",
+    "countdownHours": "時間",
+    "countdownMins": "分",
+    "countdownSecs": "秒"
   },
   "info": {
     "eyebrow": "イベント概要",

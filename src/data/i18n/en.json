@@ -25,7 +25,12 @@
   "hero": {
     "watchSentence": "Watch {relay} Live on Twitch",
     "watchCta": "Watch on Twitch",
-    "relayPrefix": "Relay"
+    "relayPrefix": "Relay",
+    "countdownLabel": "Event starts in",
+    "countdownDays": "Days",
+    "countdownHours": "Hours",
+    "countdownMins": "Mins",
+    "countdownSecs": "Secs"
   },
   "info": {
     "eyebrow": "About the event",

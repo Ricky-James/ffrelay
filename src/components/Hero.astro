@@ -1,5 +1,6 @@
 ---
 import eventData from '../data/event.json';
+import { csvExportUrl } from '../lib/sheetUrl';
 import { getSocialLinks } from '../lib/socialLinks';
 import {
   localeFromAstro,
@@ -8,6 +9,8 @@ import {
   tField,
   type Locale,
 } from '../lib/i18n';
+
+const SCHEDULE_URL = csvExportUrl(eventData.sheet.sheetId, eventData.sheet.tabs.schedule);
 
 interface Props {
   lang?: Locale;
@@ -44,6 +47,12 @@ const watchCta = t('hero.watchCta', lang);
 // is from our own JSON, not user input.
 const relayHtml = `<span class="cta-event">${relayPrefix} ${eventData.eventNumber}</span>`;
 const watchSentenceHtml = t('hero.watchSentence', lang, { relay: relayHtml });
+
+const countdownLabel = t('hero.countdownLabel', lang);
+const countdownDays = t('hero.countdownDays', lang);
+const countdownHours = t('hero.countdownHours', lang);
+const countdownMins = t('hero.countdownMins', lang);
+const countdownSecs = t('hero.countdownSecs', lang);
 ---
 
 <section id="home" class="relative overflow-hidden flex items-center">
@@ -87,6 +96,34 @@ const watchSentenceHtml = t('hero.watchSentence', lang, { relay: relayHtml });
 
       <div class="hero-cta">
         <p class="cta-headline" set:html={watchSentenceHtml} />
+        <div
+          id="hero-countdown"
+          class="cta-countdown"
+          data-start-date={eventData.startDate}
+          data-schedule-url={SCHEDULE_URL}
+          aria-label={countdownLabel}
+          hidden
+        >
+          <p class="cd-label">{countdownLabel}</p>
+          <div class="cd-grid">
+            <div class="cd-unit">
+              <span class="cd-value" data-cd="d">0</span>
+              <span class="cd-key">{countdownDays}</span>
+            </div>
+            <div class="cd-unit">
+              <span class="cd-value" data-cd="h">00</span>
+              <span class="cd-key">{countdownHours}</span>
+            </div>
+            <div class="cd-unit">
+              <span class="cd-value" data-cd="m">00</span>
+              <span class="cd-key">{countdownMins}</span>
+            </div>
+            <div class="cd-unit">
+              <span class="cd-value" data-cd="s">00</span>
+              <span class="cd-key">{countdownSecs}</span>
+            </div>
+          </div>
+        </div>
         <p class="cta-dates">{eventDates}</p>
         <a href={twitchUrl} class="cta-btn" target="_blank" rel="noopener noreferrer">
           <iconify-icon icon="simple-icons:twitch" width="22" height="22" aria-hidden="true"
@@ -230,6 +267,56 @@ const watchSentenceHtml = t('hero.watchSentence', lang, { relay: relayHtml });
     font-variant-numeric: tabular-nums;
     margin: 0 0 0.5rem;
   }
+  .cta-countdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    width: 100%;
+  }
+  .cd-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dimmer);
+    margin: 0;
+  }
+  .cd-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .cd-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.7rem 0.4rem 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 0.55rem;
+    background: rgba(255, 255, 255, 0.025);
+  }
+  [data-theme='light'] .cd-unit {
+    background: rgba(0, 0, 0, 0.025);
+  }
+  .cd-value {
+    font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: #fde047;
+  }
+  [data-theme='light'] .cd-value {
+    color: #a16207;
+  }
+  .cd-key {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dimmer);
+    margin-top: 0.4rem;
+  }
   .cta-btn {
     display: inline-flex;
     align-items: center;
@@ -257,3 +344,76 @@ const watchSentenceHtml = t('hero.watchSentence', lang, { relay: relayHtml });
     outline-offset: 3px;
   }
 </style>
+
+<script>
+  import { parseCsv, parseUtcDayTime } from '../lib/sheetParse';
+
+  const cdEl = document.getElementById('hero-countdown');
+  if (cdEl) {
+    const startDate = cdEl.dataset.startDate ?? '';
+    const scheduleUrl = cdEl.dataset.scheduleUrl ?? '';
+    const [y, m, d] = startDate.split('-').map(Number);
+    // Provisional target: UTC midnight on startDate. The schedule sheet's first
+    // run is the real start (later the same day); we refine to that once fetched.
+    let targetMs = Date.UTC(y, m - 1, d);
+    const dEl = cdEl.querySelector('[data-cd="d"]') as HTMLElement | null;
+    const hEl = cdEl.querySelector('[data-cd="h"]') as HTMLElement | null;
+    const mEl = cdEl.querySelector('[data-cd="m"]') as HTMLElement | null;
+    const sEl = cdEl.querySelector('[data-cd="s"]') as HTMLElement | null;
+
+    function pad(n: number) {
+      return String(n).padStart(2, '0');
+    }
+
+    function tick(): boolean {
+      const diff = targetMs - Date.now();
+      if (diff <= 0) {
+        cdEl!.hidden = true;
+        return false;
+      }
+      const totalSecs = Math.floor(diff / 1000);
+      if (dEl) dEl.textContent = String(Math.floor(totalSecs / 86_400));
+      if (hEl) hEl.textContent = pad(Math.floor((totalSecs % 86_400) / 3600));
+      if (mEl) mEl.textContent = pad(Math.floor((totalSecs % 3600) / 60));
+      if (sEl) sEl.textContent = pad(totalSecs % 60);
+      return true;
+    }
+
+    // First valid "DAY @ HH:MM:SS" cell under the schedule's "Start (UTC)" column.
+    function findFirstStartTime(csv: string): Date | null {
+      const rows = parseCsv(csv);
+      const headerIdx = rows.findIndex((r) => /^game$/i.test((r[0] ?? '').trim()));
+      if (headerIdx === -1) return null;
+      const header = rows[headerIdx];
+      const startCol = header.findIndex((h) => /start.*utc/i.test((h ?? '').trim()));
+      if (startCol === -1) return null;
+      for (let r = headerIdx + 1; r < rows.length; r++) {
+        const name = (rows[r][0] ?? '').trim();
+        if (!name) continue;
+        const parsed = parseUtcDayTime(rows[r][startCol], startDate);
+        if (parsed) return parsed;
+      }
+      return null;
+    }
+
+    async function refineTarget() {
+      if (!scheduleUrl) return;
+      try {
+        const res = await fetch(scheduleUrl, { cache: 'no-store' });
+        if (!res.ok) return;
+        const t = findFirstStartTime(await res.text());
+        if (t) targetMs = t.getTime();
+      } catch {
+        // Keep the midnight-UTC fallback.
+      }
+    }
+
+    if (tick()) {
+      cdEl.hidden = false;
+      const handle = setInterval(() => {
+        if (!tick()) clearInterval(handle);
+      }, 1000);
+      refineTarget();
+    }
+  }
+</script>
