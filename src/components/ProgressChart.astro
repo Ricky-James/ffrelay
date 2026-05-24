@@ -21,7 +21,6 @@ const STRINGS_JSON = JSON.stringify({
   lastFailed: t('progressChart.statusLastFailed', lang),
   loadFailed: t('progressChart.statusLoadFailed', lang),
   unexpectedFormat: t('progressChart.statusUnexpectedFormat', lang),
-  deltaTooltipFrom: t('progressChart.deltaTooltipFrom', lang),
   perGameStartLabel: t('progressChart.perGameStartLabel', lang),
   perGameEmptyText: t('progressChart.perGameEmptyText', lang),
 });
@@ -227,6 +226,15 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     stroke-linejoin: round;
     stroke-linecap: round;
   }
+  /* Position indicator, not a real comparison — dashed + dimmed conveys
+     "team is here, no measured delta yet". */
+  :global(.chart-svg .line-extension) {
+    stroke-dasharray: 5 4;
+    opacity: 0.5;
+  }
+  :global(.chart-svg .dot-extension) {
+    opacity: 0.55;
+  }
   :global(.chart-svg .line-mog),
   :global(.chart-svg .dot-mog) {
     stroke: #38bdf8;
@@ -315,7 +323,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
 <script>
   // @ts-nocheck
   import { parseCsv, timeToSeconds, teamSlug, escapeHtml, gameKey } from '../lib/sheetParse';
-  import { fillTemplate, intlLocaleFor, makeCompoundTranslator, readDataJson, tTeamName } from '../lib/clientI18n';
+  import { fillTemplate, intlLocaleFor, makeCompoundTranslator, readDataJson } from '../lib/clientI18n';
 
   const rootEl = document.getElementById('progress-chart');
   const CSV_URL = rootEl.dataset.csvUrl;
@@ -468,15 +476,34 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
 
     const startTimes = {};
     for (const t of teams) startTimes[t] = 0;
-    const scoped = [{ name: STRINGS.perGameStartLabel, times: startTimes, isGameEnd: false }];
+    const startRow = {
+      name: STRINGS.perGameStartLabel,
+      times: startTimes,
+      isGameEnd: false,
+      allFilled: true,
+    };
+    const allScoped = [startRow];
+    const filledScoped = [startRow];
 
     for (const row of groups[gi].rows) {
-      if (!row.allFilled) continue;
       const times = {};
-      for (const t of teams) times[t] = row.times[t] - baseline[t];
-      scoped.push({ name: row.name, times, isGameEnd: row.isGameEnd });
+      let filledCount = 0;
+      for (const t of teams) {
+        if (row.times[t] == null) continue;
+        times[t] = row.times[t] - baseline[t];
+        filledCount++;
+      }
+      const allFilled = filledCount === teams.length;
+      const entry = { name: row.name, times, isGameEnd: row.isGameEnd, allFilled };
+      allScoped.push(entry);
+      if (allFilled) filledScoped.push(entry);
     }
-    return { teams, splits: scoped, allSplits: scoped, anyData: scoped.length > 1 };
+    return {
+      teams,
+      splits: filledScoped,
+      allSplits: allScoped,
+      anyData: filledScoped.length > 1,
+    };
   }
 
   function currentRenderData() {
@@ -486,15 +513,54 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     return buildPerGameData(lastParsed, selectedGame);
   }
 
-  function computeDeltas(parsed) {
+  // Single source of truth for what the chart should draw. Returns:
+  //   filledRows: one per all-filled split (real comparison data) with computed
+  //               deltas and the row's index in allSplits.
+  //   teamLastIdx: per-team latest index in allSplits, used to anchor each
+  //               team's dashed extension line.
+  //   lastFilledIdx / maxTeamIdx: bounds for the real and extension regions.
+  function displayDimensions(parsed) {
     const teams = parsed.teams;
-    return parsed.splits.map((s) => {
+    const allSplits = parsed.allSplits ?? parsed.splits ?? [];
+
+    const filledRows = [];
+    for (let i = 0; i < allSplits.length; i++) {
+      const s = allSplits[i];
+      if (!s.allFilled) continue;
       const sum = teams.reduce((a, t) => a + s.times[t], 0);
       const avg = sum / teams.length;
       const deltas = {};
       for (const t of teams) deltas[t] = (s.times[t] - avg) / 60;
-      return { name: s.name, deltas, isGameEnd: s.isGameEnd };
-    });
+      filledRows.push({ idx: i, name: s.name, isGameEnd: s.isGameEnd, deltas });
+    }
+
+    const teamLastIdx = {};
+    for (const t of teams) teamLastIdx[t] = -1;
+    for (let i = 0; i < allSplits.length; i++) {
+      for (const t of teams) {
+        if (allSplits[i].times[t] != null) teamLastIdx[t] = i;
+      }
+    }
+    const maxTeamIdx = teams.reduce((m, t) => Math.max(m, teamLastIdx[t]), -1);
+    const lastFilledIdx = filledRows.length > 0 ? filledRows[filledRows.length - 1].idx : -1;
+
+    return { teams, allSplits, filledRows, teamLastIdx, maxTeamIdx, lastFilledIdx };
+  }
+
+  // True when there's real per-split data to plot. For per-game, ignores the
+  // synthetic Start row so an empty game still triggers the empty state.
+  function hasAnyDisplayData(data) {
+    if (!data) return false;
+    const teams = data.teams;
+    const allSplits = data.allSplits ?? data.splits ?? [];
+    const startName = STRINGS.perGameStartLabel;
+    for (const s of allSplits) {
+      if (s.name === startName) continue;
+      for (const t of teams) {
+        if (s.times[t] != null) return true;
+      }
+    }
+    return false;
   }
 
   function niceYTicks(absMax, target = 6) {
@@ -535,18 +601,18 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   }
 
   function render(parsed) {
-    const n = parsed.splits.length;
-    if (n === 0) {
+    const dims = displayDimensions(parsed);
+    const { teams, allSplits, filledRows, teamLastIdx, maxTeamIdx, lastFilledIdx } = dims;
+    if (filledRows.length === 0 || maxTeamIdx < 0) {
       renderEmpty(STRINGS.emptyText);
       return;
     }
-    const deltas = computeDeltas(parsed);
-    const teams = parsed.teams;
     const plotH = CHART_H - PAD_TOP - PAD_BOTTOM;
+    const n = maxTeamIdx + 1;
 
     let absMax = 0;
-    for (const d of deltas) {
-      for (const t of teams) absMax = Math.max(absMax, Math.abs(d.deltas[t]));
+    for (const r of filledRows) {
+      for (const t of teams) absMax = Math.max(absMax, Math.abs(r.deltas[t]));
     }
     const { ticks, top: yTop } = niceYTicks(absMax, 6);
     const yMin = -yTop;
@@ -584,10 +650,14 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     const labelY = CHART_H - PAD_BOTTOM + 14;
     for (let i = 0; i < n; i++) {
       const x = xOf(i);
+      const split = allSplits[i];
+      if (!split) continue;
       parts.push(`<line class="tick" x1="${x}" y1="${CHART_H - PAD_BOTTOM}" x2="${x}" y2="${CHART_H - PAD_BOTTOM + 4}" />`);
-      const isEnd = deltas[i].isGameEnd;
-      if (!showAllLabels && !isEnd) continue;
-      const name = displayName(deltas[i].name);
+      const isEnd = split.isGameEnd;
+      // In the extension region (i > lastFilledIdx) we only label game ends —
+      // intermediate splits there don't have a comparable delta to label.
+      if (!isEnd && (!showAllLabels || i > lastFilledIdx)) continue;
+      const name = displayName(split.name);
       const cls = isEnd ? 'axis-label x-label x-label-game' : 'axis-label x-label';
       parts.push(
         `<text class="${cls}" x="${x}" y="${labelY}" text-anchor="end" transform="rotate(-45 ${x} ${labelY})">${escapeHtml(name)}</text>`,
@@ -595,21 +665,55 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
     }
 
     for (const team of teams) {
-      const points = deltas.map((d, i) => `${xOf(i)},${yOf(d.deltas[team])}`).join(' ');
-      parts.push(`<polyline class="line line-${team}" points="${points}" />`);
-      for (let i = 0; i < n; i++) {
-        const isEnd = deltas[i].isGameEnd;
-        if (!isEnd && !showSegmentDots) continue;
-        const cx = xOf(i);
-        const cy = yOf(deltas[i].deltas[team]);
-        const teamLabel = tTeamName(`${team[0].toUpperCase()}${team.slice(1)}`, LOCALE);
-        const splitDisplay = displayName(deltas[i].name);
-        const label = `${teamLabel} · ${splitDisplay}: ${formatDelta(deltas[i].deltas[team])} ${STRINGS.deltaTooltipFrom}`;
-        const cls = isEnd ? `dot dot-${team} dot-game` : `dot dot-${team}`;
-        const r = isEnd ? 5 : 3.5;
+      const realPoints = filledRows
+        .map((r) => `${xOf(r.idx)},${yOf(r.deltas[team])}`)
+        .join(' ');
+      parts.push(`<polyline class="line line-${team}" points="${realPoints}" />`);
+
+      // Horizontal dashed extension from the last common-comparison point to
+      // this team's current position. The y-value is frozen at their last
+      // real delta — it's a position indicator, not a measurement.
+      const hasExtension = teamLastIdx[team] > lastFilledIdx;
+      const extY = hasExtension
+        ? yOf(filledRows[filledRows.length - 1].deltas[team])
+        : null;
+      if (hasExtension) {
+        const startX = xOf(lastFilledIdx);
+        const endX = xOf(teamLastIdx[team]);
         parts.push(
-          `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}"><title>${escapeHtml(label)}</title></circle>`,
+          `<polyline class="line line-${team} line-extension" points="${startX},${extY} ${endX},${extY}" />`,
         );
+      }
+
+      for (let j = 0; j < filledRows.length; j++) {
+        const r = filledRows[j];
+        const isEnd = r.isGameEnd;
+        if (!isEnd && !showSegmentDots) continue;
+        const cx = xOf(r.idx);
+        const cy = yOf(r.deltas[team]);
+        const cls = isEnd ? `dot dot-${team} dot-game` : `dot dot-${team}`;
+        const rad = isEnd ? 5 : 3.5;
+        parts.push(
+          `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${rad}"></circle>`,
+        );
+      }
+
+      // Extension dots ride the frozen y-line.
+      if (hasExtension) {
+        for (let i = lastFilledIdx + 1; i <= teamLastIdx[team]; i++) {
+          const split = allSplits[i];
+          if (!split || split.times[team] == null) continue;
+          const isEnd = split.isGameEnd;
+          if (!isEnd && !showSegmentDots) continue;
+          const cx = xOf(i);
+          const cls = isEnd
+            ? `dot dot-${team} dot-game dot-extension`
+            : `dot dot-${team} dot-extension`;
+          const rad = isEnd ? 5 : 3.5;
+          parts.push(
+            `<circle class="${cls}" cx="${cx}" cy="${extY}" r="${rad}"></circle>`,
+          );
+        }
       }
     }
 
@@ -627,13 +731,12 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
   function redraw() {
     if (!lastParsed) { renderEmpty(STRINGS.emptyText); return; }
     if (mode === 'race') {
-      if (lastParsed.splits.length === 0) renderEmpty(STRINGS.emptyText);
+      if (!hasAnyDisplayData(lastParsed)) renderEmpty(STRINGS.emptyText);
       else render(lastParsed);
       return;
     }
     const data = currentRenderData();
-    // <= 1 = only the synthetic Start row, no real splits yet.
-    if (!data || data.splits.length <= 1) {
+    if (!hasAnyDisplayData(data)) {
       renderEmpty(STRINGS.perGameEmptyText);
       return;
     }
@@ -724,10 +827,13 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
 
   function updateZoomMin() {
     const data = currentRenderData();
-    if (!data || data.splits.length === 0) return false;
+    if (!data || !hasAnyDisplayData(data)) return false;
+    const { maxTeamIdx } = displayDimensions(data);
+    const slotCount = maxTeamIdx + 1;
+    if (slotCount === 0) return false;
     const avail = scrollEl.clientWidth - PAD_LEFT - PAD_RIGHT;
     if (avail <= 0) return false;
-    const slots = Math.max(0.5, data.splits.length - 0.5);
+    const slots = Math.max(0.5, slotCount - 0.5);
     minPx = Math.max(0.1, avail / slots);
     const targetPx = mode === 'per-game' ? minPx : Math.max(pxPerSplit, minPx);
     if (Math.abs(pxPerSplit - targetPx) > 0.001) {

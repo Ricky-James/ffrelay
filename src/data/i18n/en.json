@@ -173,7 +173,6 @@
     "statusLastFailed": "Last update failed at {ts}. Showing previous data.",
     "statusLoadFailed": "Unable to load data ({err}). Retrying…",
     "statusUnexpectedFormat": "Sheet format unexpected — could not find team columns.",
-    "deltaTooltipFrom": "from avg",
     "perGameStartLabel": "Start",
     "perGameEmptyText": "No completed splits for this game yet."
   }
