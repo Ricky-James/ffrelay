@@ -654,9 +654,7 @@ const loadingStatus = t('progressChart.loadingStatus', lang);
       if (!split) continue;
       parts.push(`<line class="tick" x1="${x}" y1="${CHART_H - PAD_BOTTOM}" x2="${x}" y2="${CHART_H - PAD_BOTTOM + 4}" />`);
       const isEnd = split.isGameEnd;
-      // In the extension region (i > lastFilledIdx) we only label game ends —
-      // intermediate splits there don't have a comparable delta to label.
-      if (!isEnd && (!showAllLabels || i > lastFilledIdx)) continue;
+      if (!isEnd && !showAllLabels) continue;
       const name = displayName(split.name);
       const cls = isEnd ? 'axis-label x-label x-label-game' : 'axis-label x-label';
       parts.push(
