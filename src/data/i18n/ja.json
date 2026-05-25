@@ -53,13 +53,15 @@
     "runner": "ランナー",
     "game": "ゲーム",
     "completionTimeLabel": "クリアタイム",
+    "elapsedLabel": "タイム",
     "gapFromOrdinalLabel": "{ordinal}との差",
     "gapFromFirstLabel": "1位との差",
     "chartCaption": "各ラインは3チームの平均との累計スプリット差です — 下にあるほど速い。",
     "tabRace": "リレー全体",
     "tabPerGame": "個別ゲーム",
     "tabsHeading": "比較を切替",
-    "gameSelectAriaLabel": "ゲームを選択"
+    "gameSelectAriaLabel": "ゲームを選択",
+    "gameNowSuffix": "進行中"
   },
   "schedule": {
     "metaTitle": "スケジュール",

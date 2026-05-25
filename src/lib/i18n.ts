@@ -110,6 +110,12 @@ const CATEGORY_TO_JA: Record<string, string> = Object.fromEntries(
     .filter(([k, v]) => !k.startsWith('_') && typeof v === 'string') as [string, string][],
 );
 
+// Empty in EN — callers use it as a no-op lookup table for category-token translation.
+export function buildCategoryMap(locale: Locale): Record<string, string> {
+  if (locale === DEFAULT_LOCALE) return {};
+  return { ...CATEGORY_TO_JA };
+}
+
 // "Final Fantasy I (GBA Any%)" / "Final Fantasy I: Any% (PSP)" → localized recomposition.
 // Title prefix translates via games.json (full match, then `:` strip-fallback for the
 // Relay I form); paren tokens pass through if platforms, else CATEGORY_TO_JA → raw.
