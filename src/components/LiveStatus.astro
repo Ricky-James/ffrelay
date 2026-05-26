@@ -326,36 +326,28 @@ const CATEGORY_MAP_JSON = JSON.stringify(buildCategoryMap(lang));
     transition: background 0.2s ease, border-color 0.2s ease;
   }
 
-  /* Icon is a CSS mask so we can recolour without baking colours into the SVG files. */
   .ls-icon {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
-    border: 1px solid var(--border);
+    border: 2px solid currentColor;
     background: rgba(255, 255, 255, 0.04);
+    overflow: hidden;
   }
   .ls-icon::after {
     content: '';
     display: block;
-    width: 1.35rem;
-    height: 1.35rem;
-    background-color: var(--text-muted);
-    -webkit-mask: var(--ls-icon-url) center / contain no-repeat;
-            mask: var(--ls-icon-url) center / contain no-repeat;
+    width: 100%;
+    height: 100%;
+    background: var(--ls-icon-url) center / contain no-repeat;
   }
   [data-theme='light'] .ls-icon {
     background: rgba(0, 0, 0, 0.025);
   }
-  .ls-row.tone-blue .ls-icon::after   { background-color: #38bdf8; }
-  .ls-row.tone-yellow .ls-icon::after { background-color: #fde047; }
-  .ls-row.tone-green .ls-icon::after  { background-color: #4ade80; }
-  [data-theme='light'] .ls-row.tone-blue .ls-icon::after   { background-color: #0c4a6e; }
-  [data-theme='light'] .ls-row.tone-yellow .ls-icon::after { background-color: #713f12; }
-  [data-theme='light'] .ls-row.tone-green .ls-icon::after  { background-color: #14532d; }
   .ls-team-block {
     display: flex;
     flex-direction: column;
@@ -459,12 +451,8 @@ const CATEGORY_MAP_JSON = JSON.stringify(buildCategoryMap(lang));
                 0 8px 24px color-mix(in srgb, currentColor 14%, transparent);
   }
   .ls-row.is-leader .ls-icon {
-    background: currentColor;
-    border-color: transparent;
+    background: color-mix(in srgb, currentColor 22%, transparent);
     box-shadow: 0 0 14px color-mix(in srgb, currentColor 55%, transparent);
-  }
-  .ls-row.is-leader .ls-icon::after {
-    background-color: var(--bg);
   }
   .ls-row.is-leader .ls-team {
     font-weight: 700;
@@ -886,7 +874,7 @@ const CATEGORY_MAP_JSON = JSON.stringify(buildCategoryMap(lang));
       if (i === 0) cls.push('is-leader');
       const iconSlug = ICON_TEAMS.has(row.team) ? row.team : null;
       const iconStyle = iconSlug
-        ? `style="--ls-icon-url: url('${BASE}images/teams/${iconSlug}.svg')"`
+        ? `style="--ls-icon-url: url('${BASE}images/teams/${iconSlug}.png')"`
         : '';
       const lines = [];
       if (row.runner) lines.push(metaSpan(STRINGS.runner, linkName(row.runner)));
