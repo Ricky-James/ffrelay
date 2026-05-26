@@ -10,14 +10,14 @@ import '@fontsource/space-grotesk/700.css';
 // so the JP subset is selected automatically). Latin subset also imported so
 // mixed-script content (e.g. JP game titles with English category suffixes)
 // can render in a single mincho voice — opt-in per element via font-family.
-import '@fontsource/shippori-mincho/japanese-400.css';
-import '@fontsource/shippori-mincho/japanese-600.css';
-import '@fontsource/shippori-mincho/japanese-700.css';
-import '@fontsource/shippori-mincho/japanese-800.css';
+import '../styles/shippori-ja.css';
 import '@fontsource/shippori-mincho/latin-400.css';
 import '@fontsource/shippori-mincho/latin-600.css';
 import '@fontsource/shippori-mincho/latin-700.css';
 import '@fontsource/shippori-mincho/latin-800.css';
+import spaceGroteskBody from '@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff2';
+import spaceGroteskHeading from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2';
+import shipporiBody from '@fontsource/shippori-mincho/files/shippori-mincho-japanese-400-normal.woff2';
 import siteData from '../data/site.json';
 import eventData from '../data/event.json';
 import {
@@ -125,6 +125,12 @@ function safeJsonLd(obj: object): string {
     <link rel="manifest" href={`${base}manifest.json`} />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#020617" id="meta-theme-color" />
+    <link rel="preload" href={`${base}fonts/finalf.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={spaceGroteskBody} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={spaceGroteskHeading} as="font" type="font/woff2" crossorigin />
+    {lang === 'ja' && (
+      <link rel="preload" href={shipporiBody} as="font" type="font/woff2" crossorigin />
+    )}
     <link href={`${base}fonts/inter.css`} rel="stylesheet" />
     <link href={`${base}fonts/finalf.css`} rel="stylesheet" />
     <script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js" defer

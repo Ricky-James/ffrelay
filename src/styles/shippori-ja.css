@@ -1,0 +1,34 @@
+/* Shippori Mincho, Japanese subset. @fontsource ships these ~1.4 MB CJK faces as
+   font-display: swap, which flashes a fallback on load because the file can't arrive before
+   first paint; `optional` renders the fallback for that load instead of swapping mid-view.
+   No unicode-range (matching @fontsource) means these are the catch-all for non-Latin
+   glyphs, so this file MUST be imported before the latin subsets so Latin codepoints keep
+   using the small latin faces. */
+@font-face {
+  font-family: 'Shippori Mincho';
+  font-style: normal;
+  font-weight: 400;
+  font-display: optional;
+  src: url('../../node_modules/@fontsource/shippori-mincho/files/shippori-mincho-japanese-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Shippori Mincho';
+  font-style: normal;
+  font-weight: 600;
+  font-display: optional;
+  src: url('../../node_modules/@fontsource/shippori-mincho/files/shippori-mincho-japanese-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Shippori Mincho';
+  font-style: normal;
+  font-weight: 700;
+  font-display: optional;
+  src: url('../../node_modules/@fontsource/shippori-mincho/files/shippori-mincho-japanese-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Shippori Mincho';
+  font-style: normal;
+  font-weight: 800;
+  font-display: optional;
+  src: url('../../node_modules/@fontsource/shippori-mincho/files/shippori-mincho-japanese-800-normal.woff2') format('woff2');
+}
