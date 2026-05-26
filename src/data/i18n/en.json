@@ -128,7 +128,7 @@
     "groupRelays": "Relays"
   },
   "runners": {
-    "lead": "Every runner who has taken part in a Final Fantasy Relay Race, sorted by total appearances, with the game run in each relay.",
+    "lead": "Every runner who has taken part in a Final Fantasy Series Relay Race, sorted by total appearances, with the game run in each relay.",
     "count": "{n} runners",
     "colRunner": "Runner",
     "colTotalAppearances": "Total\nAppearances",
@@ -138,7 +138,7 @@
     "metaTitle": "Past Results",
     "metaDescription": "Previous winners and full per-relay breakdowns for every {eventName}.",
     "heading": "Previous Winners",
-    "lead": "Every Final Fantasy Relay Race held to date, with team count, winner, and links to the VoDs.",
+    "lead": "Every Final Fantasy Series Relay Race held to date, with team count, winner, and links to the VoDs.",
     "colEvent": "Event",
     "colDate": "Date",
     "colTeams": "Teams",
@@ -146,7 +146,7 @@
     "colVod": "VoD",
     "vodLinkText": "Link",
     "detailHeading": "Previous Results",
-    "detailLead": "Games, runners, and final times for each Final Fantasy Relay Race. Pick a tab to jump to that event.",
+    "detailLead": "Games, runners, and final times for each Final Fantasy Series Relay Race. Pick a tab to jump to that event.",
     "detailFollowup": "For even more details, check out the",
     "detailFollowupSuffix": "page!",
     "historyLinkText": "History",

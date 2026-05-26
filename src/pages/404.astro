@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import eventData from '../data/event.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const title = `Page Not Found | ${eventData.name}`;
+---
+
+<Layout title={title} description={`The page you were looking for doesn't exist on the ${eventData.name} site.`}>
+  <main id="main-content" class="notfound-page">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="notfound-inner">
+        <img
+          class="notfound-art"
+          src={`${base}images/Relay-Mascots.png`}
+          width="2170"
+          height="1529"
+          alt="The Mog, Choco and Tonberry team mascots"
+          loading="eager"
+          decoding="async"
+        />
+        <p class="notfound-code gradient-text">404</p>
+        <h1 class="notfound-title">Page not found</h1>
+        <p class="notfound-text">
+          Looks like you managed to softlock the site, click the button below to reset.
+        </p>
+        <a href={base} class="notfound-home">← Back to {eventData.name}</a>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .notfound-page {
+    background-color: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .notfound-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 6rem 0;
+  }
+  .notfound-art {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin-bottom: 1.5rem;
+  }
+  .notfound-code {
+    font-size: clamp(4rem, 14vw, 7rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .notfound-title {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-weight: 700;
+    color: var(--text);
+    margin: 0.75rem 0 0;
+  }
+  .notfound-text {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 28rem;
+    margin: 1rem 0 2rem;
+  }
+  .notfound-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 0.6rem;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .notfound-home:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  .notfound-home:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+</style>
