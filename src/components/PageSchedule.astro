@@ -52,7 +52,7 @@ const STRINGS_JSON = JSON.stringify({
     data-name-map={NAME_MAP_JSON}
     data-strings={STRINGS_JSON}
   >
-    <section id="schedule-placeholder" class="page-intro pre-event">
+    <section id="schedule-placeholder" class="page-intro pre-event" hidden>
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
         <p class="eyebrow">{t('schedule.eyebrowPre', lang)}</p>
         <h1 class="page-heading">{t('schedule.heading', lang)}</h1>
@@ -60,7 +60,7 @@ const STRINGS_JSON = JSON.stringify({
       </div>
     </section>
 
-    <div id="schedule-content" hidden>
+    <div id="schedule-content">
       <section class="page-intro">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <p class="eyebrow">{t('schedule.eyebrow', lang)}</p>
@@ -497,15 +497,6 @@ const STRINGS_JSON = JSON.stringify({
   let pollHandle = null;
   let scrolledToLive = false;
 
-  // Reveal the schedule three weeks before the event so attendees can plan around it.
-  // Before that, only show it once the splits sheet has data (i.e. the event has started).
-  const PRE_EVENT_REVEAL_DAYS = 21;
-  function withinPreEventWindow() {
-    const [y, mo, d] = START_DATE.split('-').map(Number);
-    const startMs = Date.UTC(y, mo - 1, d);
-    return Date.now() >= startMs - PRE_EVENT_REVEAL_DAYS * 86_400_000;
-  }
-
   // Splits sheet → per-game progress for each team. Only game-end rows ("Final Fantasy …")
   // are tracked, matching the LiveStatus + ProgressChart parse logic.
   function parseSplitsForStatus(text) {
@@ -733,10 +724,6 @@ const STRINGS_JSON = JSON.stringify({
         try { splitsParsed = parseSplitsForStatus(await splitsRes.text()); } catch {}
       }
       const splitsHasData = !!(splitsParsed && splitsParsed.anyData);
-      if (!splitsHasData && !withinPreEventWindow()) {
-        showPlaceholder();
-        return;
-      }
 
       if (!scheduleRes.ok) throw new Error(`HTTP ${scheduleRes.status}`);
       const text = await scheduleRes.text();
@@ -744,6 +731,12 @@ const STRINGS_JSON = JSON.stringify({
       if (!parsed) {
         showContent();
         setStatus(STRINGS.sheetFormatUnexpected, true);
+        return;
+      }
+      // Only show the schedule when the sheet actually has runs; with none, fall back to
+      // the "closer to the event" placeholder.
+      if (!parsed.runs.length) {
+        showPlaceholder();
         return;
       }
       if (infoRes && infoRes.ok) {
@@ -788,6 +781,12 @@ const STRINGS_JSON = JSON.stringify({
     if (document.hidden) stopPolling();
     else startPolling();
   });
+
+  // The placeholder is a terminal "no schedule yet" state, not a loading state. The markup
+  // renders the loading view by default so there's no placeholder paint before this script
+  // runs; refresh() swaps in the schedule once the sheet has runs, or the placeholder when
+  // it doesn't.
+  showContent();
 
   startPolling();
 </script>
